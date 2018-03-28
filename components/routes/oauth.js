@@ -4,6 +4,7 @@ module.exports = function(webserver, controller) {
 
     var handler = {
         login: function(req, res) {
+          
             res.redirect(controller.getAuthorizeURL());
         },
         oauth: function(req, res) {
@@ -68,7 +69,7 @@ module.exports = function(webserver, controller) {
     // See: https://github.com/howdyai/botkit/blob/master/readme-slack.md#custom-auth-flows
     debug('Configured /login url');
     webserver.get('/login', handler.login);
-
+  
     // Create a /oauth link
     // This is the link that receives the postback from Slack's oauth system
     // So in Slack's config, under oauth redirect urls,

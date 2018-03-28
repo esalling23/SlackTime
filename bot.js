@@ -66,7 +66,7 @@ var debug = require('debug')('botkit:main');
 var bot_options = {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
-    // debug: true,
+    debug: false,
     scopes: ['bot'],
     studio_token: process.env.studio_token,
     studio_command_uri: process.env.studio_command_uri
@@ -76,6 +76,7 @@ var bot_options = {
 // Mongo is automatically configured when deploying to Heroku
 if (process.env.MONGO_URI) {
     var mongoStorage = require('botkit-storage-mongo')({mongoUri: process.env.MONGO_URI});
+    console.log(mongoStorage);
     bot_options.storage = mongoStorage;
 } else {
     bot_options.json_file_store = __dirname + '/.data/db/'; // store user data in a simple JSON format
@@ -96,7 +97,7 @@ if (!process.env.clientId || !process.env.clientSecret) {
 
   webserver.get('/', function(req, res){
     res.render('installation', {
-      studio_enabled: controller.config.studio_token ? true : false,
+      studio_enabled: true,
       domain: req.get('host'),
       protocol: req.protocol,
       glitch_domain:  process.env.PROJECT_DOMAIN,
@@ -112,10 +113,10 @@ if (!process.env.clientId || !process.env.clientSecret) {
     res.render('index', {
       domain: req.get('host'),
       protocol: req.protocol,
-      glitch_domain:  process.env.PROJECT_DOMAIN,
+      glitch_domain:  process.env.glitch_domain,
       layout: 'layouts/default'
     });
-  })
+  });
   // Set up a simple storage backend for keeping a record of customers
   // who sign up for the app via the oauth
   require(__dirname + '/components/user_registration.js')(controller);
@@ -133,6 +134,7 @@ if (!process.env.clientId || !process.env.clientSecret) {
   require("fs").readdirSync(normalizedPath).forEach(function(file) {
     require("./skills/" + file)(controller);
   });
+  
 
   // This captures and evaluates any message sent to the bot as a DM
   // or sent to the bot in the form "@bot message" and passes it to
@@ -141,6 +143,7 @@ if (!process.env.clientId || !process.env.clientSecret) {
   // You can tie into the execution of the script using the functions
   // controller.studio.before, controller.studio.after and controller.studio.validate
   if (process.env.studio_token) {
+    
       controller.on('direct_message,direct_mention,mention', function(bot, message) {
           controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).then(function(convo) {
               if (!convo) {
@@ -167,8 +170,43 @@ if (!process.env.clientId || !process.env.clientSecret) {
 }
 
 
+webserver.get('/:team_id/map', function(req, res){
+  
+  var teamId = req.params.team_id;
+  
+  controller.storage.teams.get(teamId, function(err,team) {
 
+    // If no puzzles, create an empty array
+    if (!team.puzzles) {
+      team.puzzles = [];
+    }
 
+    if (err) {
+      throw new Error(err);
+    }
+    
+    // Render map.hbs
+    res.render('map', {
+      domain: req.get('host'),
+      protocol: req.protocol,
+      glitch_domain: process.env.PROJECT_DOMAIN,
+      layout: 'layouts/default', 
+      data: team
+    });
+
+  });
+  
+});
+
+webserver.get('/download/:file', function(req, res){
+  
+  var file = req.params.file;
+
+  var filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
+  
+  res.redirect(filePath);
+  
+});
 
 function usage_tip() {
     console.log('~~~~~~~~~~');
@@ -179,3 +217,5 @@ function usage_tip() {
     console.log('Get a Botkit Studio token here: https://studio.botkit.ai/')
     console.log('~~~~~~~~~~');
 }
+
+
