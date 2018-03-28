@@ -1,3 +1,4 @@
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -17,6 +18,10 @@ module.exports = function(controller) {
     webserver.engine('hbs', hbs.express4({partialsDir: __dirname + '/../views/partials'}));
     webserver.set('view engine', 'hbs');
     webserver.set('views', __dirname + '/../views/');
+  
+    hbs.registerHelper('jsonPrint', function(obj) {
+      return JSON.stringify(obj, null, 2);
+    });
 
     // import express middlewares that are present in /components/express_middleware
     var normalizedPath = require("path").join(__dirname, "express_middleware");
@@ -27,11 +32,12 @@ module.exports = function(controller) {
     webserver.use(express.static('public'));
 
     var server = http.createServer(webserver);
+    // var io = require('socket.io')(server);
 
     server.listen(process.env.PORT || 3000, null, function() {
 
         console.log('Express webserver configured and listening at http://localhost:' + process.env.PORT || 3000);
-
+        
     });
 
     // import all the pre-defined routes that are present in /components/routes

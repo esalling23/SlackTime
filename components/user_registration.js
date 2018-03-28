@@ -24,7 +24,7 @@ module.exports = function(controller) {
                 };
                 var new_team= true;
             }
-
+          
             team.bot = {
                 token: payload.bot.bot_access_token,
                 user_id: payload.bot.bot_user_id,
@@ -47,6 +47,9 @@ module.exports = function(controller) {
                     testbot.identity.name = bot_auth.user;
 
                     testbot.team_info = team;
+                  
+                    // team.bot_instance = testbot;
+                  // console.log(team.bot_instance, " THIS IS THE BOT INSTANCE");
 
                     // Replace this with your own database!
 
@@ -55,9 +58,9 @@ module.exports = function(controller) {
                             debug('Error: could not save team record:', err);
                         } else {
                             if (new_team) {
-                                controller.trigger('create_team', [testbot, team]);
+                                controller.trigger('create_team', [testbot, team, payload]);
                             } else {
-                                controller.trigger('update_team', [testbot, team]);
+                                controller.trigger('update_team', [testbot, team, payload]);
                             }
                         }
                     });
@@ -67,24 +70,26 @@ module.exports = function(controller) {
     });
 
 
-    controller.on('create_team', function(bot, team) {
+    controller.on('create_team', function(bot, team, payload) {
 
         debug('Team created:', team);
 
         // Trigger an event that will establish an RTM connection for this bot
-        controller.trigger('rtm:start', [bot.config]);
+        controller.trigger('rtm:start', [bot.config, team, payload]);
 
         // Trigger an event that will cause this team to receive onboarding messages
-        controller.trigger('onboard', [bot, team]);
+        controller.trigger('onboard', [bot, team, payload]);
 
     });
 
 
-    controller.on('update_team', function(bot, team) {
+    controller.on('update_team', function(bot, team, payload) {
 
         debug('Team updated:', team);
         // Trigger an event that will establish an RTM connection for this bot
         controller.trigger('rtm:start', [bot]);
+      
+        controller.trigger('onboard', [bot, team, payload]);
 
     });
 
