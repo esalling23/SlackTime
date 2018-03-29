@@ -93,15 +93,18 @@ module.exports = function(controller) {
         }
     };
     
+    var filePath = destination_path + params.message.file.title;
+    
     var stream = request(opts, function(err, res, body) {
         console.log('FILE RETRIEVE STATUS',res.statusCode);          
-    }).pipe(fs.createWriteStream(destination_path + params.message.file.title));
+    }).pipe(fs.createWriteStream(filePath));
     
     stream.on("finish", function() {
       cloudinary.v2.uploader.unsigned_upload(destination_path + params.message.file.title, "image_counter_bot", 
           { resource_type: "image", tags: [ 'user_' + params.message.user, 'team_' + params.message.team ] },
          function(err, result) {
         console.log(err, result);
+        fs.unlinkSync(filePath);
         // SAVE TO TEAM //
         // ************ //
         controller.storage.teams.get(params.message.team, function(err, team) {

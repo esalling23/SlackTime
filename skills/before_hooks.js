@@ -13,7 +13,13 @@ var keypad_codes = {
   2: []
 };
 
-var door_codes = {
+var aris_codes = {
+  0: [],
+  1: [], 
+  2: []
+};
+
+var tamagotchi_codes = {
   0: [],
   1: [], 
   2: []
@@ -64,11 +70,24 @@ module.exports = function(controller) {
   
   controller.studio.before("tamagotchi_door", function(convo, next) {
     var menus = convo.threads.default[0].attachments[0].actions;
+    var tamagotchi_code = process.env.tamagotchi_code.split("-");
+    
+    _.each(menus, function(menu) {
+      
+      menu.options = generateCodes(menu, menus, tamagotchi_codes, tamagotchi_code);
+      
+    });
+    
+    next();
+  });
+  
+  controller.studio.before("aris_door", function(convo, next) {
+    var menus = convo.threads.default[0].attachments[0].actions;
     var aris_code = process.env.aris_code.split("-");
     
     _.each(menus, function(menu) {
       
-      menu.options = generateCodes(menu, menus, door_codes, aris_code);
+      menu.options = generateCodes(menu, menus, aris_codes, aris_code);
       
     });
     

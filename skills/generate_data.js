@@ -10,7 +10,6 @@ var team,
     user, 
     channel;
 
-
 function isUser(member) {
   console.log(member.name, "is the member being checked");
   if (member.is_bot || member.name == process.env.botName || member.name == "slackbot")

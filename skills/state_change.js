@@ -14,7 +14,7 @@ module.exports = function(controller) {
   
   controller.on("state_change", function(options) {
     
-    // console.log(options.bot, "in the state change");
+    console.log(options.key, "in the state change");
     var res = options.team;
     var code = options.key.code;
 
@@ -48,11 +48,7 @@ module.exports = function(controller) {
       if (options.codeType != 'bookshelf')
         res.codesEntered.push(code);
       
-//       console.log(options.key);
-//       console.log(res.currentState, "is the current team state");
-//       console.log(res.events, "is the current team events");
-
-      if (code == 'orb' || code == 'random' || code == 'safe') {
+      if (['orb', 'random', 'safe'].includes(code)) {
         
         if (!res.events.includes(code))
             res.events.push(code);
@@ -84,9 +80,6 @@ module.exports = function(controller) {
   }); // End on event
 }
 
-var repeatButtons = function() {
-  
-}
 
 var findState = function(currentState, event) {
       var newState;

@@ -46,7 +46,7 @@ module.exports = function(controller) {
         if (vars.location)
           template.location = vars.location;
         
-        console.log(template);
+        // console.log(template);
         
         convo.stop('card_only');
         cb(template);
