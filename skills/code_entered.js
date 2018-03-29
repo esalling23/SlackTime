@@ -21,6 +21,13 @@ const correctSafeCode = {
   2: process.env.safe_code.split("-")[2]
 };
 
+
+const correctTamagotchiCode = {
+  0: process.env.tamagotchi_code.split("-")[0],
+  1: process.env.tamagotchi_code.split("-")[1],
+  2: process.env.tamagotchi_code.split("-")[2]
+};
+
 const correctArisCode = {
   0: process.env.aris_code.split("-")[0],
   1: process.env.aris_code.split("-")[1],
@@ -32,7 +39,7 @@ module.exports = function(controller) {
   
   controller.on("code_entered", function(params) {
     
-    console.log(params.codeType, "is the cody type in the code_entered");
+    console.log(params.codeType, "is the code type in the code_entered");
     var bot = params.bot;
     controller.storage.teams.get(params.team).then(res => {
       
@@ -41,9 +48,17 @@ module.exports = function(controller) {
       
       console.log(params.codeType, params.code);
       
-      if (params.codeType == 'safe') {
-        correctCodes = correctSafeCode;
+      if (['safe', 'tamagotchi_door', 'aris_door'].includes(params.codeType)) {
+        if (params.codeType == 'safe')
+          correctCodes = correctSafeCode;
+        else if (params.codeType == 'tamagotchi_door')
+          correctCodes = correctTamagotchiCode;
+        else if (params.codeType == 'aris_door')
+          correctCodes = correctArisCode;
+        
         code = checkCodeObject(params.code, correctCodes);
+        code.code = params.codeType;
+        
       } else {
         if (params.codeType == 'bookshelf')
           correctCodes = correctBookCombos;
@@ -63,7 +78,7 @@ module.exports = function(controller) {
         
         controller.trigger("state_change", [params]);
 
-        console.log(params);
+        // console.log(params);
 
         if (code.code == 'safari')
           controller.trigger("image_counter_onboard", [bot, params.event]);
@@ -147,14 +162,14 @@ module.exports = function(controller) {
         console.log("correct");
         
         if ( count == Object.keys(correctCode).length ) {
-           return { correct: true, code: 'safe' };
+           return { correct: true };
         }
 
       }
 
     }
     
-    return { correct: false, code: 'safe' };
+    return { correct: false };
     
   }
   

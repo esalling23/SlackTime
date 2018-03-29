@@ -166,13 +166,18 @@ module.exports = function(controller) {
             if (!thread)
               thread = 'default';
             
-             if (data.confirmed.value == "egg_table") {
+            console.log(res.codesEntered, data.confirmed.value);
+            
+            if (res.codesEntered.includes(data.confirmed.value))
+              thread = "repeat";
+            
+            if (data.confirmed.value == "egg_table") {
               vars.egg = true;
               vars.user = event.user;
               vars.team = event.team.id;
-             }
+            }
              
-             controller.makeCard(bot, event, data.confirmed.value, thread, vars, function(card) {
+            controller.makeCard(bot, event, data.confirmed.value, thread, vars, function(card) {
                 // console.log(card);
 
                 // replace the original button message with a new one
@@ -209,14 +214,17 @@ module.exports = function(controller) {
       
       var options = {};
       var code = [];
+      
+      var type = event.actions[0].name;
             
       _.each(reply.attachments, function(attachment) {
         _.each(attachment.actions, function(action) {
 
-          if (event.actions[0].name.includes('safe') || event.actions[0].name.includes('tamagotchi_door')) {
+          if (type.includes('safe') || type.includes('tamagotchi') || type.includes('aris')) {
             console.log("confirming safe/door enter code");
             var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-            var callback_id = event.callback_id.replace("_code", "");
+            var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
+            console.log(callback_id, "is the codeType");
             
             options.code = confirmedChoice.choice;
             
@@ -449,7 +457,9 @@ module.exports = function(controller) {
             if (!thread)
               thread = 'default';
             
-            if (value == "safe" && res.events.includes("safe"))
+            console.log(res.codesEntered, value);
+            
+            if (res.codesEntered.includes(value))
               thread = "repeat";
             
             if (value == "egg_table") {
