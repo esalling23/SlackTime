@@ -4,8 +4,8 @@ const request = require('request');
 var sort = require("sorted-object");
 
 const correctButtonCodes = {
-  safari: ['grey', 'green', 'red', 'grey', 'red', 'green'],
-  random: ['grey','red','green', 'grey', 'green', 'red'],
+  random: ['grey', 'green', 'red', 'grey', 'red', 'green'],
+  safari: ['grey','red','green', 'grey', 'green', 'red'],
   hole: ['green', 'red', 'red', 'red', 'grey', 'green'], 
   glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey'],
   orb: ['red', 'red', 'grey', 'red', 'grey', 'grey']

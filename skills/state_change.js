@@ -84,9 +84,6 @@ module.exports = function(controller) {
   }); // End on event
 }
 
-var repeatButtons = function() {
-  
-}
 
 var findState = function(currentState, event) {
       var newState;
