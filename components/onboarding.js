@@ -12,7 +12,7 @@ var channels = ["gamelog", "theLabyrinth", "map"],
     memberCount;
 
 function isUser(member) {
-  // console.log(member.name, "is the member being checked");
+  console.log(member.name, "is the member being checked");
   if (member.is_bot || member.name == process.env.botName || member.name == "slackbot")
     return false;
   else
@@ -30,71 +30,38 @@ module.exports = function(controller) {
        web.users.list().then((res) => {
                 
          if (!team.users) team.users = [];
-          // console.log(res);
-         creator = bot.config.createdBy;
-
+          console.log(res);
+         
           _.each(res.members, function(user) {
             var thisUser = _.findWhere(team.users, { userId: user.id });
-            if (isUser(user) && !thisUser) 
+            if (isUser(user) && !thisUser) {
+              
               team.users.push({ userId: user.id, name: user.name });
                           
-            console.log(team.users);
-            bot.api.im.open({user: user.id}, function(err, direct_message) { 
-              console.log(err, direct_message);
-              console.log(direct_message, "opened the onboarding message");
+                bot.api.im.open({user: user.id}, function(err, direct_message) { 
+                  creator = bot.config.createdBy;
+                  console.log(creator, "created this group and added the bot");
 
-              if (err) {
-                debug('Error sending onboarding message:', err);
-              } else {
-                // console.log(user.id);
-                controller.studio.runTrigger(bot, 'welcome', user.id, direct_message.channel.id, direct_message).catch(function(err) {
-                  debug('Error: encountered an error loading onboarding script from Botkit Studio:', err);
+                  if (err) {
+                    debug('Error sending onboarding message:', err);
+                  } else {
+                    console.log(user.id);
+                    controller.studio.runTrigger(bot, 'welcome', user.id, direct_message.channel.id, direct_message).catch(function(err) {
+                      debug('Error: encountered an error loading onboarding script from Botkit Studio:', err);
+                    });
+                  }
                 });
-              }
 
+            }
+            
+            team.oauth_token = auth.access_token;
+            
+            controller.storage.teams.save(team, function(err, saved) {
+
+              console.log(saved, " we onboarded this team");
             });
-
             
-          });
-            
-          team.oauth_token = auth.access_token;
-
-          controller.storage.teams.save(team, function(err, saved) {
-
-            // console.log(saved, " we onboarded this team");              
-            web.groups.create("game_log").then((channel, err) => {
-
-              var channelId = channel.group.id;
-
-              var data = _.map(saved.users, function(user) {
-                return [ web, user.userId, channelId, saved.users.indexOf(user) ]
-              });
-
-              data.push([ web, saved.bot.user_id, channelId, 1 ]);
-              
-              // console.log(data, "is the data we have");
-
-              var mapPromises = data.map(channelJoin);
-              // console.log("completed channel joins");
-
-              var results = Promise.all(mapPromises);
-
-              results.then(members => {
-                console.log("completed promises");
-
-                setTimeout(function() {
-                  controller.studio.get(bot, 'gamelog', creator, channelId).then(convo => {
-                    convo.activate();
-                  }).catch(function(err) {
-                    debug('Error: encountered an error loading onboarding script from Botkit Studio:', err);
-                  });
-                }, 100 * data.length);
-              });
-
-            }).catch(err => console.log(err));
-
-          });
-            
+          });    
                    
        }).catch((err) => { console.log(err) }); // End users.list call
 
@@ -104,44 +71,63 @@ module.exports = function(controller) {
   });
 
 }
+
+          
       
-var channelJoin = function channelJoin(params) {
+//       var channelCreate = function channelCreate(name) {
+        
+//         // Set a timeout so we don't hit our slack request limits
+//         // Since we know we need to wait 1 sec for each user
+//         // We will use the total expected wait time for our delay
+//         // setTimeout(function() {
+//           // Join the channels
 
-  // console.log(params, "are the params in this join");
-  // Set a timeout for 1 sec each so that we don't exceed our Slack Api limits
-  setTimeout(function() {
-    var web = params[0];
-    var member = params[1].toString();
-    var channel = params[2].toString();
-    console.log(member, "is the member that will join " + channel);
+//           return web.channels.create(name).then((res) => {
+//             // console.log("created labyrinth channel: " + JSON.stringify(res.channel));            
+//             return res.channel;
 
-    // check if user is bot before adding
-    // TODO check if user is already in channel
-    if (member) {
-      // var member = member["id"];
+//           }).catch((err) => { console.log(err) }); // End channels.join call 
 
-      web.groups.info(channel).then(channelData => {
-        // console.log(channelData);
-        if (channelData) {
-          // console.log(params[1], isUser(params[1]));
+//         // }, 1000 * memberCount + 1); // End channel timeout
 
-          if (isUser(params[1])) {
+//       }; // End channel create
+      
+//       var channelJoin = function channelJoin(params) {
+        
+//         // Set a timeout for 1 sec each so that we don't exceed our Slack Api limits
+//         // setTimeout(function() {
+//           var member = params[1]["id"].toString();
+//           var channel = params[0]["id"].toString();
+//           console.log(member, "is the member that will join " + channel);
 
-            // Invite each user to the labyrinth chat channel
-            return web.groups.invite(channel, member)
-              .then(res => {
-                // console.log(res, "is the channel res");
-                return res;
-              }).catch((err) => { console.log(err) });
+//           // check if user is bot before adding
+//           // TODO check if user is already in channel
+//           if (member) {
+//             // var member = member["id"];
+            
+//             web.channels.info(channel).then(channelData => {
+//               // console.log(channelData);
+//               if (channelData) {
+//                 // console.log(params[1], isUser(params[1]));
+                
+//                 if (isUser(params[1])) {
+                  
+//                   // Invite each user to the labyrinth chat channel
+//                   return web.channels.invite(channel, member)
+//                     .then(res => {
+//                       // console.log(res, "is the channel res");
+//                       return res;
+//                     }).catch((err) => { console.log(err) });
+                  
+//                 }
+//               }
+//             }).catch(err => console.log(err));
 
-          }
-        }
-      }).catch(err => console.log(err));
+            
+//           }
 
-    }
-
-  }, 100 * (params[3]+1));
-
-};// End channel Join
-
+//         // }, 1000 * (j+1));
+        
+//       };// End channel Join
+      
       
