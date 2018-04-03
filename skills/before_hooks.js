@@ -125,6 +125,19 @@ module.exports = function(controller) {
     
   });
   
+  controller.studio.before("pictures", function(convo, next) {
+  
+    var team = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
+
+    controller.storage.teams.get(team, function(err, res) {
+      console.log(res.uploadedImages[0]);
+      console.log(convo.threads.default[0].attachments[0]);
+      convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
+    });
+    
+    next();
+  });
+  
   var generateString = function() {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

@@ -194,8 +194,8 @@ module.exports = function(controller) {
     if (event.actions[0].name.match(/^tag/)) {
       var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
       
-      console.log(event);
-      console.log(confirmedChoice);
+      // console.log(event);
+      // console.log(confirmedChoice);
             
       controller.trigger("image_tag_submit", [{
         bot: bot,
@@ -264,6 +264,16 @@ module.exports = function(controller) {
                 options.code.push(parseInt(value));
               });
               options.codeType = 'bookshelf';
+          } else if (event.actions[0].name.includes('keypad')) {
+              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
+
+              console.log(confirmedChoice, "on the keypad");
+              
+              options.code = [];
+              _.each(Object.values(confirmedChoice.choice), function(value) {
+                options.code.push(value);
+              });
+              options.codeType = 'keypad';
           }
           
         });
@@ -272,6 +282,7 @@ module.exports = function(controller) {
       console.log(options.code, options.codeType);
       
       options.event = event;
+      options.user = event.user;
       options.team = event.team.id;
       options.bot = bot;
       
@@ -338,7 +349,7 @@ module.exports = function(controller) {
             controller.storage.teams.save(team, function(err, saved) {
               
               console.log(saved.users, " we saved these users");
-               controller.trigger("count_colors", [bot, event, saved.users]);
+               controller.trigger("count_colors", [bot, event, saved]);
             });
 
           });
@@ -348,33 +359,33 @@ module.exports = function(controller) {
       
     }
     
-    // button text change
-    if (event.actions[0].name.match(/^text/)) {
-      console.log(event);
+//     // button text change
+//     if (event.actions[0].name.match(/^text/)) {
+//       console.log(event);
 
-      // we need to change this button's color homie
+//       // we need to change this button's color homie
       
-      _.map(reply.message.attachments[0].actions, function(action) {
-          if (action.value != 'paused') {
-            var num = parseInt(action.text);
-            if (num >= 3) 
-              action.text = "1"
-            else 
-              action.text = num + 1;
-          }
+//       _.map(reply.message.attachments[0].actions, function(action) {
+//           if (action.value != 'paused') {
+//             var num = parseInt(action.text);
+//             if (num >= 3) 
+//               action.text = "1"
+//             else 
+//               action.text = num + 1;
+//           }
           
-          return action;
-      });
+//           return action;
+//       });
 
-      // console.log(response.message.attachments[0].actions);
-      bot.api.chat.update({
-        channel: reply.channel, 
-        ts: reply.ts, 
-        attachments: reply.message.attachments
-      }, function(err, updated) { console.log(err, updated)});
+//       // console.log(response.message.attachments[0].actions);
+//       bot.api.chat.update({
+//         channel: reply.channel, 
+//         ts: reply.ts, 
+//         attachments: reply.message.attachments
+//       }, function(err, updated) { console.log(err, updated)});
       
       
-    }
+//     }
     
     if (event.actions[0].name.match(/^start/)) {
       
@@ -391,6 +402,46 @@ module.exports = function(controller) {
       controller.studio.runTrigger(bot, 'start', event.user, event.channel, event).catch(function(err) {
           console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
       });
+      
+    }
+    
+    if (event.actions[0].name.match(/^picture/)) {
+      console.log(event);
+      var reply = event.original_message;
+      var type = event.actions[0].value;
+      var url = reply.attachments[0].image_url;
+      console.log(reply.attachments[0].image_url);
+      
+      controller.storage.teams.get(event.team.id, function(err, team) {
+        var image = _.findWhere(team.uploadedImages, { url: url });
+        var pos = team.uploadedImages.indexOf(image);
+        
+        if (type == "next") {
+          pos++;
+          if (!team.uploadedImages[pos])
+            pos = 0;
+        } else if (type == "back") {
+          pos--;
+          if (!team.uploadedImages[pos])
+            pos = team.uploadedImages.length - 1;
+        }
+        
+        console.log(pos, team.uploadedImages.length);
+        
+        reply.attachments[0].image_url = team.uploadedImages[pos].url;
+        
+        reply.attachments[0].actions[0].text = "<";
+        reply.attachments[0].actions[2].text = ">";
+        
+        bot.api.chat.update({
+          channel: event.channel, 
+          ts: reply.ts, 
+          attachments: reply.attachments
+        }, function(err, updated) { console.log(err, updated)});
+        
+        
+      });     
+
       
     }
     
@@ -450,8 +501,8 @@ module.exports = function(controller) {
           var thread;
           
           controller.studio.get(bot, script.name, event.user, event.channel).then((currentScript) => {
-            
-            var thread = determineThread(currentScript, res);
+            var thisUser = _.findWhere(res.users, { userId: event.user });
+            var thread = determineThread(currentScript, res, thisUser);
             var vars = {};
             
             if (!thread)
@@ -488,7 +539,7 @@ module.exports = function(controller) {
   
 }
 
-var determineThread = function(script, team) {
+var determineThread = function(script, team, user) {
   
   console.log(team.events, team.currentState);
   var thread;
@@ -529,7 +580,9 @@ var determineThread = function(script, team) {
           console.log("this is an event thread");
           console.log(team.events);
           
-          if (team.events) {
+          if (v.includes('orb') && user.hasOrb) {
+            thread = v;
+          } else if (team.events) {
             
             _.each(team.events, function(event) {
               console.log(v, event);

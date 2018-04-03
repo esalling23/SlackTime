@@ -186,7 +186,9 @@ module.exports = function(controller) {
   
   // Test for entry
   controller.hears("labyrinth", 'direct_message,direct_mention', function(bot, message) {
-      controller.studio.run(bot, 'welcome', message.user, message.channel);
+      controller.studio.get(bot, 'safe', message.user, message.channel).then(convo => {
+        console.log(convo);
+      });
   });
   
   controller.hears("escape_2", 'direct_message,direct_mention', function(bot, message) {

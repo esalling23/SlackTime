@@ -6,4 +6,3 @@ components/routes/_*
 .data
 json
 tmp
-views/index.hbs

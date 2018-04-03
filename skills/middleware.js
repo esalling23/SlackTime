@@ -42,15 +42,15 @@ module.exports = function(controller) {
 
             var web = new WebClient(token);
             
-            if (!team.image_feedback) team.image_feedback = {};
-
             setTimeout(function() {
               web.groups.history(message.channel).then(res => {
+                // console.log(res.messages);
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
+                
                 thisMsg.channel = message.channel;
 
-                team.image_feedback[message.location] = thisMsg;
-                controller.storage.teams.save(team, function(err, saved) { console.log(team.image_feedback[message.location], "saved") });
+                team.image_feedback = thisMsg;
+                controller.storage.teams.save(team, function(err, saved) { console.log("saved") });
               });
             }, 1000);
           });
