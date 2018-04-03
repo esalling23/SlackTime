@@ -48,30 +48,63 @@ module.exports = function(controller) {
       if (options.codeType != 'bookshelf')
         res.codesEntered.push(code);
       
-      if (['orb', 'random', 'safe'].includes(code)) {
+      if (options.phaseUnlocked) {
+        if (!res.phasesUnlocked) res.phasesUnlocked = ["phase_1"];
+        res.phasesUnlocked.push(options.phaseUnlocked);
+      }
+      
+      if (['random', 'safe'].includes(code)) {
         
         if (!res.events.includes(code))
             res.events.push(code);
         
+      } else if (code == "orb") {
+        var thisUser = _.findWhere(res.users, { userId: options.user });
+        thisUser.hasOrb = true;
+        res.users = _.map(res.users, function(user) {
+          if (user.userId == thisUser.userId)
+            return thisUser;
+          else 
+            return user;
+        });
       } else {
         res.currentState = findState(res.currentState, code);
       }
 
       controller.storage.teams.save(res).then((updated) => {
 
-        // console.log("We saved this new team state", updated);
-        var vars = {};
-
-        console.log(thread + "is the thread we are going to in the " + options.codeType + " script");
-
-        controller.makeCard(options.bot, options.event, options.codeType, thread, vars, function(card) {
-          // console.log(card, "is the card from the state change");
+        controller.studio.getScripts().then(scripts => {
+          // console.log("We saved this new team state", updated);
+          var vars = {};
           
+          var thisScript = _.findWhere(scripts, { name: options.codeType });
+          console.log(thisScript);
+          var thisPhase = _.filter(thisScript.tags, function(tag) {
+            return tag.includes('phase');
+          })[0];
 
-          // replace the original button message with a new one
-          options.bot.replyInteractive(options.event, card);
+          console.log(thisPhase);
+          console.log(thread + " is the thread we are going to in the " + options.codeType + " script");
 
+          var log = {
+            bot: options.bot, 
+            team: options.event.team.id ? options.event.team.id : options.event.team,
+            phase: thisPhase, 
+            event: options.codeType, 
+            player: options.event.user
+          }
+          console.log(log.event, log.player);
+
+          controller.trigger('gamelog_update', [log]);
+
+          controller.makeCard(options.bot, options.event, options.codeType, thread, vars, function(card) {
+            // console.log(card, "is the card from the state change");
+            // replace the original button message with a new one
+            options.bot.replyInteractive(options.event, card);
+
+          });
         });
+        
 
       }); 
     }

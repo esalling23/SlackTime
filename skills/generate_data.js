@@ -45,7 +45,8 @@ module.exports = function(controller) {
       teamData.users = [];
       teamData.uploadedImages = [];
       teamData.image_channel_id = "";
-      
+      teamData.image_feedback = "";
+      // teamData.gamelogChannel
       // add users array
       var web = new WebClient(teamData.oauth_token);
       
@@ -53,7 +54,7 @@ module.exports = function(controller) {
         _.each(res.members, function(user) {
           if (isUser(user))
             teamData.users.push({ userId: user.id, name: user.name });
-        })
+        });
         
         // Set the team puzzles to the generated puzzles array
         controller.storage.teams.save(teamData, function(err, teamSaved) {

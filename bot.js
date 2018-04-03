@@ -202,8 +202,13 @@ webserver.get('/:team_id/map', function(req, res){
 webserver.get('/download/:file', function(req, res){
   
   var file = req.params.file;
-
-  var filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
+  console.log(file);
+  if(file == "tangrams.zip") {
+    var filePath = "http://res.cloudinary.com/extraludic/file/upload/fl_attachment/escape-room/" + file;
+  }
+  else {
+    var filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
+  }
   
   res.redirect(filePath);
   

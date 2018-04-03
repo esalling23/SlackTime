@@ -34,6 +34,11 @@ const correctArisCode = {
   2: process.env.aris_code.split("-")[2]
 };
 
+const correctKeypadCode = {
+  0: process.env.keypad_code.split("-")[0],
+  1: process.env.keypad_code.split("-")[1],
+  2: process.env.keypad_code.split("-")[2]
+};
 
 module.exports = function(controller) {
   
@@ -48,13 +53,20 @@ module.exports = function(controller) {
       
       console.log(params.codeType, params.code);
       
-      if (['safe', 'tamagotchi_door', 'aris_door'].includes(params.codeType)) {
-        if (params.codeType == 'safe')
+      if (['safe', 'tamagotchi_door', 'aris_door', 'keypad'].includes(params.codeType)) {
+        if (params.codeType == 'safe') {
           correctCodes = correctSafeCode;
-        else if (params.codeType == 'tamagotchi_door')
+          params.phaseUnlocked = "phase_2";
+        } else if (params.codeType == 'tamagotchi_door') {
           correctCodes = correctTamagotchiCode;
-        else if (params.codeType == 'aris_door')
+          params.phaseUnlocked = "phase_3";
+        } else if (params.codeType == 'aris_door') {
           correctCodes = correctArisCode;
+          params.phaseUnlocked = "phase_4";
+        } else if (params.codeType == 'keypad') {
+          correctCodes = correctKeypadCode;
+          params.phaseUnlocked = "phase_5";
+        }
         
         code = checkCodeObject(params.code, correctCodes);
         code.code = params.codeType;

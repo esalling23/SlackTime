@@ -42,6 +42,7 @@ module.exports = function(controller) {
         var channelId = channel.group.id;
         
         team.image_channel_id = channelId;
+        
         controller.storage.teams.save(team, function(err, savedTeam) {
           console.log(err, savedTeam);
           console.log("WE SAVED THE TEAM AFTER MAKING THE CHANNEL");
@@ -61,12 +62,9 @@ module.exports = function(controller) {
             console.log("completed promises");
 
             setTimeout(function() {
-              bot.say({
-                channel: channelId, 
-                unfurl_media: true,
-                text: 'https://www.youtube.com/watch?v=JJr_peu2Rpk \nWatch this video to understand how to use this channel\n'
-              });
+              controller.imageFeedback(bot, message, channelId, team);
             }, 100 * data.length);
+            
           });
 
         });
@@ -80,38 +78,55 @@ module.exports = function(controller) {
   controller.on("image_counter_upload", function(params) {
     console.log(params.message.file.title);
 
-    var destination_path = 'tmp/uploaded/';
+    controller.storage.teams.get(params.message.team, function(err, team) {
+                  
+      var token = team.bot.app_token;
 
-    // the url to the file is in url_private. there are other fields containing image thumbnails as appropriate
-    var url = params.message.file.url_private;
+      if (team.imagesComplete) {
 
-    var opts = {
-        method: 'GET',
-        url: url,
-        headers: {
-          Authorization: 'Bearer ' + params.bot.config.bot.token, // Authorization header with bot's access token
-        }
-    };
-    
-    var filePath = destination_path + params.message.file.title;
-    
-    var stream = request(opts, function(err, res, body) {
-        console.log('FILE RETRIEVE STATUS',res.statusCode);          
-    }).pipe(fs.createWriteStream(filePath));
-    
-    stream.on("finish", function() {
-      cloudinary.v2.uploader.unsigned_upload(destination_path + params.message.file.title, "image_counter_bot", 
-          { resource_type: "image", tags: [ 'user_' + params.message.user, 'team_' + params.message.team ] },
-         function(err, result) {
-        console.log(err, result);
-        fs.unlinkSync(filePath);
-        // SAVE TO TEAM //
-        // ************ //
-        controller.storage.teams.get(params.message.team, function(err, team) {
-          var token = team.bot.app_token;
-          
+        deleteThisMsg(params.message, token, function() { 
+          controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
+
+            convo.changeTopic("all_complete");
+
+            convo.activate();
+          });
+        });
+        
+        return;
+
+      }
+
+      var destination_path = 'tmp/uploaded/';
+
+      // the url to the file is in url_private. there are other fields containing image thumbnails as appropriate
+      var url = params.message.file.url_private;
+
+      var opts = {
+          method: 'GET',
+          url: url,
+          headers: {
+            Authorization: 'Bearer ' + params.bot.config.bot.token, // Authorization header with bot's access token
+          }
+      };
+
+      var filePath = destination_path + params.message.file.title;
+
+      var stream = request(opts, function(err, res, body) {
+          console.log('FILE RETRIEVE STATUS',res.statusCode);          
+      }).pipe(fs.createWriteStream(filePath));
+
+      stream.on("finish", function() {
+        cloudinary.v2.uploader.unsigned_upload(destination_path + params.message.file.title, "image_counter_bot", 
+            { resource_type: "image", tags: [ 'user_' + params.message.user, 'team_' + params.message.team ] },
+           function(err, result) {
+          console.log(err, result);
+          fs.unlinkSync(filePath);
+          // SAVE TO TEAM //
+          // ************ //
+
           deleteThisMsg(params.message, token, function() { 
-            
+
             console.log("deleted") 
             if (!team.uploadedImages) team.uploadedImages = [];
 
@@ -127,22 +142,22 @@ module.exports = function(controller) {
                 user: params.message.user
               };
 
-              // console.log(params.message.user, params.message.channel);
-
               // upon image upload, show menu asking for player to tag the image location
               controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
-                
+
                 convo.threads.default[0].attachments[0].image_url = vars.image_url;
 
                 convo.activate();
               });
+
             });
-            
+
           });
-          
-          
+
         });
+
       });
+      
     });
     
   });
@@ -171,31 +186,42 @@ module.exports = function(controller) {
 
         team.uploadedImages = updated;
         
+        if (team.uploadedImages.length == 18) 
+          team.imagesComplete = true;          
+                
         controller.storage.teams.save(team, function(err, saved) {
           // console.log("saved team: ", saved);
 
           vars.count = _.where(saved.uploadedImages, { location: params.location }).length;
           vars.max = 6;
-        
-          if(team.uploadedImages.length == (6 * 2)) {//params.message.attachments[0].actions.length)) {
-            vars.code = process.env.safe_code.replace(/-/g, "").toString();
-            thread = "complete";
-          } else {
-            thread = "thanks";
-          }
-          
-          if (!team.image_feedback) team.image_feedback = {};
 
-          console.log(team.image_feedback[params.location], " is the existing feedback msg");
+          deleteThisMsg(params.message, team.oauth_token, function() {
+            
+            if(saved.imagesComplete) {
+              vars.code = process.env.safe_code.replace(/-/g, "").toString();
+              controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
+                params.bot.replyInteractive(params.message, card);            
+              });
+            } else {
 
-          if (team.image_feedback[params.location]) {
-            deleteThisMsg(team.image_feedback[params.location], team.oauth_token, function() {});
-          }
-          
-          controller.makeCard(params.bot, params.message, 'image_tag', thread, vars, function(card) {
-            params.bot.replyInteractive(params.message, card);            
+              deleteThisMsg(team.image_feedback, team.oauth_token, function() {
+                controller.imageFeedback(params.bot, params.message, saved.image_channel_id, saved);
+                
+                if (saved.imagesComplete) {
+                  controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
+
+                    convo.changeTopic("all_complete");
+
+                    convo.activate();
+                  });
+                }
+                
+              });
+
+            } 
+
           });
-          
+
         });
       }
     });
@@ -250,10 +276,14 @@ module.exports = function(controller) {
   
   var deleteThisMsg = function(message, token, callback) {
     
+    // console.log(message, "we are deleting this");
+    
+    var ts = message.message_ts ? message.message_ts : message.ts;
+    
     var web = new WebClient(token);
       
-    web.chat.delete(message.ts, message.channel).then(res => {
-      console.log(res);
+    web.chat.delete(ts, message.channel).then(res => {
+      // console.log(res, "deleted");
       callback();
     }).catch(err => console.log(err));
   }
