@@ -4,28 +4,23 @@ const request = require('request');
 var sort = require("sorted-object");
 
 const correctButtonCodes = {
-  random: ['grey', 'green', 'red', 'grey', 'red', 'green'],
-  safari: ['grey','red','green', 'grey', 'green', 'red'],
-  hole: ['green', 'red', 'red', 'red', 'grey', 'green'], 
-  glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey'],
-  orb: ['red', 'red', 'grey', 'red', 'grey', 'grey']
+  random: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
+  safari: ['grey','red','green', 'grey', 'green', 'red', 'green', 'red', 'grey'],
+  hole: ['grey', 'grey', 'red', 'red', 'green', 'green', 'grey', 'red', 'grey'], 
+  glyph: ['green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey', 'red'],
+  orb: ['red', 'red', 'grey', 'red', 'grey', 'grey', 'grey', 'grey', 'grey']
 }
 
-const correctBookCombos = {
-  0: [parseInt(process.env.book), parseInt(process.env.page), parseInt(process.env.line)]
+const correctBookCode = {
+  0: parseInt(process.env.book), 
+  1: parseInt(process.env.page), 
+  2: parseInt(process.env.line)
 };
 
 const correctSafeCode = {
   0: process.env.safe_code.split("-")[0],
   1: process.env.safe_code.split("-")[1],
   2: process.env.safe_code.split("-")[2]
-};
-
-
-const correctTamagotchiCode = {
-  0: process.env.tamagotchi_code.split("-")[0],
-  1: process.env.tamagotchi_code.split("-")[1],
-  2: process.env.tamagotchi_code.split("-")[2]
 };
 
 const correctArisCode = {
@@ -53,12 +48,12 @@ module.exports = function(controller) {
       
       console.log(params.codeType, params.code);
       
-      if (['safe', 'tamagotchi_door', 'aris_door', 'keypad'].includes(params.codeType)) {
+      if (['safe', 'bookshelf', 'aris_door', 'keypad'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = correctSafeCode;
           params.phaseUnlocked = "phase_2";
-        } else if (params.codeType == 'tamagotchi_door') {
-          correctCodes = correctTamagotchiCode;
+        } else if (params.codeType == 'bookshelf') {
+          correctCodes = correctBookCode;
           params.phaseUnlocked = "phase_3";
         } else if (params.codeType == 'aris_door') {
           correctCodes = correctArisCode;
@@ -72,10 +67,8 @@ module.exports = function(controller) {
         code.code = params.codeType;
         
       } else {
-        if (params.codeType == 'bookshelf')
-          correctCodes = correctBookCombos;
-        else 
-          correctCodes = correctButtonCodes;
+        
+        correctCodes = correctButtonCodes;
         
         code = checkCodeArray(params.code, correctCodes);
       }

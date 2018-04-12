@@ -19,8 +19,9 @@ module.exports = function(controller) {
   
   controller.on('interactive_message_callback', function(bot, event) {
     
-    console.log(event.actions[0].name, "is the interactive message callback event");
+    console.log(event, "is the interactive message callback event");
     
+    controller.dataStore(event);
 
     // Choose a menu option
     if (event.actions[0].name.match(/^choose(.*)$/)) {

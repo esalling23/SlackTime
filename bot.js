@@ -75,7 +75,10 @@ var bot_options = {
 // Use a mongo database if specified, otherwise store in a JSON file local to the app.
 // Mongo is automatically configured when deploying to Heroku
 if (process.env.MONGO_URI) {
-    var mongoStorage = require('botkit-storage-mongo')({mongoUri: process.env.MONGO_URI});
+    var mongoStorage = require('botkit-storage-mongo')({
+      mongoUri: process.env.MONGO_URI, 
+      tables: ['events']
+    });
     console.log(mongoStorage);
     bot_options.storage = mongoStorage;
 } else {
@@ -101,7 +104,8 @@ if (!process.env.clientId || !process.env.clientSecret) {
       domain: req.get('host'),
       protocol: req.protocol,
       glitch_domain:  process.env.PROJECT_DOMAIN,
-      layout: 'layouts/default'
+      layout: 'layouts/default',
+      data: { clientId: process.env.clientId }
     });
   })
 
@@ -114,7 +118,8 @@ if (!process.env.clientId || !process.env.clientSecret) {
       domain: req.get('host'),
       protocol: req.protocol,
       glitch_domain:  process.env.glitch_domain,
-      layout: 'layouts/default'
+      layout: 'layouts/default',
+      data: { clientId: process.env.clientId }
     });
   });
   // Set up a simple storage backend for keeping a record of customers
@@ -202,12 +207,13 @@ webserver.get('/:team_id/map', function(req, res){
 webserver.get('/download/:file', function(req, res){
   
   var file = req.params.file;
-  console.log(file);
+  var filePath;
+
   if(file == "tangrams.zip") {
-    var filePath = "http://res.cloudinary.com/extraludic/file/upload/fl_attachment/escape-room/" + file;
+    filePath = "http://res.cloudinary.com/extraludic/raw/upload/fl_attachment/escape-room/" + file;
   }
   else {
-    var filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
+    filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
   }
   
   res.redirect(filePath);
