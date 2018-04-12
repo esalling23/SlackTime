@@ -90,9 +90,16 @@ module.exports = function(controller) {
             bot: options.bot, 
             team: options.event.team.id ? options.event.team.id : options.event.team,
             phase: thisPhase, 
-            event: options.codeType, 
+            event: options.event,
+            codeType: options.codeType,
             player: options.event.user
           }
+          
+          if (log.codeType == "buttons")
+            log.puzzle = code;
+          else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
+            log.puzzle = log.codeType;
+          
           console.log(log.event, log.player);
 
           controller.trigger('gamelog_update', [log]);

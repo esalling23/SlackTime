@@ -15,13 +15,13 @@ module.exports = function(controller) {
 
       _.each(template.attachments, function(a) {
         if (template.attachments.indexOf(a) == 0) {
-          a.color = "bcbcbc"
+          a.color = "bcbcbc";
         } else {
           var l = _.where(team.uploadedImages, { location: a.fallback }).length;
           if (l == 0)
             a.color = "ff2600";
           else if (l > 0 && l < 6)
-            a.color = "fffb00";
+            a.color = "ffb900";
           else 
             a.color = "00f900";
         }

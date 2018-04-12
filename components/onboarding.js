@@ -37,6 +37,14 @@ module.exports = function(controller) {
          team.uploadedImages = [];
          team.image_channel_id = "";
          team.image_feedback = undefined;
+         team.phasesUnlocked = ["phase_1"];
+         
+         team.gamelog = {};
+         
+         for (var i = 0; i < 5; i++) {
+            var phase = "phase_" + (i+1);
+            team.gamelog[phase] = [];
+         }
          
           // console.log(res);
          creator = bot.config.createdBy;
@@ -94,13 +102,10 @@ module.exports = function(controller) {
               console.log("completed promises");
 
               setTimeout(function() {
-                controller.studio.get(bot, 'gamelog', creator, channelId).then(convo => {
-                  convo.activate();
-                }).catch(function(err) {
-                  debug('Error: encountered an error loading onboarding script from Botkit Studio:', err);
-                });
                 controller.storage.teams.save(team, function(err, saved) {
                   console.log("saved in the onboarding: ", saved);
+                  controller.gamelogMessage(bot, { user: team.bot.user_id, channel: channelId }, saved);
+
                 });
               }, 100 * data.length);
             });

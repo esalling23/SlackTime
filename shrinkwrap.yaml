@@ -5,6 +5,7 @@ dependencies:
   botkit: 0.6.12
   botkit-storage-mongo: 1.0.7
   botkit-studio-metrics: 0.0.4
+  bson: 2.0.5
   cloudinary: 1.11.0
   cookie-parser: 1.4.3
   debug: 3.1.0
@@ -756,6 +757,12 @@ packages:
       node: '>=0.6.19'
     resolution:
       integrity: sha512-D8zmlb46xfuK2gGvKmUjIklQEouN2nQ0LEHHeZ/NoHM2LDiMk2EYzZ5Ntw/Urk+bgMDosOZxaRzXxvhI5TcAVQ==
+  /bson/2.0.5:
+    dev: false
+    engines:
+      node: '>=4.0.0'
+    resolution:
+      integrity: sha512-4gGFIV/DJXPUY5ZhpE7CjG5Z+N73gEnNalLvJ99nqXLPj+RlVQ+wz1FVDUj/F7TDrJe/zXx6GFDLUkYeK5SDGg==
   /buffer-equal-constant-time/1.0.1:
     dev: false
     resolution:
@@ -3111,6 +3118,7 @@ specifiers:
   botkit: ^0.6.12
   botkit-storage-mongo: ^1.0.7
   botkit-studio-metrics: ^0.0.4
+  bson: ^2.0.5
   cloudinary: ^1.10.0
   cookie-parser: ^1.4.3
   debug: ^3.1.0
