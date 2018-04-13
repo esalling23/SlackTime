@@ -11,6 +11,12 @@ const correctButtonCodes = {
   orb: ['red', 'red', 'grey', 'red', 'grey', 'grey', 'grey', 'grey', 'grey']
 }
 
+const correctTelegraphKeyCode = {
+  0: process.env.telegraph_key_1, 
+  1: process.env.telegraph_key_2, 
+  2: process.env.telegraph_key_3
+};
+
 const correctBookCode = {
   0: parseInt(process.env.book), 
   1: parseInt(process.env.page), 
@@ -48,7 +54,7 @@ module.exports = function(controller) {
       
       console.log(params.codeType, params.code);
       
-      if (['safe', 'bookshelf', 'aris_door', 'keypad'].includes(params.codeType)) {
+      if (['safe', 'bookshelf', 'aris_door', 'keypad', 'telegraph_key'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = correctSafeCode;
           params.phaseUnlocked = "phase_2";
@@ -61,6 +67,9 @@ module.exports = function(controller) {
         } else if (params.codeType == 'keypad') {
           correctCodes = correctKeypadCode;
           params.phaseUnlocked = "phase_5";
+        } else if (params.codeType == 'telegraph_key') {
+          correctCodes = correctTelegraphKeyCode;
+          // params.phaseUnlocked = "phase_5";
         }
         
         code = checkCodeObject(params.code, correctCodes);

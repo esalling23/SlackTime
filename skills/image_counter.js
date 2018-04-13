@@ -36,10 +36,10 @@ module.exports = function(controller) {
       
       // console.log(_.pluck(team.users, 'userId'), message.user);
       
-      web.groups.create("priva_image_counter").then((channel, err) => {
-        console.log(channel, err);
-
-        var channelId = channel.group.id;
+      web.groups.create("priva_image_counter").then((response) => {
+        console.log(response);
+        var channel = response.group;
+        var channelId = channel.id;
         
         team.image_channel_id = channelId;
         
@@ -48,10 +48,10 @@ module.exports = function(controller) {
           console.log("WE SAVED THE TEAM AFTER MAKING THE CHANNEL");
           
           var data = _.map(team.users, function(user) {
-            return [ web, user.userId, channelId, team.users.indexOf(user) ]
+            return [ web, user.userId, channelId, savedTeam.users.indexOf(user) ]
           });
 
-          data.push([ web, team.bot.user_id, channelId, 1 ])
+          data.push([ web, savedTeam.bot.user_id, channelId, 1 ])
 
           var mapPromises = data.map(channelJoin);
           console.log("completed channel joins");
@@ -62,7 +62,7 @@ module.exports = function(controller) {
             console.log("completed promises");
 
             setTimeout(function() {
-              controller.imageFeedback(bot, message, channelId, team);
+              controller.imageFeedback(bot, message, channelId, savedTeam);
             }, 100 * data.length);
             
           });

@@ -132,7 +132,8 @@ module.exports = function(controller) {
     controller.storage.teams.get(team, function(err, res) {
       console.log(res.uploadedImages[0]);
       console.log(convo.threads.default[0].attachments[0]);
-      convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
+      if (res.uploadedImages && res.uploadedImages.length > 0)
+        convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
     });
     
     next();

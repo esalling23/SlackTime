@@ -79,9 +79,9 @@ module.exports = function(controller) {
               console.log("There was an error: ", err);
             }
             
-            var message = { user: teamData.bot.user_id, channel: teamData.gamelog_channel_id };
+            var message = { user: teamData.bot.createdBy, channel: teamData.gamelog_channel_id };
   
-            controller.trigger('gamelog_update', [options.bot, message, teamSaved]);
+            controller.trigger('gamelog_update', [{bot: options.bot, event: message, team: teamSaved}]);
               
 
             // Check the team to make sure it was updated

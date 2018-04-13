@@ -22,15 +22,21 @@ function findGalaxy(data, num) {
 };
 
 module.exports = function(controller) {
+  
     controller.on("count_colors", function (bot, event, team) {
 
       var web = new WebClient(team.bot.token);
+      var length = (team.users.length * 3)/2;
+      var ready = false;
 
       var redCount = 0;
       var greyCount = 0;
       var greenCount = 0;
+      
       _.each(team.users, function(user) {
+        
         _.each(user.startBtns, function(btn) {
+          
           if (btn == "danger") {
             redCount++;
           } else if (btn == "primary") {
@@ -44,14 +50,15 @@ module.exports = function(controller) {
         });
       });
       
-      if(redCount >= 3 || greenCount >= 3 || greyCount >= 3) {
+      if(redCount >= length || greenCount >= length || greyCount >= length) {
         console.log("we did it!");
          _.each(team.users, function(user) {
             web.im.list().then(function(list) {
               var thisIM = _.findWhere(list.ims, { user: user.userId });
               var channel = thisIM.id;
+              var context = { user: user.userId, channel: channel };
               
-              controller.makeCard(bot, event, 'input_nodes_1', 'default', {}, function(card) {
+              controller.makeCard(bot, context, 'input_nodes_1', 'default', {}, function(card) {
                 bot.replyInteractive(event, card);
               });
             }).catch(err => console.log(err));
@@ -59,6 +66,11 @@ module.exports = function(controller) {
       }      
 
     });
+  
+  
+  
+  
+  
     // message sent in the labyrinth channel
     controller.on('ambient', function(bot, message) {
       

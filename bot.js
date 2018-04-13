@@ -208,6 +208,8 @@ webserver.get('/download/:file', function(req, res){
   
   var file = req.params.file;
   var filePath;
+  
+  
 
   if(file == "tangrams.zip") {
     filePath = "http://res.cloudinary.com/extraludic/raw/upload/fl_attachment/escape-room/" + file;
@@ -215,6 +217,8 @@ webserver.get('/download/:file', function(req, res){
   else {
     filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
   }
+  
+  console.log(filePath, "is the filepath");
   
   res.redirect(filePath);
   

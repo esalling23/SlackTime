@@ -169,8 +169,14 @@ module.exports = function(controller) {
             
             console.log(res.codesEntered, data.confirmed.value);
             
-            if (res.codesEntered.includes(data.confirmed.value))
-              thread = "repeat";
+            if (res.codesEntered.includes(data.confirmed.value)) {
+              var repeat = false;
+              _.each(script.threads, function(t) {
+                if (t.name == "repeat") repeat = true;
+              })
+              if (repeat)
+                thread = "repeat";
+            }
             
             if (data.confirmed.value == "egg_table") {
               vars.egg = true;
@@ -275,6 +281,16 @@ module.exports = function(controller) {
                 options.code.push(value);
               });
               options.codeType = 'keypad';
+          } else if (event.actions[0].name.includes('telegraph_key')) {
+              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
+
+              console.log(confirmedChoice, "on the telegraph_key");
+              
+              options.code = [];
+              _.each(Object.values(confirmedChoice.choice), function(value) {
+                options.code.push(value);
+              });
+              options.codeType = 'telegraph_key';
           }
           
         });
@@ -568,7 +584,7 @@ var determineThread = function(script, team, user) {
           }
           
         } else if (v.includes("state")) {
-          console.log("this is a state thread");
+          console.log(v, "this is a state thread");
           
           if (team.currentState != 'default') {
             
