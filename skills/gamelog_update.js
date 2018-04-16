@@ -5,18 +5,23 @@ module.exports = function(controller) {
   
   controller.on('gamelog_update', function(params) {
     
-    console.log("LETS UPDATE THE GAME LOG");
+    console.log(params, "LETS UPDATE THE GAME LOG");
     // WHAT KIND OF UPDATE
     var bot = params.bot;
+    var teamId = params.team;
+    var userId = params.player ? params.player : params.event.user;
+    console.log(userId);
     
-    controller.storage.teams.get(params.team, function(err, res) {
+    if (teamId.id) teamId = teamId.id
+    
+    controller.storage.teams.get(teamId, function(err, res) {
       
       if (!bot)
         bot = controller.spawn(res.bot);
       
       var web = new WebClient(res.oauth_token);
       
-      var thisUser = _.findWhere(res.users, { userId: params.player });
+      var thisUser = _.findWhere(res.users, { userId: userId });
       
       web.groups.history(res.gamelog_channel_id).then(group => {
         

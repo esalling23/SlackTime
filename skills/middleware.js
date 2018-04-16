@@ -48,9 +48,12 @@ module.exports = function(controller) {
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
                 
                 thisMsg.channel = message.channel;
-
+                if (!team.image_channel_id) team.image_channel_id = thisMsg.channel;
+                
                 team.image_feedback = thisMsg;
-                controller.storage.teams.save(team, function(err, saved) { console.log("saved") });
+                controller.storage.teams.save(team, function(err, saved) { 
+                  console.log("saved") 
+                });
               });
             }, 1000);
           });
