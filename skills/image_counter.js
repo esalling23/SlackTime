@@ -42,6 +42,7 @@ module.exports = function(controller) {
         var channelId = channel.id;
         
         team.image_channel_id = channelId;
+        team.noChatChannels.push(channelId);
         
         controller.storage.teams.save(team, function(err, savedTeam) {
           console.log(err, savedTeam);
@@ -187,10 +188,10 @@ module.exports = function(controller) {
         team.uploadedImages = updated;
         
         var taggedImages = _.filter(team.uploadedImages, function(image) {
-          return image.location;
+          return image.location !== undefined;
         });
         
-        if (team.uploadedImages.length == 18) 
+        if (taggedImages.length == 18) 
           team.imagesComplete = true;          
                 
         controller.storage.teams.save(team, function(err, saved) {
@@ -198,30 +199,34 @@ module.exports = function(controller) {
 
           vars.count = _.where(saved.uploadedImages, { location: params.location }).length;
           vars.max = 6;
+          
+          if (vars.count == vars.max) {
+            
+            var message = { user: saved.bot.createdBy, channel: saved.gamelog_channel_id };
+  
+            controller.trigger('gamelog_update', [{
+              bot: params.bot, 
+              event: message, 
+              team: saved, 
+              codeType: 'image_count', 
+              phase: "phase_1",
+              puzzle: params.location
+              
+            }]);
+              
+          }
 
           deleteThisMsg(params.message, team.oauth_token, function() {
             
+            controller.imageFeedback(params.bot, params.message, saved.image_channel_id, saved);
+
             if(saved.imagesComplete) {
-              vars.code = process.env.safe_code.replace(/-/g, "").toString();
-              controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
-                params.bot.replyInteractive(params.message, card);            
-              });
-            } else {
-
-              deleteThisMsg(team.image_feedback, team.oauth_token, function() {
-                controller.imageFeedback(params.bot, params.message, saved.image_channel_id, saved);
-                
-                if (saved.imagesComplete) {
-                  controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
-
-                    convo.changeTopic("all_complete");
-
-                    convo.activate();
-                  });
-                }
-                
-              });
-
+              setTimeout(function() {
+                vars.code = process.env.safe_code.replace(/-/g, "").toString();
+                controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
+                  params.bot.replyInteractive(params.message, card);            
+                });
+              }, 2000);
             } 
 
           });

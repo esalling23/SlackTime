@@ -35,9 +35,14 @@ module.exports = function(controller) {
          team.events = [];
          team.codesEntered = [];
          team.uploadedImages = [];
+         
+         team.albumImages = undefined;
+         team.imagesComplete = false;
          team.image_channel_id = "";
          team.image_feedback = undefined;
          team.phasesUnlocked = ["phase_1"];
+         
+         team.noChatChannels = [];
          
          team.gamelog = {};
          
@@ -84,6 +89,7 @@ module.exports = function(controller) {
             var channelId = channel.group.id;
             
             team.gamelog_channel_id = channelId;
+            team.noChatChannels.push(channelId);
 
             var data = _.map(team.users, function(user) {
               return [ web, user.userId, channelId, team.users.indexOf(user) ]

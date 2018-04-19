@@ -132,10 +132,6 @@ module.exports = function(controller) {
           });
         } else {
           
-          if (params.codeType == "telegraph_key") {
-             vars.mp3 = "Wrong"; 
-          }
-          
          controller.makeCard(bot, params.event, params.codeType, 'wrong', vars, function(card) {
             console.log(card, "is the card for the wrong entered code");
 
