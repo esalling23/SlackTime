@@ -38,8 +38,10 @@ module.exports = function(controller) {
         if (vars.egg) {
           _.each(template.attachments[0].actions, function(btn) {
             console.log(btn);
-            console.log(btn.url + '/' + vars.user + '/' + vars.team);
-            btn.url += '/' + vars.user + '/' + vars.team;
+            if (btn.name == "link_button") {
+              console.log(btn.url + '/' + vars.user + '/' + vars.team);
+              btn.url += '/' + vars.user + '/' + vars.team;
+            }
           });
         }
         
