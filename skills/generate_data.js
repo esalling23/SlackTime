@@ -44,9 +44,12 @@ module.exports = function(controller) {
       teamData.codesEntered = [];
       teamData.users = [];
       teamData.uploadedImages = [];
+      teamData.imagesComplete = false;
       teamData.image_channel_id = "";
       teamData.image_feedback = "";
       teamData.phasesUnlocked = ["phase_1"];
+      
+      teamData.noChatChannels = [teamData.gamelog_channel_id];
       
       teamData.gamelog = {};
       

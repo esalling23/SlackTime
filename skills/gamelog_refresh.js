@@ -35,6 +35,12 @@ const evolveNames = {
   turtle: "Sauropod"
 }
 
+const locationNames = {
+  bpl: "the Boston Public Library",
+  mit: "MIT", 
+  aquarium: "the Aquarium" 
+}
+
 module.exports = function(controller) {
   
   controller.gamelogEvent = function(name, event, date) {
@@ -48,6 +54,10 @@ module.exports = function(controller) {
         
       case 'download': 
         message += " downloaded _*" + event.puzzle + "*_";
+        break;
+        
+      case 'image_count': 
+        message += " uploaded the last image needed for _*" + locationNames[event.puzzle] + "*_";
         break;
       
       case 'bookshelf': 

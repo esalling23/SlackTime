@@ -8,6 +8,20 @@ const { WebClient } = require('@slack/client');
 var acceptedTypes = ['jpg', 'jpeg', 'png'];
 
 module.exports = function(controller) {
+  
+  var deleteThisMsg = function(message, token, callback) {
+    
+    console.log(message, "we are deleting this");
+    
+    var ts = message.message_ts ? message.message_ts : message.ts;
+    
+    var web = new WebClient(token);
+      
+    web.chat.delete(ts, message.channel).then(res => {
+      // console.log(res, "deleted");
+      callback();
+    }).catch(err => console.log(err));
+  }
 
     controller.middleware.receive.use(function(bot, message, next) {
     
@@ -43,17 +57,26 @@ module.exports = function(controller) {
 
             var web = new WebClient(token);
             
+            if (team.image_feedback != "") 
+              deleteThisMsg(team.image_feedback, team.oauth_token, function() {});
+
             setTimeout(function() {
               web.groups.history(message.channel).then(res => {
-                // console.log(res.messages);
+                console.log(res.messages);
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
-                
+
                 thisMsg.channel = message.channel;
-                if (!team.image_channel_id) team.image_channel_id = thisMsg.channel;
                 
+                if (!team.image_channel_id) 
+                  team.image_channel_id = thisMsg.channel;
+                
+                if (!team.noChatChannels.includes(team.image_channel_id)) 
+                  team.noChatChannels.push(team.image_channel_id);
+
                 team.image_feedback = thisMsg;
+                
                 controller.storage.teams.save(team, function(err, saved) { 
-                  console.log("saved") 
+                  console.log(saved, "saved") 
                 });
               });
             }, 1000);

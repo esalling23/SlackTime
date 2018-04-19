@@ -138,40 +138,19 @@ module.exports = function(controller) {
     }
   });
   
-//   controller.hears('start', 'direct_message,ambient', function(bot,message) {
+  controller.hears('(.*)', 'ambient', function(bot,message) {
     
-//     console.log("starting the game!!");
     
-//     controller.studio.getScripts().then((list) => {
-//       // console.log(list, " we are listing the list" );
-//       var script;
-//       for (var i = 0; i < list.length; i++) {
-//         var triggers = list[i].triggers;
-//         // Locate the script based on its triggers
-//         // If script is listening for the message text, that's our script
-//         _.each(triggers, function(a) {
-//           // console.log(triggers);
-//           if (a.pattern == "enter") {
-//             script = list[i];
-//           }
-//         });
-//       }
-      
-//       // console.log(script, " start script");
-      
-//       // Run the script listening to for "enter" (the first room)
-//       controller.studio.runTrigger(bot, "enter", message.user, message.channel)
-//         .catch((err) => { bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err); });
+    // If we hear anything in the no-chat channels, delete it
+    controller.storage.teams.get(message.team, function(err, team) {
 
-//       // If the team doesn't already, get them the puzzle data
-//       controller.storage.teams.get(message.team, function(err, team) {
-//         if (!team.puzzles) // Generate the team's fresh puzzle data  
-//           controller.trigger('generate', [bot, message, false]);
-//       });
-      
-//     });
+      if (team.noChatChannels.includes(message.channel))
+        deleteThisMsg(message, botReply, [message, 'sorry we had to delete that']);
 
-//   });
+    });
+      
+
+  });
   
   controller.hears('map','direct_message,direct_mention,ambient',function(bot,message) {
 
