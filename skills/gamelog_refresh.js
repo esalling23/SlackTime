@@ -45,6 +45,10 @@ module.exports = function(controller) {
       case 'buttons': 
         message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle";
         break;
+        
+      case 'download': 
+        message += " downloaded _*" + event.puzzle + "*_";
+        break;
       
       case 'bookshelf': 
         message += " found a special line from the bookshelf! The line turned into a black hole and lead to node 5";
@@ -68,6 +72,10 @@ module.exports = function(controller) {
         
       case 'safe': 
         message += " unlocked the safe in node 2, which lead to node 4";
+        break;
+        
+      case 'telegraph_key': 
+        message += " heard the phonograph play something related to channel " + event.puzzle;
         break;
       
       case 'aris_door':

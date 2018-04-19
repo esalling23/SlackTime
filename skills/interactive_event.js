@@ -368,6 +368,12 @@ module.exports = function(controller) {
       
     }
     
+    if (event.actions[0].name.match(/^download/)) {
+      
+      controller.trigger("download", [bot, event]);
+      
+    }
+    
     if (event.actions[0].name.match(/^dilemma/)) {
       
       controller.trigger("prisoners_selection", [bot, event]);

@@ -204,25 +204,6 @@ webserver.get('/:team_id/map', function(req, res){
   
 });
 
-webserver.get('/download/:file', function(req, res){
-  
-  var file = req.params.file;
-  var filePath;
-  
-  
-
-  if(file == "New_Tangram_Items.zip") {
-    filePath = "http://res.cloudinary.com/extraludic/raw/upload/v1/escape-room/" + file;
-  }
-  else {
-    filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/v1/escape-room/" + file;
-  }
-  
-  console.log(filePath, "is the filepath");
-    
-  res.redirect(filePath);
-  
-});
 
 function usage_tip() {
     console.log('~~~~~~~~~~');
