@@ -211,15 +211,15 @@ webserver.get('/download/:file', function(req, res){
   
   
 
-  if(file == "tangrams.zip") {
-    filePath = "http://res.cloudinary.com/extraludic/raw/upload/fl_attachment/escape-room/" + file;
+  if(file == "New_Tangram_Items.zip") {
+    filePath = "http://res.cloudinary.com/extraludic/raw/upload/v1/escape-room/" + file;
   }
   else {
-    filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/escape-room/" + file;
+    filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/v1/escape-room/" + file;
   }
   
   console.log(filePath, "is the filepath");
-  
+    
   res.redirect(filePath);
   
 });

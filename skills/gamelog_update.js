@@ -37,15 +37,21 @@ module.exports = function(controller) {
           });
         }
         
-        bot.api.chat.delete({
-          channel: res.gamelog_channel_id, 
-          ts: gamelogMsg.ts
-        }, function(err, deleted) {
-          
+        if (!gamelogMsg) {
           controller.storage.teams.save(res, function(err, saved) {
              controller.gamelogMessage(bot, { user: thisUser.userId, channel: saved.gamelog_channel_id }, saved);
           });
-        });
+        } else {
+          bot.api.chat.delete({
+            channel: res.gamelog_channel_id, 
+            ts: gamelogMsg.ts
+          }, function(err, deleted) {
+
+            controller.storage.teams.save(res, function(err, saved) {
+               controller.gamelogMessage(bot, { user: thisUser.userId, channel: saved.gamelog_channel_id }, saved);
+            });
+          });
+        }
         
       });
 

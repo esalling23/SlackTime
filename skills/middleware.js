@@ -57,6 +57,27 @@ module.exports = function(controller) {
               });
             }, 1000);
           });
+        } else if (message.type == "already_complete") {
+          controller.storage.teams.get(bot.config.id, function(err, team) {
+            var token = team.oauth_token;
+
+            var web = new WebClient(token);
+            console.log(message);
+            
+            setTimeout(function() {
+              web.groups.history(message.channel).then(res => {
+                // console.log(res.messages);
+                var thisMsg = _.findWhere(res.messages, { text: message.text });
+                
+                thisMsg.channel = message.channel;
+                
+                bot.api.chat.delete({ts: thisMsg.ts, channel: message.channel}, function(err, res) {
+                    console.log(err, res);
+                });
+              });
+            }, 1000);
+            
+          });
         }
       
         next();

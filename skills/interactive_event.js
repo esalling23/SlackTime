@@ -19,7 +19,7 @@ module.exports = function(controller) {
   
   controller.on('interactive_message_callback', function(bot, event) {
     
-    console.log(event, "is the interactive message callback event");
+    // console.log(event, "is the interactive message callback event");
     
     controller.dataStore(event);
 
@@ -137,60 +137,28 @@ module.exports = function(controller) {
         var reply = event.original_message;
         // data object for puzzle attempt event
         var data = {};
-        console.log(choiceSelect, event.user);
-
-        console.log("user confirmed " + JSON.stringify(_.findWhere(choiceSelect, { user: event.user })));
-
+      
         // Locate the saved choice based on the user key
         var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
         var script;
 
         controller.storage.teams.get(event.team.id).then((res) => {
-          // console.log(res);
-          var thread;
-          
           
           // Set the puzzle, answer, and if the answer is correct
           // This data will be sent to the puzzle_attempt event for saving to storage
-          data.confirmed = confirmedChoice;
-          
-          console.log(data.confirmed);
 
-          controller.studio.get(bot, data.confirmed.value, event.user, event.channel).then((script) => {
+          controller.studio.get(bot, confirmedChoice.value, event.user, event.channel).then((script) => {
             
-            var thread = determineThread(script, res);
-            var vars = {};
-            // console.log(thread, res.currentState);
-            // console.log(res.events);
-            
-            
-            if (!thread)
-              thread = 'default';
-            
-            console.log(res.codesEntered, data.confirmed.value);
-            
-            if (res.codesEntered.includes(data.confirmed.value)) {
-              var repeat = false;
-              _.each(script.threads, function(t) {
-                if (t.name == "repeat") repeat = true;
-              })
-              if (repeat)
-                thread = "repeat";
+            var opt = {
+              bot: bot, 
+              event: event, 
+              team: res, 
+              user: _.findWhere(res.users, { userId: event.user }), 
+              data: confirmedChoice, 
+              script: script
             }
             
-            if (data.confirmed.value == "egg_table") {
-              vars.egg = true;
-              vars.user = event.user;
-              vars.team = event.team.id;
-            }
-             
-            controller.makeCard(bot, event, data.confirmed.value, thread, vars, function(card) {
-                // console.log(card);
-
-                // replace the original button message with a new one
-                bot.replyInteractive(event, card);
-
-            });
+            controller.confirmMovement(opt);
 
           });
 
@@ -206,17 +174,14 @@ module.exports = function(controller) {
             
       controller.trigger("image_tag_submit", [{
         bot: bot,
-        message: event, 
+        message: event,
         url: event.original_message.attachments[0].image_url, 
         location: confirmedChoice.value
       }]);
     }
 
     // user submitted a code
-    if (event.actions[0].name.match(/^code(.*)/)) {
-      
-      // console.log(event);
-      
+    if (event.actions[0].name.match(/^code(.*)/)) {      
       var reply = event.original_message;
       
       var options = {};
@@ -227,17 +192,17 @@ module.exports = function(controller) {
       _.each(reply.attachments, function(attachment) {
         _.each(attachment.actions, function(action) {
 
-          if (type.includes('safe') || type.includes('tamagotchi') || type.includes('aris')) {
+          if (type.includes('safe') || type.includes('aris') || type.includes('keypad') || type.includes('bookshelf') || type.includes('telegraph_key')) {
             console.log("confirming safe/door enter code");
             var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
             var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
-            console.log(callback_id, "is the codeType");
+            console.log(confirmedChoice, "is the codeType");
             
             options.code = confirmedChoice.choice;
             
             options.codeType = callback_id;
             
-          } else if (event.actions[0].name.includes('buttons')) {
+          } else if (type.includes('buttons')) {
 
             if (action.name == "color") {
               var color;
@@ -261,37 +226,8 @@ module.exports = function(controller) {
             options.codeType = 'buttons';
             options.code = code;
             
-          } else if (event.actions[0].name.includes('bookshelf')) {
-              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-
-              console.log(confirmedChoice, "in the bookshelf");
-              
-              options.code = [];
-              _.each(Object.values(confirmedChoice.choice), function(value) {
-                options.code.push(parseInt(value));
-              });
-              options.codeType = 'bookshelf';
-          } else if (event.actions[0].name.includes('keypad')) {
-              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-
-              console.log(confirmedChoice, "on the keypad");
-              
-              options.code = [];
-              _.each(Object.values(confirmedChoice.choice), function(value) {
-                options.code.push(value);
-              });
-              options.codeType = 'keypad';
-          } else if (event.actions[0].name.includes('telegraph_key')) {
-              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-
-              console.log(confirmedChoice, "on the telegraph_key");
-              
-              options.code = [];
-              _.each(Object.values(confirmedChoice.choice), function(value) {
-                options.code.push(value);
-              });
-              options.codeType = 'telegraph_key';
-          }
+          } 
+          
           
         });
       });
@@ -349,7 +285,7 @@ module.exports = function(controller) {
           // console.log(event.team.id);
           
           controller.storage.teams.get(event.team.id, function (error, team) {
-            // console.log(error, team);
+            console.log(error, team);
             var thisUser = _.findWhere(team.users, { userId: event.user });
             thisUser.startBtns = [];
             _.each(updated.message.attachments[0].actions, function(btn) {
@@ -375,34 +311,6 @@ module.exports = function(controller) {
     
       
     }
-    
-//     // button text change
-//     if (event.actions[0].name.match(/^text/)) {
-//       console.log(event);
-
-//       // we need to change this button's color homie
-      
-//       _.map(reply.message.attachments[0].actions, function(action) {
-//           if (action.value != 'paused') {
-//             var num = parseInt(action.text);
-//             if (num >= 3) 
-//               action.text = "1"
-//             else 
-//               action.text = num + 1;
-//           }
-          
-//           return action;
-//       });
-
-//       // console.log(response.message.attachments[0].actions);
-//       bot.api.chat.update({
-//         channel: reply.channel, 
-//         ts: reply.ts, 
-//         attachments: reply.message.attachments
-//       }, function(err, updated) { console.log(err, updated)});
-      
-      
-//     }
     
     if (event.actions[0].name.match(/^start/)) {
       
@@ -456,9 +364,7 @@ module.exports = function(controller) {
           attachments: reply.attachments
         }, function(err, updated) { console.log(err, updated)});
         
-        
       });     
-
       
     }
     
@@ -468,80 +374,27 @@ module.exports = function(controller) {
       
     }
     
-//     if (event.actions[0].name.match(/^egg/)) {
-      
-//       var type = event.actions[0].value;
-//       var url = 'https://tamagotchi-production.glitch.me/pickup/' + type + '/' + event.user + '/' + event.team.id;
-      
-//       request.get(url, function(err, res, body) {
-//         console.log(body);
-//         if (body == "success") {
-//           request.get('https://tamagotchi-production.glitch.me/start', function(err, res, body) {
-            
-//             console.log(body);
-//           });
-//           // opn(, { app: 'chrome' }).catch(err => console.log(err));
-//         } else {
-//           controller.makeCard(bot, event, "egg_table", body, {}, function(card) {
-//             // replace the original button message with a new one
-//             bot.replyInteractive(event, card);
-          
-//           });
-//         }
-//       });
-      
-//     }
     
     // user says something
     if (event.actions[0].name.match(/^say/)) {
-      
-      var value = event.actions[0].value;
-      var script;
-      
-      console.log(value);
-      
+            
       controller.studio.getScripts().then((list) => {
-        // console.log(list, " we are listing the list" );
-
-        for (var i = 0; i < list.length; i++) {
-          // console.log(value, list[i].name);
-          // Locate the script based on its name
-          if (list[i].name == value)
-            script = list[i];
-
-        }
         
-        console.log(script);
-      
+        var script = _.findWhere(list, { name: event.actions[0].value });
+              
         controller.storage.teams.get(event.team.id).then((res) => {
-                    
-          var thread;
-          
+                              
           controller.studio.get(bot, script.name, event.user, event.channel).then((currentScript) => {
-            var thisUser = _.findWhere(res.users, { userId: event.user });
-            var thread = determineThread(currentScript, res, thisUser);
-            var vars = {};
-            
-            if (!thread)
-              thread = 'default';
-            
-            console.log(res.codesEntered, value);
-            
-            if (res.codesEntered.includes(value))
-              thread = "repeat";
-            
-            if (value == "egg_table") {
-              vars.egg = true;
-              vars.user = event.user;
-              vars.team = event.team.id;
+            var opt = {
+              bot: bot, 
+              event: event, 
+              team: res, 
+              user: _.findWhere(res.users, { userId: event.user }), 
+              data: event.actions[0], 
+              script: currentScript
             }
             
-            controller.makeCard(bot, event, script.name, thread, vars, function(card) {
-              console.log(card);
-              // replace the original button message with a new one
-              bot.replyInteractive(event, card);
-
-            });
+            controller.confirmMovement(opt);
             
           });
 
@@ -553,72 +406,13 @@ module.exports = function(controller) {
     
     
   });
+ 
   
 }
 
+
 var determineThread = function(script, team, user) {
   
-  console.log(team.events, team.currentState);
-  var thread;
   
-  _.each(script.threads, function(t, v) {
-
-    if (!thread || v.includes("combo")) {
-      if (v.split("_").length > 1) {
-        // console.log(v);
-
-        if (v.includes("combo")) {
-          console.log("this is a combo thread");
-          if (team.events) {
-            
-            _.each(team.events, function(event) {
-              console.log(v, event);
-              console.log(v.includes(event));
-              console.log(v.split("_")[2].includes(team.currentState));
-              
-              if (v.includes(event) && v.split("_")[2].includes(team.currentState)) 
-                thread = v;
-              
-            });
-            
-          }
-          
-        } else if (v.includes("state")) {
-          console.log(v, "this is a state thread");
-          
-          if (team.currentState != 'default') {
-            
-            if (v.split("_")[1].includes(team.currentState)) 
-              thread = v;
-            
-          }
-          
-        } else if (v.includes("event")) {
-          console.log("this is an event thread");
-          console.log(team.events);
-          
-          if (v.includes('orb') && user.hasOrb) {
-            thread = v;
-          } else if (team.events) {
-            
-            _.each(team.events, function(event) {
-              console.log(v, event);
-              console.log(v.includes(event));
-              
-              if (v.includes(event)) 
-                thread = v;
-              
-            });
-            
-          }
-          
-        }
-
-      }
-    }
-
-  });
-  
-  return thread;
   
 }
