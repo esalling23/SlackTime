@@ -8,9 +8,9 @@ const web = new WebClient(token);
 const cloudinary = require('cloudinary');
     
 cloudinary.config({
-  cloud_name: 'extraludic',
-  api_key: '644777884418652',
-  api_secret: 'ZFfyDuBlYl5MhddAm91fv78kMYg'
+  cloud_name: process.env.cloudinary_cloud_name,
+  api_key: process.env.cloudinary_api_key,
+  api_secret: process.env.cloudinary_api_secret
 });
 
 function isUser(member) {
@@ -185,6 +185,10 @@ module.exports = function(controller) {
         });
 
         team.uploadedImages = updated;
+        
+        var taggedImages = _.filter(team.uploadedImages, function(image) {
+          return image.location;
+        });
         
         if (team.uploadedImages.length == 18) 
           team.imagesComplete = true;          

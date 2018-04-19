@@ -1,4 +1,5 @@
-var _ = require('underscore');
+const _ = require('underscore');
+const request = require('request');
 
 var dataChannel;
 
@@ -8,18 +9,6 @@ const { WebClient } = require('@slack/client');
 const token = process.env.slackToken;
 
 const web = new WebClient(token);
-
-function findGalaxy(data, num) {
-
-  var thesePuzzles = _.pluck(data, "roomId");
-  // console.log(thesePuzzles);
-  var thisPuzzle = thesePuzzles.indexOf(num.toString());
-  console.log(thisPuzzle, data[thisPuzzle]);
-  if (thisPuzzle >= 0) 
-    return data[thisPuzzle].galaxy;
-  else return 0;
-
-};
 
 module.exports = function(controller) {
   
@@ -137,68 +126,32 @@ module.exports = function(controller) {
 
     });
   
-  // Choose a door
-  controller.on('door_enter', function(bot, message) {
-    // Store that a player approached the door
+  // Player clicks a download button
+  controller.on('download', function(params) {
+    
+    controller.storage.teams.get(params.team, function(err, team) {
+
+      var bot = controller.spawn(team.bot);
+
+      var log = {
+        bot: bot, 
+        team: params.team,
+        phase: downloadPhase(params.file), 
+        codeType: "download",
+        puzzle: params.file,
+        player: params.user
+      }
+
+      console.log(log.codeType, log.puzzle);
+
+      controller.trigger('gamelog_update', [log]);
+
+      // request.get(process.env.domain + '/download/' + event.actions[0].value);
+      
+    });
     
   });
   
-  // Attempt a door
-  controller.on('puzzle_attempt', function(bot, message, data) {
-      
-    // console.log(data);
-    // Get the team id from the message
-    var teamId = message.team.id ? message.team.id : message.team_id;
-
-    // Find the team object
-    controller.storage.teams.get(teamId, function(err,team) {
-
-      // console.log("team: " + JSON.stringify(team));
-
-      if (!team.puzzles) {
-        // Just in case
-        var options = {
-          bot: bot, 
-          message: message, 
-          forced: false
-        };
-        controller.trigger("generate", [options]);
-      }
-
-      // Find this particular puzzle from the team's generated puzzle list
-      var puzzle = _.findWhere(team.puzzles, { room: data.puzzle });
-
-      if (data.correct) puzzle.locked = false;
-
-      // Add a try to the puzzle
-      puzzle.tries++;
-
-      // Create the attempt object
-      var attempt = {
-        answer: data.answer,
-        correct: data.correct
-      };
-
-      // Create the puzzle's attempts list on the puzzle object if none exists
-      if (!puzzle.attempts) puzzle.attempts = [];
-
-      // Add this puzzle attempt to the puzzle's attempts list
-      puzzle.attempts.push(data);
-
-      // Save this team
-      controller.storage.teams.save(team, function(err, id) {
-        controller.storage.teams.get(id, function(err, team) {
-          console.log("this team is updated: ", team);
-        });
-      });
-
-      if (err) {
-        throw new Error(err);
-      }
-
-    });
-
-  });
   
   // Map event for sending team the map link
   controller.on("map_event", function(options) {
@@ -246,69 +199,36 @@ module.exports = function(controller) {
     }
     
   });
-
   
-  controller.on("generate_puzzle", function(options) {
-    var bot = options.bot;
-    var message = options.message;
-    var puzzle_message = {
-      "attachments": [
-          {
-              "text": "For this puzzle, put the colors in the right order",
-              "callback_id": "number_puzzle",
-              "color": "#3AA3E3",
-              "attachment_type": "default",
-              "actions": [
-                  {
-                      "name": "number",
-                      "text": "1",
-                      "type": "button"
-                  },
-                  {
-                      "name": "number",
-                      "text": "2",
-                      "type": "button"
-                  },
-                  {
-                      "name": "number",
-                      "text": "3",
-                      "type": "button"
-                  }
-              ]
-          }
-      ]
+  var downloadPhase = function(file) {
+    
+    console.log(file);
+    
+    var thisPhase;
+    var count = 0;
+    
+    
+    const phases = {
+      phase_1: ["Stars.png", "directions.png", "CypherWheel.png"],
+      phase_4: ["TangramZip.zip", "Guide.png"]
     }
     
-    bot.reply(message, puzzle_message, function(err, response) {
-      setInterval(function() {
-        // console.log("hit the interval");
+    _.each(phases, function(files, phase) {
+      console.log(files, phase);
+      if (files.includes(file)) {
+        console.log("the phase, ", phase);
+        thisPhase = phase;
+      }
+      count++;
 
-        _.map(response.message.attachments[0].actions, function(action) {
-          if (action.value != 'paused') {
-            var num = parseInt(action.text);
-            if (num >= 3) 
-              action.text = "1"
-            else 
-              action.text = num + 1;
-          }
-          
-          return action;
-        });
-        
-        // console.log(response.message.attachments[0].actions);
-        bot.api.chat.update({
-          channel: response.channel, 
-          ts: response.ts, 
-          attachments: response.message.attachments
-        }, function(err, updated) { });
-      }, 2000);
     });
     
-    
-    
-    
-    
-  });
-  
+    if (count == Object.keys(phases).length) {
+      console.log("we should return the phase, ", thisPhase);
+
+      return thisPhase;
+    }
+  }
+
   
 }

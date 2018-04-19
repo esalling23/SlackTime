@@ -30,6 +30,9 @@ module.exports = function(controller) {
         })[0];
                 
         if (params.codeType && params.puzzle) {
+          if (!res.gamelog[params.phase]) res.gamelog[params.phase] = [];
+          if (!res.phasesUnlocked.includes(params.phase)) res.phasesUnlocked.push(params.phase);
+          
           res.gamelog[params.phase].push({
             event: { type: params.codeType, puzzle: params.puzzle },
             unlockedBy: thisUser,

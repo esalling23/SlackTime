@@ -13,6 +13,7 @@ module.exports = function(controller) {
     
 //         // do something...
         // console.log('RCVD:', message);
+      
         if (message.file) {
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
             var messId = message.team.id ? message.team.id : message.team;

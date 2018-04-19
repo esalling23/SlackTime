@@ -23,14 +23,13 @@ module.exports = function(controller) {
         thread = "repeat";
     }
 
-    if (params.data.value == "egg_table") {
-      vars.egg = true;
+    if (["egg_table", "drawer"].includes(params.data.value)) {
       vars.user = params.user.userId;
       vars.team = params.team.id;
     }
+        
+    vars.egg = params.data.value == "egg_table";
     
-    vars.channel = true;
-
     controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
         // replace the original button message with a new one
         params.bot.replyInteractive(params.event, card);
