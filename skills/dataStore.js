@@ -13,7 +13,7 @@ module.exports = function(controller) {
       team: event.team.id ? event.team.id : event.team, 
       user: event.user,
       channel: event.channel,
-      btnId: event.callback_id,
+      btnId: "",
       type: event.actions[0].type,
       action: event.actions[0].name, 
       value: event.actions[0].value ? event.actions[0].value : event.actions[0].selected_options[0].value, 
@@ -21,10 +21,10 @@ module.exports = function(controller) {
       time: new Date()
     }
     
-    console.log(dataEvent);
+    // console.log(dataEvent);
     
     controller.storage.events.save(dataEvent, function(err, saved) {
-      console.log(err, saved, "SAVED!!");
+      // console.log(err, saved, "SAVED!!");
     });
     
   };

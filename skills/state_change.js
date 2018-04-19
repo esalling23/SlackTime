@@ -28,11 +28,13 @@ module.exports = function(controller) {
     
     var thread = 'correct';
 
-    if (options.codeType == 'buttons')
+    if (options.codeType == 'buttons' || options.codeType == "telegraph_key")
       thread += '_' + code;
     
+    console.log(thread, "is the thread");
+    
     // Has the player already entered this code?
-    if (res.codesEntered.includes(code) && options.codeType != 'bookshelf') {
+    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key'].includes(options.codeType) && code !== "orb") {
       var vars = {};
       
       if (options.codeType == 'buttons') vars.recap = thread;
@@ -45,7 +47,7 @@ module.exports = function(controller) {
       
     } else {
       
-      if (options.codeType != 'bookshelf')
+      if ('bookshelf' !== options.codeType)
         res.codesEntered.push(code);
       
       if (options.phaseUnlocked) {
@@ -95,12 +97,16 @@ module.exports = function(controller) {
             player: options.event.user
           }
           
-          if (log.codeType == "buttons")
+          if (log.codeType == "buttons" || log.codeType == "telegraph_key")
             log.puzzle = code;
           else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
             log.puzzle = log.codeType;
           
-          console.log(log.event, log.player);
+          if (log.codeType == "telegraph_key") {
+             vars.mp3 = log.puzzle; 
+          }
+          
+          console.log(log.codeType, log.puzzle);
 
           controller.trigger('gamelog_update', [log]);
 

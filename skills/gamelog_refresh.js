@@ -39,47 +39,47 @@ module.exports = function(controller) {
   
   controller.gamelogEvent = function(name, event, date) {
     
-    var message = "*" + name + "*";
+    var message = "_" + name + "_";
     
     switch (event.type) {
       case 'buttons': 
-        message += " put in a correct button code, solving the " + puzzleNames[event.puzzle] + " puzzle!\n";
+        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle";
         break;
       
       case 'bookshelf': 
-        message += " found a special line from the bookshelf! The line turned into a black hole and lead to node 5!\n";
+        message += " found a special line from the bookshelf! The line turned into a black hole and lead to node 5";
         break;
         
       case 'tamagotchi_complete': 
-        message += " satiated the " + evolveNames[event.puzzle] + ", and got a special clue as a reward.\n";
+        message += " satiated the _*" + evolveNames[event.puzzle] + "*_, and got a special clue as a reward";
         break;
         
       case 'tamagotchi_evolve': 
-        message += " fed and grew the " + hatchNames[event.puzzle] + ", and it evolved into a " + evolveNames[event.puzzle] + "!!\n";
+        message += " fed and grew the _*" + hatchNames[event.puzzle] + "*_, and it evolved into a _*" + evolveNames[event.puzzle] + "*_";
         break;
         
       case 'tamagotchi_hatch':
-        message += " hatched the " + eggNames[event.puzzle] + " egg! They now have a " + hatchNames[event.puzzle] + "!\n";
+        message += " hatched the _*" + eggNames[event.puzzle] + "*_ egg! They now have a _*" + hatchNames[event.puzzle] + "*_";
         break;
         
       case 'tamagotchi_egg': 
-        message += " picked up the " + eggNames[event.puzzle] + " egg!\n";
+        message += " picked up the _*" + eggNames[event.puzzle] + "*_ egg";
         break;
         
       case 'safe': 
-        message += " unlocked the safe in node 2, which lead to node 4!\n";
+        message += " unlocked the safe in node 2, which lead to node 4";
         break;
       
       case 'aris_door':
-        message += " unlocked the door out of node 5 and found node 6!\n";
+        message += " unlocked the door out of node 5 and found node 6";
         break;
         
       case 'keypad':
-        message += " put in the correct keypad code and made it to the final node!\n";
+        message += " put in the correct keypad code and made it to the final node";
         break;
      }
     
-    message += "Time Completed: " + date + "\n\n";
+    message += " at _" + date.toDateString() + "_\n\n";
     
     return message;
   }

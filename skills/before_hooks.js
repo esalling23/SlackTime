@@ -19,12 +19,6 @@ var aris_codes = {
   2: []
 };
 
-var tamagotchi_codes = {
-  0: [],
-  1: [], 
-  2: []
-};
-
 module.exports = function(controller) {
   
   controller.studio.before("bookshelf", function(convo, next) {
@@ -68,18 +62,6 @@ module.exports = function(controller) {
     next();
   });
   
-  controller.studio.before("tamagotchi_door", function(convo, next) {
-    var menus = convo.threads.default[0].attachments[0].actions;
-    var tamagotchi_code = process.env.tamagotchi_code.split("-");
-    
-    _.each(menus, function(menu) {
-      
-      menu.options = generateCodes(menu, menus, tamagotchi_codes, tamagotchi_code);
-      
-    });
-    
-    next();
-  });
   
   controller.studio.before("aris_door", function(convo, next) {
     var menus = convo.threads.default[0].attachments[0].actions;
@@ -134,6 +116,19 @@ module.exports = function(controller) {
       console.log(convo.threads.default[0].attachments[0]);
       if (res.uploadedImages && res.uploadedImages.length > 0)
         convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
+    });
+    
+    next();
+  });
+  
+  controller.studio.before("telegraph_key", function(convo, next) {
+    _.each(convo.threads, function(thread, v) {
+      if (v.includes("correct")) {
+        var mp3 = v.split('_')[1];
+        thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Channel_" + mp3 + ".mp3";
+      } else if (v.includes("wrong")) {
+        thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Wrong_Input.mp3";
+      }
     });
     
     next();
