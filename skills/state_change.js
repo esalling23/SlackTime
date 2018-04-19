@@ -34,7 +34,7 @@ module.exports = function(controller) {
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
-    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key'].includes(options.codeType) && code !== "orb") {
+    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key'].includes(options.codeType) && code != "orb") {
       var vars = {};
       
       if (options.codeType == 'buttons') vars.recap = thread;
@@ -46,9 +46,6 @@ module.exports = function(controller) {
       });
       
     } else {
-      
-      if ('bookshelf' !== options.codeType)
-        res.codesEntered.push(code);
       
       if (options.phaseUnlocked) {
         if (!res.phasesUnlocked) res.phasesUnlocked = ["phase_1"];
@@ -87,6 +84,19 @@ module.exports = function(controller) {
 
           console.log(thisPhase);
           console.log(thread + " is the thread we are going to in the " + options.codeType + " script");
+          
+          
+          controller.makeCard(options.bot, options.event, options.codeType, thread, vars, function(card) {
+            // console.log(card, "is the card from the state change");
+            // replace the original button message with a new one
+            options.bot.replyInteractive(options.event, card);
+
+          });
+          
+          if (res.codesEntered.includes(code)) return;
+          
+          if (!options.codeType == "bookshelf")
+            res.codesEntered.push(code);
 
           var log = {
             bot: options.bot, 
@@ -102,20 +112,10 @@ module.exports = function(controller) {
           else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
             log.puzzle = log.codeType;
           
-          if (log.codeType == "telegraph_key") {
-             vars.mp3 = log.puzzle; 
-          }
-          
           console.log(log.codeType, log.puzzle);
 
           controller.trigger('gamelog_update', [log]);
 
-          controller.makeCard(options.bot, options.event, options.codeType, thread, vars, function(card) {
-            // console.log(card, "is the card from the state change");
-            // replace the original button message with a new one
-            options.bot.replyInteractive(options.event, card);
-
-          });
         });
         
 

@@ -44,6 +44,7 @@ module.exports = function(controller) {
       teamData.codesEntered = [];
       teamData.users = [];
       teamData.uploadedImages = [];
+      teamData.albumImages = undefined;
       teamData.imagesComplete = false;
       teamData.image_channel_id = "";
       teamData.image_feedback = "";

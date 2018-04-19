@@ -85,7 +85,7 @@ module.exports = function(controller) {
         break;
         
       case 'telegraph_key': 
-        message += " heard the phonograph play something related to channel " + event.puzzle;
+        message += " heard a phonograph message about Channel " + event.puzzle;
         break;
       
       case 'aris_door':

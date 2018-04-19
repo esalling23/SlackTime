@@ -110,26 +110,50 @@ module.exports = function(controller) {
   controller.studio.before("pictures", function(convo, next) {
   
     var team = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
+    var altered = {
+      bpl: "http://res.cloudinary.com/extraludic/image/upload/v1524175357/escape-room/Glendale_Atentiam_Petersburg.jpg", 
+      aquarium: "http://res.cloudinary.com/extraludic/image/upload/v1524175360/escape-room/Leadership_Campaign_September.jpg", 
+      mit: "http://res.cloudinary.com/extraludic/image/upload/v1524175353/escape-room/Birth_Muses_Artwork.jpg.jpg"
+    }
 
     controller.storage.teams.get(team, function(err, res) {
       console.log(res.uploadedImages[0]);
       console.log(convo.threads.default[0].attachments[0]);
-      if (res.uploadedImages && res.uploadedImages.length > 0)
+      if (res.uploadedImages && res.uploadedImages.length > 0) {
         convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
+        
+        if (!res.albumImages) {
+          res.albumImages = _.groupBy(_.filter(res.uploadedImages, function(i) { 
+            return i.location != undefined 
+          }), "location");
+
+          res.albumImages.bpl.push({ url: altered.bpl });
+          res.albumImages.mit.push({ url: altered.mit });
+          res.albumImages.aquarium.push({ url: altered.aquarium });
+          
+          res.uploadedImages = _.flatten(_.values(res.albumImages));
+        }
+        
+        controller.storage.teams.save(res, function(err, saved) {
+          console.log(saved.uploadedImages);
+          next();
+        });
+
+      } else 
+        next();
     });
     
-    next();
   });
   
   controller.studio.before("telegraph_key", function(convo, next) {
-    _.each(convo.threads, function(thread, v) {
-      if (v.includes("correct")) {
-        var mp3 = v.split('_')[1];
-        thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Channel_" + mp3 + ".mp3";
-      } else if (v.includes("wrong")) {
-        thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Wrong_Input.mp3";
-      }
-    });
+    // _.each(convo.threads, function(thread, v) {
+    //   if (v.includes("correct")) {
+    //     var mp3 = v.split('_')[1];
+    //     thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Channel_" + mp3 + ".mp3";
+    //   } else if (v.includes("wrong")) {
+    //     thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Wrong_Input.mp3";
+    //   }
+    // });
     
     next();
   });

@@ -35,6 +35,8 @@ module.exports = function(controller) {
          team.events = [];
          team.codesEntered = [];
          team.uploadedImages = [];
+         
+         team.albumImages = undefined;
          team.imagesComplete = false;
          team.image_channel_id = "";
          team.image_feedback = undefined;
