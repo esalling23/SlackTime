@@ -57,7 +57,7 @@ module.exports = function(controller) {
 
             var web = new WebClient(token);
             
-            if (team.image_feedback != "") 
+            if (team.image_feedback) 
               deleteThisMsg(team.image_feedback, team.oauth_token, function() {});
 
             setTimeout(function() {
