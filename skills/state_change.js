@@ -93,28 +93,32 @@ module.exports = function(controller) {
 
           });
           
-          if (res.codesEntered.includes(code)) return;
+          if (updated.codesEntered.includes(code)) return;
           
-          if (!options.codeType == "bookshelf")
-            res.codesEntered.push(code);
+          if (options.codeType != "bookshelf")
+            updated.codesEntered.push(code);
+          
+          controller.storage.teams.save(updated).then((saved) => {
 
-          var log = {
-            bot: options.bot, 
-            team: options.event.team.id ? options.event.team.id : options.event.team,
-            phase: thisPhase, 
-            event: options.event,
-            codeType: options.codeType,
-            player: options.event.user
-          }
-          
-          if (log.codeType == "buttons" || log.codeType == "telegraph_key")
-            log.puzzle = code;
-          else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
-            log.puzzle = log.codeType;
-          
-          console.log(log.codeType, log.puzzle);
+            var log = {
+              bot: options.bot, 
+              team: options.event.team.id ? options.event.team.id : options.event.team,
+              phase: thisPhase, 
+              event: options.event,
+              codeType: options.codeType,
+              player: options.event.user
+            }
 
-          controller.trigger('gamelog_update', [log]);
+            if (log.codeType == "buttons" || log.codeType == "telegraph_key")
+              log.puzzle = code;
+            else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
+              log.puzzle = log.codeType;
+
+            console.log(log.codeType, log.puzzle);
+
+            controller.trigger('gamelog_update', [log]);
+          
+          });
 
         });
         
