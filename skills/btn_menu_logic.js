@@ -23,7 +23,8 @@ module.exports = function(controller) {
         thread = "repeat";
     }
     
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) vars.download = true;
+    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) 
+      vars.download = true;
 
     if (params.data.value == "egg_table" || vars.download) {
       vars.user = params.user.userId;

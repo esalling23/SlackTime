@@ -5,12 +5,10 @@ module.exports = function(controller) {
   
   controller.on('gamelog_update', function(params) {
     
-    console.log(params, "LETS UPDATE THE GAME LOG");
+    // console.log(params, "LETS UPDATE THE GAME LOG");
     // WHAT KIND OF UPDATE
     var bot = params.bot;
     var teamId = params.team;
-    var userId = params.player ? params.player : params.event.user;
-    console.log(userId);
     
     if (teamId.id) teamId = teamId.id
     
@@ -20,9 +18,7 @@ module.exports = function(controller) {
         bot = controller.spawn(res.bot);
       
       var web = new WebClient(res.oauth_token);
-      
-      var thisUser = _.findWhere(res.users, { userId: userId });
-      
+            
       web.groups.history(res.gamelog_channel_id).then(group => {
         
         var gamelogMsg = _.filter(group.messages, function(msg) {
@@ -33,6 +29,11 @@ module.exports = function(controller) {
           if (!res.gamelog[params.phase]) res.gamelog[params.phase] = [];
           if (!res.phasesUnlocked.includes(params.phase)) res.phasesUnlocked.push(params.phase);
           
+          var userId = params.player ? params.player : params.event.user;
+          var thisUser = _.findWhere(res.users, { userId: userId });
+
+          console.log(userId);
+          
           res.gamelog[params.phase].push({
             event: { type: params.codeType, puzzle: params.puzzle },
             unlockedBy: thisUser,
@@ -42,7 +43,7 @@ module.exports = function(controller) {
         
         if (!gamelogMsg) {
           controller.storage.teams.save(res, function(err, saved) {
-             controller.gamelogMessage(bot, { user: thisUser.userId, channel: saved.gamelog_channel_id }, saved);
+             controller.gamelogMessage(bot, saved);
           });
         } else {
           bot.api.chat.delete({
@@ -51,7 +52,7 @@ module.exports = function(controller) {
           }, function(err, deleted) {
 
             controller.storage.teams.save(res, function(err, saved) {
-               controller.gamelogMessage(bot, { user: thisUser.userId, channel: saved.gamelog_channel_id }, saved);
+               controller.gamelogMessage(bot, saved);
             });
           });
         }

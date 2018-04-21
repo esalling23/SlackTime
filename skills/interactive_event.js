@@ -368,6 +368,38 @@ module.exports = function(controller) {
       
     }
     
+    if (event.actions[0].name.match(/^guide/)) {
+
+      var reply = event.original_message;
+      var type = event.actions[0].value;
+      var url = reply.attachments[0].image_url;
+      
+      var pos = parseInt(reply.attachments[0].image_url.split("Guide-")[1].replace(".pdf", ""));
+      var url = "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/Guide-";
+
+      if (type == "next") {
+        pos++;
+        if (pos > 3)
+          pos = 1;
+      } else if (type == "prev") {
+        pos--;
+        if (pos <= 0)
+          pos = 3;
+      }
+
+      reply.attachments[0].image_url = url + pos + ".png";
+
+      reply.attachments[0].actions[0].text = "<";
+      reply.attachments[0].actions[2].text = ">";
+
+      bot.api.chat.update({
+        channel: event.channel, 
+        ts: reply.ts, 
+        attachments: reply.attachments
+      }, function(err, updated) { console.log(err, updated)});
+
+    }
+    
     if (event.actions[0].name.match(/^download/)) {
       
       controller.trigger("download", [bot, event]);
