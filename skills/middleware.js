@@ -49,7 +49,7 @@ module.exports = function(controller) {
     controller.middleware.send.use(function(bot, message, next) {
     
         // do something...
-        // console.log('SEND:', message);
+        console.log('SEND:', message);
       
         if (message.type == "feedback") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
@@ -81,7 +81,9 @@ module.exports = function(controller) {
               });
             }, 1000);
           });
-        } else if (message.type == "already_complete") {
+        } 
+      
+      if (message.type == "already_complete") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
             var token = team.oauth_token;
 
@@ -103,6 +105,34 @@ module.exports = function(controller) {
             
           });
         }
+      
+      if (message.movement) {
+        
+        controller.storage.teams.get(bot.config.id, function(err, team) {
+          console.log("this team's movements: ", team.movements);
+          if (!team.movements) team.movements = [];
+          
+          if (team.movements.includes(message.movement)) return;
+            
+          team.movements.push(message.movement);
+          
+          controller.storage.teams.save(team, function(err, saved) {
+          
+            var phase = message.movement <= 3 ? 1 : message.movment - 2;
+
+            var log = {
+              bot: bot, 
+              team: bot.config.id,
+              phase: "phase_" + phase, 
+            }
+
+            controller.trigger('gamelog_update', [log]);
+            console.log("saved the movement to node ", message.movement);
+            console.log(saved.movements);
+          });
+        });
+        
+      }
       
         next();
     

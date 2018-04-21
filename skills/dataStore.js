@@ -13,7 +13,6 @@ module.exports = function(controller) {
       team: event.team.id ? event.team.id : event.team, 
       user: event.user,
       channel: event.channel,
-      btnId: "",
       type: event.actions[0].type,
       action: event.actions[0].name, 
       value: event.actions[0].value ? event.actions[0].value : event.actions[0].selected_options[0].value, 

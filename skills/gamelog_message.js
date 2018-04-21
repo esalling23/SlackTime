@@ -2,13 +2,15 @@ const _ = require("underscore");
 
 module.exports = function(controller) {
    
-  controller.gamelogMessage = function(bot, context, team) {
+  controller.gamelogMessage = function(bot, team) {
+    
+    var user = bot.config.createdBy;
     
     var unlockedStages = _.map(team.phasesUnlocked, function(stage) { 
       return parseInt(stage.split("_")[1]);
     });
         
-    controller.studio.get(bot, "gamelog", context.user, context.channel).then(function(convo) {
+    controller.studio.get(bot, "gamelog", user, team.gamelog_channel_id).then(function(convo) {
         // console.log(convo);        
       convo.changeTopic("default");
 
@@ -21,10 +23,24 @@ module.exports = function(controller) {
           // do stuff to the text?
           att.text = controller.gamelogRefresh(id, team);
           console.log(att);
+          return att;
 
+        } else if (id == 0) {
+          var url = "http://res.cloudinary.com/extraludic/image/upload/v1/node-maps/nodemap_";
+          
+          var nodestep = team.movements.length == 0 ? 0 : _.max(team.movements, function(node){ return node; });
+          
+          url += nodestep;
+          
+          if (nodestep > 0)
+            url += ".1.png";
+          else 
+            url += ".png";
+          
+          att.image_url = url;
           return att;
-        } else if (id == 0) 
-          return att;
+        }
+        
         
       });
       

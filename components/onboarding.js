@@ -41,6 +41,7 @@ module.exports = function(controller) {
          team.image_channel_id = "";
          team.image_feedback = undefined;
          team.phasesUnlocked = ["phase_1"];
+         team.movements = [0];
          
          team.noChatChannels = [];
          

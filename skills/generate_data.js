@@ -40,7 +40,8 @@ module.exports = function(controller) {
       if (teamData.puzzles) delete teamData.puzzles;
 
       teamData.currentState = 'default';
-      teamData.events = [];
+      teamData.events = [];      
+      teamData.movements = [0];
       teamData.codesEntered = [];
       teamData.users = [];
       teamData.uploadedImages = [];
@@ -49,6 +50,7 @@ module.exports = function(controller) {
       teamData.image_channel_id = "";
       teamData.image_feedback = "";
       teamData.phasesUnlocked = ["phase_1"];
+      
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       
@@ -82,24 +84,46 @@ module.exports = function(controller) {
             if (err) {
               console.log("There was an error: ", err);
             }
-            
-            var message = { user: teamData.bot.createdBy, channel: teamData.gamelog_channel_id };
-  
-            controller.trigger('gamelog_update', [{bot: options.bot, event: message, team: teamSaved}]);
+              
+            controller.trigger('gamelog_update', [{bot: options.bot, team: teamSaved}]);
               
 
-            // Check the team to make sure it was updated
-            // Team should have a puzzles object now attached
-            controller.storage.teams.get(teamSaved.id, function(err, teamUpdated) {
-              console.log("updated: ", teamUpdated);
+            setTimeout(function() {
+              // Check the team to make sure it was updated
+              // Team should have a puzzles object now attached
+              controller.storage.teams.get(teamSaved.id, function(err, teamUpdated) {
+                console.log("updated: ", teamUpdated);
 
-              if (options.forced) {
-                options.bot.reply(options.message, {
-                  'text': "Nice, you have updated your team's puzzles with completely fresh data!"
+                if (options.forced) {
+                  options.bot.reply(options.message, {
+                    'text': "Nice, you have updated your team's puzzles with completely fresh data!"
+                  });
+                }
+
+                _.each(teamUpdated.users, function(user) {
+
+                  setTimeout(function() {
+                    options.bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
+                      console.log(err, direct_message);
+                      console.log(direct_message, "opened the onboarding message");
+
+                      if (err) {
+                        console.log('Error sending onboarding message:', err);
+                      } else {
+                        // console.log(user.id);
+                        controller.studio.runTrigger(options.bot, 'welcome', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
+                          console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
+                        });
+
+                      }
+
+                    });
+                  }, 1000 * teamUpdated.users.indexOf(user) + 1);
+
                 });
-              }
 
-            });
+              });
+            }, 1000);
 
           });
           
