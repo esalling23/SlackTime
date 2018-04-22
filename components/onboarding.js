@@ -85,7 +85,7 @@ module.exports = function(controller) {
          team.oauth_token = auth.access_token;
          
          // console.log(saved, " we onboarded this team");              
-          web.groups.create("game_log").then((channel, err) => {
+          web.groups.create(process.env.progress_channel).then((channel, err) => {
 
             var channelId = channel.group.id;
             

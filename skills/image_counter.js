@@ -36,7 +36,7 @@ module.exports = function(controller) {
       
       // console.log(_.pluck(team.users, 'userId'), message.user);
       
-      web.groups.create("priva_image_counter").then((response) => {
+      web.groups.create(process.env.image_counter_channel).then((response) => {
         console.log(response);
         var channel = response.group;
         var channelId = channel.id;
