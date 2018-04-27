@@ -33,9 +33,9 @@ module.exports = function(controller) {
           } else {
             greyCount++;
           }
-            // console.Log("RedCount:" + redCount);
-            // console.Log(greenCount);
-            // console.Log(greyCount);
+             console.log("RedCount:" + redCount);
+             console.log(greenCount);
+             console.log(greyCount);
         });
       });
       
@@ -46,10 +46,19 @@ module.exports = function(controller) {
               var thisIM = _.findWhere(list.ims, { user: user.userId });
               var channel = thisIM.id;
               var context = { user: user.userId, channel: channel };
-              
-              controller.makeCard(bot, context, 'input_nodes_1', 'default', {}, function(card) {
-                bot.replyInteractive(event, card);
-              });
+              bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
+                    console.log(err, direct_message);
+                    console.log(direct_message, "opened the onboarding message");
+
+                    if (err) {
+                      console.log('Error sending onboarding message:', err);
+                    } else {
+                      // console.log(user.id);
+                      controller.studio.runTrigger(bot, 'input_nodes_1', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
+                      });
+
+                    }
+                });
             }).catch(err => console.log(err));
          });
       }      

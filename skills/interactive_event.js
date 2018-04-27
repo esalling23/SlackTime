@@ -302,7 +302,7 @@ module.exports = function(controller) {
             controller.storage.teams.save(team, function(err, saved) {
               
               console.log(saved.users, " we saved these users");
-               controller.trigger("count_colors", [bot, event, saved]);
+              controller.trigger("count_colors", [bot, event, saved]);
             });
 
           });
