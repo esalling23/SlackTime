@@ -37,6 +37,13 @@ module.exports = function(controller) {
                   web.groups.invite(channel, message.user.id)
                   .then(res => {
                     console.log(res);
+                    var image = _.findWhere(list.groups, { name: process.env.image_counter_channel });
+                    if (image) {
+                       web.groups.invite(image.id, message.user.id)
+                      .then(res => {
+                        console.log(res);
+                      }).catch((err) => { console.log(err) });
+                    }
                   }).catch((err) => { console.log(err) });
 
                 }).catch(err => console.log(err));
