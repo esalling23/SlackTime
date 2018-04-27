@@ -11,7 +11,7 @@ module.exports = function(controller) {
   
   var deleteThisMsg = function(message, token, callback) {
     
-    console.log(message, "we are deleting this");
+    // console.log(message, "we are deleting this");
     
     var ts = message.message_ts ? message.message_ts : message.ts;
     
@@ -49,7 +49,7 @@ module.exports = function(controller) {
     controller.middleware.send.use(function(bot, message, next) {
     
         // do something...
-        console.log('SEND:', message);
+        // console.log('SEND:', message);
       
         if (message.type == "feedback") {
           controller.storage.teams.get(bot.config.id, function(err, team) {

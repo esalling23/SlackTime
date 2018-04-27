@@ -16,6 +16,7 @@ module.exports = function(controller) {
              if (attachments.length > 0) {
                var content = {
                  script: script.name, 
+                 node: findNode(script),
                  thread: v, 
                  attachments: []
                }
@@ -29,28 +30,58 @@ module.exports = function(controller) {
                  }
                });
                json.push(content);
+               // console.log(content);
              }
              num ++;
            });
+           // console.log(num, Object.keys(convo.threads).length);
            if (num == Object.keys(convo.threads).length) 
              count ++;
            
-           if (count == list.length) {
-             json = JSON.stringify(json, null, 4);
-              fs.writeFile("test.json", json, function(err) {
-                  if(err) {
-                      return console.log(err);
-                  }
-
-                  console.log("The file was saved!");
-              }); 
-            }
            
          });
         
       });
 
       
+     // console.log(count, list.length);
+     setTimeout(function() {
+                    // console.log(json);
+        json = _.sortBy(json, "node");
+              json = JSON.stringify(json, null, 4);
+
+       fs.writeFile("tester.json", json, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+
+            console.log("The file was saved!");
+       }); 
+     }, 5000)
+      
     });
   });
+}
+
+var findNode = function(script) {
+  
+  var phase = _.filter(script.tags, function(tag) {
+    return tag.includes('phase');
+  })[0];
+  
+  var node = parseInt(phase.split("_")[1]);
+  
+  if (node > 1) {
+    node = node + 2;
+  } else {
+    if (script.name.includes("nodes"))
+      node = parseInt(script.name.split("_")[2]);
+    else if (script.name == "safe")
+      node = 2;
+    else 
+      node = 3;
+  }
+  
+  return node;
+  
 }
