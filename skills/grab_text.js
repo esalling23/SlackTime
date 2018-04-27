@@ -12,20 +12,24 @@ module.exports = function(controller) {
         var num = 0;
          controller.studio.get(bot, script.name, message.user, message.channel).then(function(convo) {
            _.each(convo.threads, function(thread, v) {
-             var attachments = thread[0].attachments
-             var content = {
-               script: script.name, 
-               thread: v, 
-               attachments: []
-             }
-             _.each(attachments, function(att) {
-               content.attachments.push({
-                 num: attachments.indexOf(att), 
-                 title: att.title, 
-                 text: att.text
+             var attachments = thread[0].attachments;
+             if (attachments.length > 0) {
+               var content = {
+                 script: script.name, 
+                 thread: v, 
+                 attachments: []
+               }
+               _.each(attachments, function(att) {
+                 if (att.text != "") {
+                   content.attachments.push({
+                     num: attachments.indexOf(att), 
+                     title: att.title, 
+                     text: att.text
+                   });
+                 }
                });
-             });
-             json.push(content);
+               json.push(content);
+             }
              num ++;
            });
            if (num == Object.keys(convo.threads).length) 

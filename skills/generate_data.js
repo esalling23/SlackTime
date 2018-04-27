@@ -61,17 +61,9 @@ module.exports = function(controller) {
         teamData.gamelog[phase] = [];
       }
       
-      // controller.
-
-      // teamData.gamelogChannel
       // add users array
       var web = new WebClient(teamData.oauth_token);
       
-//       web.groups.history(res.gamelog_channel_id).then(group => {
-        
-//         var gamelogMsg = _.filter(group.messages, function(msg) {
-//           return !msg.subtype;
-//         })[0];
       
         web.users.list().then(res => {
           _.each(res.members, function(user) {
