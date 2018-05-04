@@ -20,6 +20,7 @@ module.exports = function(controller) {
 
       team.prisoner_players = team.users;
       team.prisoners_dilemma = [];
+      team.prisoners_messages = [];
 
       team.prisonerSuccess = 0;
       team.prisonerDecisions = 0;
@@ -30,9 +31,9 @@ module.exports = function(controller) {
 
       controller.storage.teams.save(team, function(err, saved) {
         
-        controller.addTime(saved.id);
-
-        controller.prisoners_message(bot, saved, "default");
+        console.log(err, saved);
+        
+        controller.addTime(bot, saved.id);
 
       });
         

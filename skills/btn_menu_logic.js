@@ -23,6 +23,7 @@ module.exports = function(controller) {
         thread = "repeat";
     }
     
+    
     if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) 
       vars.download = true;
 

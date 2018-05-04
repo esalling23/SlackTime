@@ -338,10 +338,10 @@ module.exports = function(controller) {
       console.log(reply.attachments[0].image_url);
       
       controller.storage.teams.get(event.team.id, function(err, team) {
-        var album = _.filter(team.uploadedImages, function(img) { return img.location });
+        var album = _.filter(team.uploadedImages, function(img) { return img.location != undefined });
         var nxt = 1;
         if (event.actions[0].name.includes("album")) {
-          album = team.albumImages;
+          album = _.flatten(_.values(team.albumImages));
           nxt = 2;
         }
                 
@@ -418,7 +418,32 @@ module.exports = function(controller) {
     
     if (event.actions[0].name.match(/^prisoner/)) {
       
-      controller.trigger("prisoners_onboard", [bot, event]);
+      if (process.env.glitch_domain == "escape-room-dev") {
+        controller.storage.teams.get(event.team.id, function(err, team) {
+
+          if (!team.prisoners_dilemma || team.prisoners_dilemma.length <= 0)
+            controller.trigger("prisoners_onboard", [bot, event]);
+
+        });
+      } else {
+         controller.storage.teams.get(event.team.id).then((res) => {
+                              
+          controller.studio.get(bot, "exit", event.user, event.channel).then((currentScript) => {
+            var opt = {
+              bot: bot, 
+              event: event, 
+              team: res, 
+              user: _.findWhere(res.users, { userId: event.user }), 
+              data: event.actions[0], 
+              script: currentScript
+            }
+            
+            controller.confirmMovement(opt);
+            
+          });
+
+        });
+      }
       
     }
     

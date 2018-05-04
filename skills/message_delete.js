@@ -16,26 +16,34 @@ module.exports = function(controller) {
       console.log(res, "deleted");
       if (callback)
         callback();
-    }).catch(err => console.log(err));
+    }).catch(err => {
+      console.log("delete error: ", err); 
+      console.log("couldn't delete: ", message);
+      callback();
+    });
   }
   
-  controller.historyDelete = function(token, channel, cb) {
+  controller.deleteHistory = function(channel, token, who, cb) {
     
     var count = 0;
+    var num = 0;
     var web = new WebClient(token);
     
     web.conversations.history(channel).then(res => {
       _.each(res.messages, function(msg) {
-        controller.deleteThisMsg(msg, token, function() {
-          
-          count++;
+        msg.channel = channel;
+        setTimeout(function() {
+          controller.deleteThisMsg(msg, token, function() {
 
-        });
+            count++;
+
+            if (count == res.messages.length) 
+              cb();
+          });
+        }, 500 * res.messages.indexOf(msg) + 1);
+          
       });
-      if (count == res.messages.length) {
-        cb();
-      }
-    }).catch(err => console.log(err));
+    }).catch(err => console.log("history error: ", err));
 
     
   }

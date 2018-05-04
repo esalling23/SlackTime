@@ -2,13 +2,14 @@ const _ = require("underscore");
 
 module.exports = function(controller) {
   
-  controller.addTime = function(id) {
+  controller.addTime = function(bot, id) {
     
     controller.storage.teams.get(id, function(err, team) {
       
       if (!team.prisoners_dilemma) team.prisoners_dilemma = [];
       
       team.decisionCount = 0;
+      team.prisonerSuccess = 0;
 
       var start = new Date();
 
@@ -37,7 +38,10 @@ module.exports = function(controller) {
       
       controller.storage.teams.save(team, function(err, saved) {
         
-        console.log("time is started!");
+        console.log("time is started!", saved.prisoners_dilemma);
+                
+        controller.prisoners_message(bot, saved.id, "default");
+
 
       });
     });
@@ -58,7 +62,7 @@ module.exports = function(controller) {
             if (end == now && !obj.complete) {
               // trigger event for this team
               var bot = controller.spawn(team.bot);
-              controller.trigger('prisoners_check', [bot, team, obj]);
+              controller.trigger('prisoners_check', [bot, team.id, obj]);
             }
             
           }); 
