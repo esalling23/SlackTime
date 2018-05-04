@@ -21,9 +21,10 @@ module.exports = function(controller) {
             
       web.groups.history(res.gamelog_channel_id).then(group => {
         
-        var gamelogMsg = _.filter(group.messages, function(msg) {
-          return !msg.subtype;
-        })[0];
+        if (group.messages.length > 1) {
+          controller.deleteHistory(res.gamelog_channel_id, res.oauth_token);
+        }
+        var gamelogMsg = group.messages[0];
                 
         if (params.codeType && params.puzzle) {
           if (!res.gamelog[params.phase]) res.gamelog[params.phase] = [];
@@ -39,6 +40,7 @@ module.exports = function(controller) {
             unlockedBy: thisUser,
             date: new Date()
           });
+          
         }
         
         if (!gamelogMsg) {

@@ -37,7 +37,7 @@ module.exports = function(controller) {
 
             count++;
 
-            if (count == res.messages.length) 
+            if (count == res.messages.length && cb) 
               cb();
           });
         }, 500 * res.messages.indexOf(msg) + 1);
