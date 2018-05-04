@@ -56,9 +56,11 @@ module.exports = function(controller) {
       web.conversations.history(message.channel).then(res => {
         _.each(res.messages, function(ms) {
           var web = new WebClient(team.oauth_token);
-          web.chat.delete(ms.ts, message.channel).then(res => {
-            console.log(res);
-          }).catch(err => console.log(err));
+          setTimeout(function() {
+            web.chat.delete(ms.ts, message.channel).then(res => {
+              console.log(res);
+            }).catch(err => console.log(err));
+          }, 500 * res.messages.indexOf(ms));
         });
       }).catch(err => console.log(err));
                                                       

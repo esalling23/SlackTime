@@ -11,6 +11,7 @@ cloudinary.config({
   api_secret: process.env.cloudinary_api_secret
 });
 
+
 module.exports = function(controller) {
  
   controller.imageRemove = function(bot, message, channel, team) {

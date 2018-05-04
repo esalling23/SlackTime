@@ -43,6 +43,16 @@ module.exports = function(controller) {
       teamData.image_feedback = "";
       teamData.phasesUnlocked = ["phase_1"];
       
+      teamData.prisoner_players = team.users;
+      teamData.prisoners_dilemma = [];
+      teamData.prisoners_messages = [];
+
+      teamData.prisonerSuccess = 0;
+      teamData.prisonerDecisions = 0;
+      
+      teamData.sharingUsers = [];
+      teamData.stealingUsers = [];
+      teamData.blockingUsers = [];
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       
@@ -58,62 +68,63 @@ module.exports = function(controller) {
       
         web.users.list().then(res => {
           _.each(res.members, function(user) {
-            if (controller.isUser(user, false))
+            if (controller.isUser(user, false)) 
               teamData.users.push({ userId: user.id, name: user.name });
           });
 
           // Set the team puzzles to the generated puzzles array
-          controller.storage.teams.save(teamData, function(err, teamSaved) {
-            if (err) {
-              console.log("There was an error: ", err);
-            }
-              
-            controller.trigger('gamelog_update', [{bot: options.bot, team: teamSaved}]);
-              
+          if (err) {
+            console.log("There was an error: ", err);
+          }
 
-            setTimeout(function() {
-              // Check the team to make sure it was updated
-              // Team should have a puzzles object now attached
-              controller.storage.teams.get(teamSaved.id, function(err, teamUpdated) {
-                console.log("updated: ", teamUpdated);
 
-                if (options.forced) {
-                  options.bot.reply(options.message, {
-                    'text': "Nice, you have updated your team's puzzles with completely fresh data!"
-                  });
-                }
+          setTimeout(function() {
+            // Check the team to make sure it was updated
+            // Team should have a puzzles object now attached
 
-                _.each(teamUpdated.users, function(user) {
+              if (options.forced) {
+                options.bot.reply(options.message, {
+                  'text': "Nice, you have updated your team's puzzles with completely fresh data!"
+                });
+              }
+            
+             _.each(teamData.users, function(user) {
 
-                  setTimeout(function() {
-                    options.bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
-                      console.log(err, direct_message);
-                      console.log(direct_message, "opened the onboarding message");
-
-                      if (err) {
-                        console.log('Error sending onboarding message:', err);
-                      } else {
-                        // console.log(user.id);
-                        controller.studio.runTrigger(options.bot, 'welcome', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
-                          console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
-                        });
-
-                      }
-
+                options.bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
+                  console.log(err, direct_message);
+                  console.log(direct_message, "opened the onboarding message");
+                  user.bot_chat = direct_message.channel.id;
+                                    
+                  if (err) {
+                    console.log('Error sending onboarding message:', err);
+                  } else {
+                    // console.log(user.id);
+                    controller.studio.runTrigger(options.bot, 'welcome', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
+                      console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
                     });
-                  }, 1000 * teamUpdated.users.indexOf(user) + 1);
+
+                  }
 
                 });
 
               });
-            }, 1000);
+            
+              setTimeout(function() {
 
-          });
-          
-        // });
+                controller.storage.teams.save(teamData, function(err, saved) {
+
+                  controller.trigger('gamelog_update', [{bot: options.bot, team: saved}]);
+
+                  console.log(err, saved);
+
+                });
+              }, 2000 * teamData.users.length + 1);
+              
+
+
+          }, 1000);
 
       });
-
     }); // End team get
   }); // End on event
 }

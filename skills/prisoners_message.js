@@ -30,38 +30,42 @@ module.exports = function(controller) {
     });
   }
   
-  controller.prisoners_message = function(bot, team, thread) {
-    var web = new WebClient(team.bot.token);    
+  controller.prisoners_message = function(bot, id, thread) {
       
-    _.each(team.prisoner_players, function(user) {
+    controller.storage.teams.get(id, function(err, team) {
+         
+      var web = new WebClient(bot.config.bot.token);    
 
-      web.conversations.history(user.bot_chat).then(function(ims) {
-        console.log(ims);
-        console.log(ims.messages);
-        var message = ims.messages[0];
+      _.each(team.prisoner_players, function(user) {
 
-        if (!message)
-          return;
+        web.conversations.history(user.bot_chat).then(function(ims) {
+          console.log(ims);
+          console.log(ims.messages);
+          var message = ims.messages[0];
 
-        message.channel = user.bot_chat;
+          if (!message)
+            return;
 
-        controller.makeCard(bot, message, "prisoners_dilemma", thread, {}, function(card) {
+          message.channel = user.bot_chat;
 
-          bot.api.chat.update({
-            channel: message.channel, 
-            ts: message.ts, 
-            attachments: card.attachments
-          }, function(err, updated) {
+          controller.makeCard(bot, message, "prisoners_dilemma", thread, {}, function(card) {
 
-            controller.store_prisoners_msg(updated, user, team);
+            bot.api.chat.update({
+              channel: message.channel, 
+              ts: message.ts, 
+              attachments: card.attachments
+            }, function(err, updated) {
+
+              controller.store_prisoners_msg(updated, user, team);
+
+            });
 
           });
 
-        });
+        }).catch(err => console.log("conversation history error: ", err));
 
-      }).catch(err => console.log("conversation history error: ", err));
+      });
 
     });
-
   }
 }

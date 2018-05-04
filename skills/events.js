@@ -55,9 +55,11 @@ module.exports = function(controller) {
               console.log(ims.messages);
               var btn_message;
               _.map(ims.messages, function(msg) {
-                if (msg.attachments.length > 0) {
-                  if (msg.attachments[0].callback_id == "three_color_buttons") {
-                    btn_message = msg;
+                if (msg.attachments){
+                  if (msg.attachments.length > 0) {
+                    if (msg.attachments[0].callback_id == "three_color_buttons") {
+                      btn_message = msg;
+                    }
                   }
                 }
               });
@@ -244,7 +246,7 @@ module.exports = function(controller) {
     
     const phases = {
       phase_1: ["Stars.png", "directions.png", "CypherWheel.png"],
-      phase_4: ["TangramZip.zip", "Guide.png"]
+      phase_4: ["tangramsZipped.zip", "Guide.png"]
     }
     
     _.each(phases, function(files, phase) {

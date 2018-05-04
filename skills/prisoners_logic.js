@@ -32,7 +32,7 @@ module.exports = function(controller) {
             attachments: card.attachments
           }, function(err, updated) {
             
-            var user = _.findWhere(team.prisoner_players, { userId: event.user });
+            var user = _.findWhere(saved.prisoner_players, { userId: event.user });
             controller.store_prisoners_msg(updated, user, saved);
             
           });
@@ -42,7 +42,7 @@ module.exports = function(controller) {
             var message = event.original_message;
             message.channel = event.channel;
             setTimeout(function() {
-              controller.trigger("prisoners_check", [bot, saved, obj]);
+              controller.trigger("prisoners_check", [bot, saved.id, obj, event]);
             }, 1000);
           }
           
@@ -51,81 +51,89 @@ module.exports = function(controller) {
       
     });
     
-    controller.on("prisoners_check", function(bot, team, timeObj, event) {
+    controller.on("prisoners_check", function(bot, id, timeObj, event) {
       
-      var web = new WebClient(team.oauth_token);
-      var usersToKick = [];
-      var thread;
-      
-      if((team.blockingUsers.length > 0 && team.stealingUsers.length > 0) || team.stealingUsers.length == team.users.length) {
-        thread = "steal_kick";
-        usersToKick.concat(team.stealingUsers);
-      } 
+      controller.storage.teams.get(id, function(err, team) {
+        var web = new WebClient(team.oauth_token);
+        var usersToKick = [];
+        var thread;
 
-      if(team.blockingUsers.length > 0 && team.stealingUsers.length <= 0) {
-        thread = "block_kick";
-        usersToKick.concat(team.blockingUsers);
-      }
+        if((team.blockingUsers.length > 0 && team.stealingUsers.length > 0) || team.stealingUsers.length == team.users.length) {
+          thread = "steal_kick";
+          usersToKick.concat(team.stealingUsers);
+        } 
 
-      if(team.blockingUsers.length <= 0 && team.stealingUsers.length > 0) {
-        thread = "share_kick";
-        usersToKick.concat(team.sharingUsers);
-      }
+        if(team.blockingUsers.length > 0 && team.stealingUsers.length <= 0) {
+          thread = "block_kick";
+          usersToKick.concat(team.blockingUsers);
+        }
 
-      team.prisoner_players = _.filter(team.prisoner_players, function(player) {
-        return !usersToKick.includes(player.userId);
-      });
+        if(team.blockingUsers.length <= 0 && team.stealingUsers.length > 0) {
+          thread = "share_kick";
+          usersToKick.concat(team.sharingUsers);
+        }
 
-      if(team.blockingUsers.length <= 0 && team.stealingUsers.length <= 0) {
-        team.prisonerSuccess++;
-        if (team.prisonerSuccess == 0) 
-          thread = "default";
-        else 
-          thread = "success_" + team.prisonerSuccess;
-      }
 
-      if (team.successCount == 2)
-        team.prisonerSuccess = 0;
+        if(team.blockingUsers.length <= 0 && team.stealingUsers.length <= 0) {
+          team.prisonerSuccess++;
+          if (team.prisonerSuccess == 0) 
+            thread = "default";
+          else 
+            thread = "success_" + team.prisonerSuccess;
+        }
 
-      team.prisonerDecisions = 0;
-      team.sharingUsers = [];
-      team.stealingUsers = [];
-      team.blockingUsers = [];
-      
-      team.prisoners_dilemma = _.map(team.prisoners_dilemma, function(time) {
-        if (time.start == timeObj.start)
-          time.completed = true;
+        if (team.prisonerSuccess == 2)
+          team.prisonerSuccess = 0;
 
-        return time;
-          
-      });
+        team.prisonerDecisions = 0;
+        team.sharingUsers = [];
+        team.stealingUsers = [];
+        team.blockingUsers = [];
 
-      controller.storage.teams.save(team, function(err, saved) {
-        
-        _.each(saved.prisoner_players, function(user) {
-          
-          controller.deleteHistory(user.bot_chat, saved.bot.token, function() {
-            
-            controller.studio.get(bot, "prisoners_dilemma", event.user, event.channel).then(convo => {
+        team.prisoners_dilemma = _.map(team.prisoners_dilemma, function(time) {
+          if (time.num == timeObj.num)
+            time.complete = true;
 
-              convo.changeTopic(thread);
+          return time;
 
-              convo.activate();
+        });
+
+        controller.storage.teams.save(team, function(err, saved) {
+
+          _.each(saved.prisoner_players, function(user) {
+
+            controller.deleteHistory(user.bot_chat, bot.config.bot.token, bot.user_id, function() {
+
+              controller.studio.get(bot, "prisoners_dilemma", user.userId, user.bot_chat).then(convo => {
+
+                convo.changeTopic(thread);
+
+                convo.activate();
+
+              });
 
             });
-            
+
           });
           
-        });
-        
-        setTimeout(function() {
-        // kickUsers(usersToKick);
-          controller.prisoners_message(bot, saved, "default");
+          setTimeout(function() {
+          // kickUsers(usersToKick);
+            
+            controller.storage.teams.save(saved, function(err, updated) {
 
-        }, 10000);
-              
+              saved.prisoner_players = _.filter(saved.prisoner_players, function(player) {
+                return !usersToKick.includes(player.userId);
+              });
+
+              controller.prisoners_message(bot, saved.id, "default");
+            });
+
+          }, 10000);
+          
+
+        });
+
       });
-      
     });
     
     

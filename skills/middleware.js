@@ -26,7 +26,7 @@ module.exports = function(controller) {
     controller.middleware.receive.use(function(bot, message, next) {
     
 //         // do something...
-        console.log('RCVD:', message);
+        // console.log('RCVD:', message);
       
         if (message.file && message.file.created) {
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
@@ -51,7 +51,7 @@ module.exports = function(controller) {
     controller.middleware.send.use(function(bot, message, next) {
     
         // do something...
-        console.log('SEND:', message);
+        // console.log('SEND:', message);
         
           if (message.type == "dilemma") {
           
