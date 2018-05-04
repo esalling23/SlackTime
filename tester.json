@@ -1,0 +1,1267 @@
+[
+    {
+        "script": "input_nodes_1",
+        "node": 1,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 1",
+                "text": "You are now in a node. As a human it’s hard to make sense of what you see: infinite white light in all directions. At your feet is a button that says \"Node 2.\""
+            }
+        ]
+    },
+    {
+        "script": "safe",
+        "node": 2,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Safe",
+                "text": "Can you crack the code?"
+            }
+        ]
+    },
+    {
+        "script": "safe",
+        "node": 2,
+        "thread": "wrong",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Safe",
+                "text": "Not quite..."
+            }
+        ]
+    },
+    {
+        "script": "safe",
+        "node": 2,
+        "thread": "correct",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Safe",
+                "text": "The safe pops open and… it’s empty. But wait, the bottom of the safe actually looks like a shaft dropping downward. And there is a ladder."
+            }
+        ]
+    },
+    {
+        "script": "safe",
+        "node": 2,
+        "thread": "repeat",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Someone on your team has already unlocked the safe!",
+                "text": "The safe pops open and… it’s empty. But wait, the bottom of the safe actually looks like a shaft dropping downward. And there is a ladder."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_2",
+        "node": 2,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 2",
+                "text": "Everything is pitch black."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_2",
+        "node": 2,
+        "thread": "orb_event_input_nodes_2",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 2",
+                "text": "The glowing orb in your hand sheds enough light that you can now see a few feet around you. You make out the shape of a stout *safe*…."
+            }
+        ]
+    },
+    {
+        "script": "safari",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Safari Slideshow",
+                "text": "It’s one of this digital picture frames…. Pictures of nine animals pop up for a few seconds each in a slideshow. A Parrot, Iguana, Frog, Rhino, Elephant,  Snake, Flamingo, Alligator and another Elephant. There is also a plaque next to the painting. Want to look at any of them more closely?"
+            }
+        ]
+    },
+    {
+        "script": "safari",
+        "node": 3,
+        "thread": "state_adge_safari",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Video: Click me!",
+                "text": "You’d better click the link and watch it!"
+            }
+        ]
+    },
+    {
+        "script": "safari_elephant",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "5. An Elephant",
+                "text": "It's an Elephant"
+            }
+        ]
+    },
+    {
+        "script": "image_tag",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Where is this image from?",
+                "text": "Select from the dropdown and press confirm"
+            }
+        ]
+    },
+    {
+        "script": "image_tag",
+        "node": 3,
+        "thread": "thanks",
+        "attachments": [
+            {
+                "num": 1,
+                "title": "MIT Campus",
+                "text": "{{vars.mit}} of 6"
+            },
+            {
+                "num": 2,
+                "title": "Boston Public Library",
+                "text": "{{vars.bpl}} of 6"
+            },
+            {
+                "num": 3,
+                "title": "Aquarium",
+                "text": "{{vars.aquarium}} of 6"
+            }
+        ]
+    },
+    {
+        "script": "pick_up_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Examine Plaque",
+                "text": "This looks important. You should probably download it."
+            }
+        ]
+    },
+    {
+        "script": "few_dots_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "\"Random\""
+            }
+        ]
+    },
+    {
+        "script": "few_dots_plaque",
+        "node": 3,
+        "thread": "event_random_few_dots_plaque",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Fallen Plaque",
+                "text": "The plaque fell off and is on the floor."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Button Matrix",
+                "text": "Here are the nine buttons. They change colors: grey, green, and red. Press them to change colors."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_orb",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The air hums electrically, and a glowing orb appears in your hand. The orb fits snugly in your palm, shedding a faint light. What might you want to light up with a glowing ball?"
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_safari",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The animal pictures are replaced by a video."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_random",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "You hear a faint click from a “random” direction."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_hole",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The room starts to rumble… The small dots painting falls of the wall. There is a hole there."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_glyph",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The room starts to rumble… The abstract symbol begins to shift. The glyphs form a circle and one symbol stands out in the center."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "wrong",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Button Matrix",
+                "text": "Nothing happens..."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "repeat",
+        "attachments": []
+    },
+    {
+        "script": "many_dots_painting",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Many Dots",
+                "text": "You see a stunning abstract painting composed of bold dots in three colors: Red, Grey, and Green. It’s signed by the artist: Daedalus. A plaque is affixed to the wall beside it. There’s some writing."
+            }
+        ]
+    },
+    {
+        "script": "safari_frog",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "3. A Frog",
+                "text": "It's a Frog"
+            }
+        ]
+    },
+    {
+        "script": "safari_parrot",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "1. A Parrot",
+                "text": "It's a parrot"
+            }
+        ]
+    },
+    {
+        "script": "safari_alligator",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "8. An Alligator",
+                "text": "It's an Alligator... or a Crocodile... Or Maybe a Cayman, I can never tell."
+            }
+        ]
+    },
+    {
+        "script": "safari_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "“Really Great Game Records”"
+            }
+        ]
+    },
+    {
+        "script": "few_dots",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Few Dots",
+                "text": "Looks like the many dots painting but it's smaller. There is a plaque with something written on it."
+            }
+        ]
+    },
+    {
+        "script": "few_dots",
+        "node": 3,
+        "thread": "state_befg_few_dots",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Hole",
+                "text": "There is a hole in the wall. In it are some documents and a ring!!! These look important. You should download them."
+            }
+        ]
+    },
+    {
+        "script": "few_dots",
+        "node": 3,
+        "thread": "random_event_few_dots",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Few Dots Painting",
+                "text": "Looks like the many dots painting but it's smaller. Hey, the plaque is gone! Oh, there it is on the floor. It must have fallen off."
+            }
+        ]
+    },
+    {
+        "script": "few_dots",
+        "node": 3,
+        "thread": "combo_random_befg_few_dots",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Hole",
+                "text": "There is a hole in the wall. In it are some documents and a ring!!! These look important. You should download them. The plaque is still on the floor, too."
+            }
+        ]
+    },
+    {
+        "script": "three_color_buttons",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "\"Below are three buttons that can change colors. To start the game 2/3 of your buttons must be the same color.\""
+            }
+        ]
+    },
+    {
+        "script": "safari_iguana",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "2. Iguana",
+                "text": "It's an Iguana"
+            }
+        ]
+    },
+    {
+        "script": "abstract_symbols_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "\"For downloaded instructions number two is the most important. PERIOD.\""
+            }
+        ]
+    },
+    {
+        "script": "safari_rhino",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "4. A Rhino",
+                "text": "It's a Rhino"
+            }
+        ]
+    },
+    {
+        "script": "take_an_orb",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Got A Glowing Orb",
+                "text": "The orb fits snugly in the palm of your hand, shedding a faint light. What might you want to light up with a glowing ball?"
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "White walls start to form and on each is a picture frame. One frame shows a digital slideshow of safari animals. Another frame has a painting of many dots. Another frame has a painting of glyphs. Finally, there is a frame with painting of a few dots. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_a_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows *a video* where the digital slideshow of safari animals used to be. Another frame has a painting of many dots. Another frame has a painting of glyphs. Finally, there is a frame with painting of a few dots. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_b_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows a digital slideshow of safari animals. Another frame has a painting of many dots. Another frame has a painting of glyphs. Finally, in the last frame is *a hole* where the few dots painting used to be. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_c_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows a digital slideshow of safari animals. Another frame has a painting of many dots. Another frame has *strange glyphs*. Finally, there is a frame with painting of a few dots. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_d_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows *a video* where the digital slideshow of safari animals used to be. Another frame has a painting of many dots. Another frame has *strange glyphs*. Finally, there is a frame with painting of a few dots. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_e_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows *a video* where the digital slideshow of safari animals used to be. Another frame has a painting of many dots. Another frame has an abstract painting of symbols and letters. Finally, in the last frame is *a hole* where the few dots painting used to be. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_f_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows a digital slideshow of safari animals. Another frame has a painting of many dots. Another frame has *strange glyphs*. Finally, in the last frame is *a hole* where the few dots painting used to be. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "input_nodes_3",
+        "node": 3,
+        "thread": "state_g_input_nodes_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Node 3 - Main Room",
+                "text": "You look around the room again. One frame shows *a video* where the digital slideshow of safari animals used to be. Another frame has a painting of many dots. Another frame has *strange glyphs*. Finally, in the last frame is *a hole* where the few dots painting used to be. In the middle of the room are six buttons. Select a choice in the menu and go."
+            }
+        ]
+    },
+    {
+        "script": "many_dots_painting_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "\"Stars always go left to right.\""
+            }
+        ]
+    },
+    {
+        "script": "safari_snake",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "6. A Snake",
+                "text": "It's a Snake"
+            }
+        ]
+    },
+    {
+        "script": "sticky_note_1",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "Congratulations on making it this far. You may be wondering at this point if Daedalus is a real AI who designed these puzzles, or if this is just a game. The truth is someplace in between. Daedalus is a real machine learning computer, and you really are training it to solve problems. However, it is not a _sentient_ AI. The puzzles were designed by a team of Northeastern University machine learning scientists, led by me. We hope you will enjoy the fictional elements of this puzzle, but do keep in mind that your actions have real import. We believe Daedalus will change the world. Thank you for your help.\n-Dr. M"
+            }
+        ]
+    },
+    {
+        "script": "abstract_symbols",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Glyph Painting",
+                "text": "It’s a mess. Should you even read the plaque about this one?"
+            }
+        ]
+    },
+    {
+        "script": "abstract_symbols",
+        "node": 3,
+        "thread": "state_cdfg_abstract_symbols",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Strange Glyph",
+                "text": "This looks important…"
+            }
+        ]
+    },
+    {
+        "script": "safari_elephant2",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "9. An Elephant",
+                "text": "It's another Elephant"
+            }
+        ]
+    },
+    {
+        "script": "first_button",
+        "node": 3,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "safari_flamingo",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "7. A Flamingo",
+                "text": "It's a Flamingo"
+            }
+        ]
+    },
+    {
+        "script": "tamagotchi_room",
+        "node": 4,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "egg_table_error",
+        "node": 4,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "egg_table_error",
+        "node": 4,
+        "thread": "claimed",
+        "attachments": []
+    },
+    {
+        "script": "egg_table_error",
+        "node": 4,
+        "thread": "holding",
+        "attachments": []
+    },
+    {
+        "script": "egg_table",
+        "node": 4,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "bookshelf",
+        "node": 4,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "bookshelf",
+        "node": 4,
+        "thread": "correct",
+        "attachments": []
+    },
+    {
+        "script": "bookshelf",
+        "node": 4,
+        "thread": "random",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You open the page and find that particular line...",
+                "text": "random text here"
+            }
+        ]
+    },
+    {
+        "script": "sticky_note_2",
+        "node": 4,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "These eggs can be hatched. The creatures inside will yield a clue to escape this node. The cleverer players may realize that you can solve the puzzle by only hatching three of the five eggs. However, we ask that if you can, you hatch all five in order to help Daedalus learn. *If you hatch four eggs, you will receive an extra $10 and if you hatch all five you will receive an extra $20 if you complete the game.* Good luck.\n-Dr. M"
+            }
+        ]
+    },
+    {
+        "script": "aris_room",
+        "node": 5,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "aris_projector",
+        "node": 5,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "aris_door",
+        "node": 5,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "aris_door",
+        "node": 5,
+        "thread": "correct",
+        "attachments": []
+    },
+    {
+        "script": "aris_door",
+        "node": 5,
+        "thread": "wrong",
+        "attachments": []
+    },
+    {
+        "script": "aris_door",
+        "node": 5,
+        "thread": "repeat",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "The door has already been unlocked!",
+                "text": "Nice! The door swings open..."
+            }
+        ]
+    },
+    {
+        "script": "sticky_note_3",
+        "node": 5,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "I’m glad you made it this far. The puzzles will be harder from here on out. You may be wondering exactly what kinds of “problems” you are helping Deadalus learn to solve. An AI such as Deadalus could be used to help solve nearly any problem from diagnosing illnesses, to predicting natural disasters, to redesigning our roads to reduce traffic accidents. The work you are doing here will save many lives. We hope you will continue all the way to the end of the game to receive your well-earned reward.\n-Dr. M"
+            }
+        ]
+    },
+    {
+        "script": "drawer",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "Nine tangrams? Wanna *download* them?"
+            }
+        ]
+    },
+    {
+        "script": "desk",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "On the desk sits pad of yellow *post-its* and a *telegraph key*. It’s hooked up to a phonograph. The desk *drawer* is slightly ajar."
+            }
+        ]
+    },
+    {
+        "script": "channel_3",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Three",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "main_room",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "You find yourself in a well appointed study, decorated and furnished as if by a 19th century gentleman, with a few strange exceptions. On the north wall a raging fireplace throws off radiant heat. Against the east wall is an ornate *desk* stuffed with papers. Sitting on top is a brass contraption connected by a cord to a phonograph. The south wall features a large, oak *door* with a high-tech keypad. The west wall is dominated by a floor to ceiling CRT television set. Next to you, in the center of the room, is a *coffee table*, upon which sits a remote control and a leather-bound photo album."
+            }
+        ]
+    },
+    {
+        "script": "photo_album",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There is a message inscribed from Daedalus. It says, “Memories from your journey and a few things you missed.” Wanna look at the *pictures*?"
+            }
+        ]
+    },
+    {
+        "script": "remote",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "You pick up the remote and the TV turns on. Must be the animal channel or something… want to try another *channel*?"
+            }
+        ]
+    },
+    {
+        "script": "channel_8",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Eight",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "channel_5",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Five",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "channel_9",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Nine",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "tv_guide",
+        "node": 6,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "sticky_note_4",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "Don’t give up, you’re nearly to the end! Oh, and if you’re having trouble deciphering the clues in this room, *think about the pigpen cipher.*\n-Dr. M"
+            }
+        ]
+    },
+    {
+        "script": "channel_2",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Two",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "Wanna type something in?"
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "wrong",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Eh, this might not be worth listening to.",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_8",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_1",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_2",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_4",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_5",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_6",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_7",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "telegraph_key",
+        "node": 6,
+        "thread": "correct_9",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Wow, that worked!",
+                "text": "The phonograph plays..."
+            }
+        ]
+    },
+    {
+        "script": "channel_4",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Four",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "post-its",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There’s a handwritten note. It says, “Think about the Pigpen Cipher.\""
+            }
+        ]
+    },
+    {
+        "script": "coffee_table",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There is a *photo album*, a *tv guide*, and a *remote*."
+            }
+        ]
+    },
+    {
+        "script": "channel_1",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel One",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "channel_6",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Six",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "door",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "It’s locked. There is a keypad next to it."
+            }
+        ]
+    },
+    {
+        "script": "keypad",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "Do you know the nine digits? Channel your brainpower to find the set."
+            }
+        ]
+    },
+    {
+        "script": "keypad",
+        "node": 6,
+        "thread": "correct",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "The door opens! You win!"
+            }
+        ]
+    },
+    {
+        "script": "keypad",
+        "node": 6,
+        "thread": "wrong",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "Sad Trumpet."
+            }
+        ]
+    },
+    {
+        "script": "channel_7",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Seven",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "animal_channel",
+        "node": 6,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "pictures",
+        "node": 6,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 1/3",
+                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
+            }
+        ]
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "success_2",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 2/3",
+                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
+            }
+        ]
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "success_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 3/3",
+                "text": "You all agreed to share the prize. Congratulations! You've will all receive an equal share of the cash prize!"
+            }
+        ]
+    },
+    {
+        "script": "prisoners_dilemma",
+        "node": 7,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You win!",
+                "text": "You have won, but before your team receives the $100 you have one final choice to make. You can either choose to split the $100 amongst your team or you can keep the $100 yourself and not share it with your teammates. You must make your choice within the next hour, or else you will be removed from this channel and receive no money."
+            },
+            {
+                "num": 1,
+                "title": "",
+                "text": "Each member of your team is getting this message and you all will be faced with the same choice. Here are your options:"
+            },
+            {
+                "num": 2,
+                "title": "",
+                "text": "Share. If all players share, each player who has not been eliminated can receive an equal share of the prize."
+            },
+            {
+                "num": 3,
+                "title": "",
+                "text": "Steal. If you steal and at least one team member votes to share, all players who chose to steal split the prize. If only you steal, you get to keep all $100. However if everyone steals, all players are eliminated and no prize is awarded."
+            },
+            {
+                "num": 4,
+                "title": "",
+                "text": "Block. Choose this option to defend against stealing. If you choose Block, all players who steal will be booted from this channel and receive no prize. Then all players will get to select another option. However, if no players steal, you will be eliminated."
+            },
+            {
+                "num": 5,
+                "title": "",
+                "text": "You will repeat this until either all players select share three times in a row, any player steals without being blocked, or all players are eliminated.\n\nChoose within the next hour"
+            }
+        ]
+    },
+    {
+        "script": "prisoners_dilemma",
+        "node": 7,
+        "thread": "block_kick",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "All Blocking Players are banned.",
+                "text": "If any of you are left, congratulations! You get to share the prize!"
+            }
+        ]
+    },
+    {
+        "script": "prisoners_dilemma",
+        "node": 7,
+        "thread": "steal_kick",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "All Stealing Players Are Banned",
+                "text": "If any of you are left, congratulations! You get to share the prize!"
+            }
+        ]
+    },
+    {
+        "script": "prisoners_dilemma",
+        "node": 7,
+        "thread": "share_kick",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "All Sharing Players are banned.",
+                "text": "If any of you are left, congratulations! You get to share the prize!"
+            }
+        ]
+    }
+]

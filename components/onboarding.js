@@ -62,11 +62,12 @@ module.exports = function(controller) {
                                       
          });
          
-         _.each(team.users, function(user) {
+         team.users = _.map(team.users, function(user) {
             
             bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
               console.log(err, direct_message);
               console.log(direct_message, "opened the onboarding message");
+              user.bot_chat = direct_message.channel.id;
 
               if (err) {
                 debug('Error sending onboarding message:', err);
@@ -79,6 +80,8 @@ module.exports = function(controller) {
               }
 
             });
+           
+           return user;
 
          });
          
@@ -111,7 +114,7 @@ module.exports = function(controller) {
               setTimeout(function() {
                 controller.storage.teams.save(team, function(err, saved) {
                   console.log("saved in the onboarding: ", saved);
-                  controller.gamelogMessage(bot, { user: team.bot.user_id, channel: channelId }, saved);
+                  controller.gamelogMessage(bot, saved);
 
                 });
               }, 100 * data.length);

@@ -4,7 +4,7 @@ const _ = require("underscore");
 module.exports = function(webserver, controller) {
   
   webserver.post('/tamagotchi_error', function(req, res) {
-    console.log(req.body);
+    // console.log(req.body);
     
     controller.storage.teams.get(req.body.team, function(err, team) {
       var bot = controller.spawn(team.bot);

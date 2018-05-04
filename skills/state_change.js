@@ -34,7 +34,7 @@ module.exports = function(controller) {
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
-    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key'].includes(options.codeType) && code != "orb") {
+    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType) && code != "orb") {
       var vars = {};
       
       if (options.codeType == 'buttons') vars.recap = thread;

@@ -14,7 +14,6 @@ module.exports = function(controller) {
   
     controller.on("count_colors", function (bot, event, team) {
 
-      var web = new WebClient(team.bot.token);
       var length = (team.users.length * 3)/2;
       var ready = false;
 
@@ -33,25 +32,60 @@ module.exports = function(controller) {
           } else {
             greyCount++;
           }
-            // console.Log("RedCount:" + redCount);
-            // console.Log(greenCount);
-            // console.Log(greyCount);
+             console.log("RedCount:" + redCount);
+             console.log(greenCount);
+             console.log(greyCount);
         });
       });
       
       if(redCount >= length || greenCount >= length || greyCount >= length) {
         console.log("we did it!");
-         _.each(team.users, function(user) {
-            web.im.list().then(function(list) {
-              var thisIM = _.findWhere(list.ims, { user: user.userId });
-              var channel = thisIM.id;
-              var context = { user: user.userId, channel: channel };
-              
-              controller.makeCard(bot, context, 'input_nodes_1', 'default', {}, function(card) {
-                bot.replyInteractive(event, card);
+        // var user = team.users[0];
+        var web = new WebClient(bot.config.bot.token);
+
+        web.conversations.list({types: "im, private_channel"}).then(function(list) {
+          _.each(team.users, function(user) {
+            console.log(list.channels, user);
+
+            var thisIM = _.findWhere(list.channels, { user: user.userId });
+            var channel = thisIM.id;
+            
+            web.conversations.history(channel).then(function(ims) {
+              console.log(ims);
+              console.log(ims.messages);
+              var btn_message;
+              _.map(ims.messages, function(msg) {
+                if (msg.attachments.length > 0) {
+                  if (msg.attachments[0].callback_id == "three_color_buttons") {
+                    btn_message = msg;
+                  }
+                }
               });
-            }).catch(err => console.log(err));
-         });
+              
+              if (!btn_message) {
+                btn_message = ims.messages[0];
+              }
+              
+              if (!btn_message)
+                return;
+              
+              btn_message.channel = channel;
+              
+              controller.makeCard(bot, btn_message, "input_nodes_1", "default", {}, function(card) {
+                bot.api.chat.update({
+                  channel: btn_message.channel, 
+                  ts: btn_message.ts, 
+                  attachments: card.attachments
+                }, function(err, updated) {
+                });
+                // bot.replyInteractive(btn_message, card);
+              });
+              
+            }).catch(err => console.log("conversation history error: ", err));
+            
+          });
+
+        }).catch(err => console.log("im list error: ", err));
       }      
 
     });

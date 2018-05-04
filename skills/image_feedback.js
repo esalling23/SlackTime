@@ -29,6 +29,47 @@ module.exports = function(controller) {
 
       convo.activate();
       
+    });
+  }
+  
+  controller.imageTag = function(bot, message, url) {
+
+    // upon image upload, show menu asking for player to tag the image location
+    controller.studio.get(bot, "image_tag", message.user, message.channel).then(convo => {
+
+      convo.threads.default[0].attachments[0].image_url = url;
+
+      convo.activate();
+
+    });
+    
+  }
+  
+  controller.imageAlbum = function(bot, message, team) {
+    controller.studio.get(bot, "image_tag_album", message.user, message.channel).then(convo => {
+
+      convo.changeTopic('default');
+      var template = convo.threads['default'][0];
+      var images = _.filter(team.uploadedImages, function(img) { return img.location });
+      var url;
+      
+      if (images.length > 0) 
+        url = images[0].url;
+      else 
+        url = "http://res.cloudinary.com/extraludic/image/upload/v1525385203/escape-room/No-Image-Placeholder.jpg";
+      
+      template.attachments[0].image_url = url;
+      
+      _.each(template.attachments[0].actions, function(btn) {
+        if (images.length > 1) 
+          btn.name = "picture";
+        else 
+          btn.name = "";
+      });
+      
+      template.attachments[0].text = "Location: " + images[0].location;
+
+      convo.activate();
 
     });
   }

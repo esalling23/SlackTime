@@ -10,14 +10,6 @@ var team,
     user, 
     channel;
 
-function isUser(member) {
-  console.log(member.name, "is the member being checked");
-  if (member.is_bot || member.name == process.env.botName || member.name == "slackbot")
-    return false;
-  else
-    return true;
-}
-
 module.exports = function(controller) {
   
   controller.on("generation_event", function(options) {
@@ -61,21 +53,12 @@ module.exports = function(controller) {
         teamData.gamelog[phase] = [];
       }
       
-      // controller.
-
-      // teamData.gamelogChannel
       // add users array
       var web = new WebClient(teamData.oauth_token);
       
-//       web.groups.history(res.gamelog_channel_id).then(group => {
-        
-//         var gamelogMsg = _.filter(group.messages, function(msg) {
-//           return !msg.subtype;
-//         })[0];
-      
         web.users.list().then(res => {
           _.each(res.members, function(user) {
-            if (isUser(user))
+            if (controller.isUser(user, false))
               teamData.users.push({ userId: user.id, name: user.name });
           });
 

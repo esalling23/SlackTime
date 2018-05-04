@@ -2,8 +2,6 @@ const _ = require("underscore");
 const request = require("request");
 const fs = require('fs');
 const { WebClient } = require('@slack/client');
-const token = process.env.slackToken;
-const web = new WebClient(token);
 
 const cloudinary = require('cloudinary');
     
@@ -61,9 +59,18 @@ module.exports = function(controller) {
 
           results.then(members => {
             console.log("completed promises");
-
+            
+            web.groups.setTopic(channelId, "Upload images from Critical Safari here. Only upload images one at a time.").then(res => console.log(res)).catch(err => console.log(err));
+            web.groups.setPurpose(channelId, "Please upload images one at a time. Uploading multiple files at once will confuse the system.").then(res => console.log(res)).catch(err => console.log(err));
+            
             setTimeout(function() {
               controller.imageFeedback(bot, message, channelId, savedTeam);
+              controller.imageAlbum(bot, message, channelId, savedTeam);
+              
+              controller.studio.get(bot, "image_tag_rules", message.user, channelId).then(convo => {
+                convo.activate();
+              });
+
             }, 100 * data.length);
             
           });
@@ -80,14 +87,12 @@ module.exports = function(controller) {
     console.log(params.message.file.title);
 
     controller.storage.teams.get(params.message.team, function(err, team) {
-                  
-      var token = team.bot.app_token;
+      var token = team.oauth_token;
 
       if (team.imagesComplete) {
 
         deleteThisMsg(params.message, token, function() { 
           controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
-
             convo.changeTopic("all_complete");
 
             convo.activate();
@@ -137,7 +142,8 @@ module.exports = function(controller) {
               date_uploaded: Date.now()
             });
 
-            controller.storage.teams.save(team, function(err, id) {
+            controller.storage.teams.save(team, function(err, saved) {
+              
               var vars = {
                 image_url: result.url, 
                 user: params.message.user
@@ -149,6 +155,7 @@ module.exports = function(controller) {
                 convo.threads.default[0].attachments[0].image_url = vars.image_url;
 
                 convo.activate();
+                
               });
 
             });
@@ -178,9 +185,11 @@ module.exports = function(controller) {
           params.bot.replyInteractive(params.message, card);
         });
       } else {
+        var userUploaded;
         var updated = _.map(team.uploadedImages, function(image) {
           if (image.url == params.url) {
             image.location = params.location;
+            userUploaded = image.user_uploaded;
           }
           return image;
         });
@@ -202,7 +211,9 @@ module.exports = function(controller) {
           
           if (vars.count == vars.max) {
             
-            var message = { user: saved.bot.createdBy, channel: saved.gamelog_channel_id };
+            var message = { user: userUploaded, channel: saved.gamelog_channel_id };
+            
+            console.log(message);
   
             controller.trigger('gamelog_update', [{
               bot: params.bot, 
@@ -211,14 +222,13 @@ module.exports = function(controller) {
               codeType: 'image_count', 
               phase: "phase_1",
               puzzle: params.location
-              
             }]);
               
           }
 
           deleteThisMsg(params.message, team.oauth_token, function() {
             
-            controller.imageFeedback(params.bot, params.message, saved.image_channel_id, saved);
+            controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved);
 
             if(saved.imagesComplete) {
               setTimeout(function() {
@@ -236,14 +246,6 @@ module.exports = function(controller) {
     });
   });
   
-  var channelCreate = function channelCreate(name) {
-      
-      // Create the channel
-      return web.channels.join(name).then((res) => {
-        
-      }).catch((err) => { console.log(err) }); // End channels.join call 
-      
-  }; // End channel create
 
   var channelJoin = function channelJoin(params) {
 

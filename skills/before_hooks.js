@@ -83,15 +83,15 @@ module.exports = function(controller) {
     var btns = convo.threads.default[0].attachments[0].actions;
 
     request.get('https://tamagotchi-production.glitch.me/check/' + team, function(err, res, body) {
-      console.log(body, btns);
+      // console.log(body, btns);
       body = JSON.parse(body);
       
       _.each(body.grabbed, function(user) {
           var userBtn = _.filter(btns, function(btn) {
-            console.log(btn.url, user.type);
+            // console.log(btn.url, user.type);
             return btn.url.includes(user.type);
           })[0];
-        console.log(userBtn);
+        // console.log(userBtn);
         
           if (userBtn) {
             userBtn.text = "~" + userBtn.text + "~";
@@ -99,7 +99,7 @@ module.exports = function(controller) {
             userBtn.url = "";
             userBtn.style = "danger";
           }
-          console.log(userBtn);        
+          // console.log(userBtn);        
       });
       
       next();
@@ -117,8 +117,7 @@ module.exports = function(controller) {
     }
 
     controller.storage.teams.get(team, function(err, res) {
-      console.log(res.uploadedImages[0]);
-      console.log(convo.threads.default[0].attachments[0]);
+      
       if (res.uploadedImages && res.uploadedImages.length > 0) {
         convo.threads.default[0].attachments[0].image_url = res.uploadedImages[0].url;
         
@@ -135,7 +134,7 @@ module.exports = function(controller) {
         }
         
         controller.storage.teams.save(res, function(err, saved) {
-          console.log(saved.uploadedImages);
+          // console.log(saved.uploadedImages);
           next();
         });
 

@@ -302,7 +302,7 @@ module.exports = function(controller) {
             controller.storage.teams.save(team, function(err, saved) {
               
               console.log(saved.users, " we saved these users");
-               controller.trigger("count_colors", [bot, event, saved]);
+              controller.trigger("count_colors", [bot, event, saved]);
             });
 
           });
@@ -330,7 +330,7 @@ module.exports = function(controller) {
       
     }
     
-    if (event.actions[0].name.match(/^picture/)) {
+    if (event.actions[0].name.match(/^picture(.*)/)) {
       console.log(event);
       var reply = event.original_message;
       var type = event.actions[0].value;
@@ -338,25 +338,35 @@ module.exports = function(controller) {
       console.log(reply.attachments[0].image_url);
       
       controller.storage.teams.get(event.team.id, function(err, team) {
-        var image = _.findWhere(team.uploadedImages, { url: url });
-        var pos = team.uploadedImages.indexOf(image);
+        var album = _.filter(team.uploadedImages, function(img) { return img.location });
+        var nxt = 1;
+        if (event.actions[0].name.includes("album")) {
+          album = team.albumImages;
+          nxt = 2;
+        }
+                
+        var image = _.findWhere(album, { url: url });
+        var pos = album.indexOf(image);
         
         if (type == "next") {
           pos++;
-          if (!team.uploadedImages[pos])
+          if (!album[pos])
             pos = 0;
         } else if (type == "back") {
           pos--;
-          if (!team.uploadedImages[pos])
-            pos = team.uploadedImages.length - 1;
+          if (!album[pos])
+            pos = album.length - 1;
         }
         
-        console.log(pos, team.uploadedImages.length);
+        console.log(pos, album.length);
         
-        reply.attachments[0].image_url = team.uploadedImages[pos].url;
+        reply.attachments[0].image_url = album[pos].url;
         
-        reply.attachments[0].actions[0].text = "<";
-        reply.attachments[0].actions[2].text = ">";
+        if (nxt == 1)
+          reply.attachments[0].text = "Location: " + album[pos].location;
+        
+        reply.attachments[0].actions[0].text = "< Back";
+        reply.attachments[0].actions[nxt].text = "Next >";
         
         bot.api.chat.update({
           channel: event.channel, 
@@ -403,6 +413,12 @@ module.exports = function(controller) {
     if (event.actions[0].name.match(/^download/)) {
       
       controller.trigger("download", [bot, event]);
+      
+    }
+    
+    if (event.actions[0].name.match(/^prisoner/)) {
+      
+      controller.trigger("prisoners_onboard", [bot, event]);
       
     }
     

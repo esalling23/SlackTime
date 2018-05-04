@@ -6,9 +6,9 @@ var sort = require("sorted-object");
 const correctButtonCodes = {
   random: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
   safari: ['grey','green','green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
-  hole: ['grey', 'grey', 'red', 'red', 'green', 'green', 'grey', 'red', 'grey'], 
-  glyph: ['green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey', 'red'],
-  orb: ['red', 'red', 'grey', 'red', 'grey', 'grey', 'grey', 'grey', 'grey']
+  hole: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'], 
+  glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+  orb: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
 }
 
 const correctTelegraphKeyCode = {
