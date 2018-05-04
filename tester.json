@@ -84,42 +84,6 @@
         ]
     },
     {
-        "script": "pick_up_plaque",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Examine Plaque",
-                "text": "This looks important. You should probably download it."
-            }
-        ]
-    },
-    {
-        "script": "take_an_orb",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Got A Glowing Orb",
-                "text": "The orb fits snugly in the palm of your hand, shedding a faint light. What might you want to light up with a glowing ball?"
-            }
-        ]
-    },
-    {
-        "script": "safari_rhino",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "4. A Rhino",
-                "text": "It's a Rhino"
-            }
-        ]
-    },
-    {
         "script": "safari",
         "node": 3,
         "thread": "default",
@@ -152,30 +116,6 @@
                 "num": 0,
                 "title": "5. An Elephant",
                 "text": "It's an Elephant"
-            }
-        ]
-    },
-    {
-        "script": "sticky_note_1",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "It is a handwritten note. It reads:",
-                "text": "Congratulations on making it this far. You may be wondering at this point if Daedalus is a real AI who designed these puzzles, or if this is just a game. The truth is someplace in between. Daedalus is a real machine learning computer, and you really are training it to solve problems. However, it is not a _sentient_ AI. The puzzles were designed by a team of Northeastern University machine learning scientists, led by me. We hope you will enjoy the fictional elements of this puzzle, but do keep in mind that your actions have real import. We believe Daedalus will change the world. Thank you for your help.\n-Dr. M"
-            }
-        ]
-    },
-    {
-        "script": "many_dots_painting",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Many Dots",
-                "text": "You see a stunning abstract painting composed of bold dots in three colors: Red, Grey, and Green. It’s signed by the artist: Daedalus. A plaque is affixed to the wall beside it. There’s some writing."
             }
         ]
     },
@@ -214,6 +154,156 @@
         ]
     },
     {
+        "script": "pick_up_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Examine Plaque",
+                "text": "This looks important. You should probably download it."
+            }
+        ]
+    },
+    {
+        "script": "few_dots_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "\"Random\""
+            }
+        ]
+    },
+    {
+        "script": "few_dots_plaque",
+        "node": 3,
+        "thread": "event_random_few_dots_plaque",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Fallen Plaque",
+                "text": "The plaque fell off and is on the floor."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Button Matrix",
+                "text": "Here are the nine buttons. They change colors: grey, green, and red. Press them to change colors."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_orb",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The air hums electrically, and a glowing orb appears in your hand. The orb fits snugly in your palm, shedding a faint light. What might you want to light up with a glowing ball?"
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_safari",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The animal pictures are replaced by a video."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_random",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "You hear a faint click from a “random” direction."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_hole",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The room starts to rumble… The small dots painting falls of the wall. There is a hole there."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "correct_glyph",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "You entered a correct button sequence",
+                "text": "The room starts to rumble… The abstract symbol begins to shift. The glyphs form a circle and one symbol stands out in the center."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "wrong",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Button Matrix",
+                "text": "Nothing happens..."
+            }
+        ]
+    },
+    {
+        "script": "buttons",
+        "node": 3,
+        "thread": "repeat",
+        "attachments": []
+    },
+    {
+        "script": "many_dots_painting",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Many Dots",
+                "text": "You see a stunning abstract painting composed of bold dots in three colors: Red, Grey, and Green. It’s signed by the artist: Daedalus. A plaque is affixed to the wall beside it. There’s some writing."
+            }
+        ]
+    },
+    {
+        "script": "safari_frog",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "3. A Frog",
+                "text": "It's a Frog"
+            }
+        ]
+    },
+    {
         "script": "safari_parrot",
         "node": 3,
         "thread": "default",
@@ -222,6 +312,30 @@
                 "num": 0,
                 "title": "1. A Parrot",
                 "text": "It's a parrot"
+            }
+        ]
+    },
+    {
+        "script": "safari_alligator",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "8. An Alligator",
+                "text": "It's an Alligator... or a Crocodile... Or Maybe a Cayman, I can never tell."
+            }
+        ]
+    },
+    {
+        "script": "safari_plaque",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Plaque",
+                "text": "“Really Great Game Records”"
             }
         ]
     },
@@ -274,14 +388,26 @@
         ]
     },
     {
-        "script": "safari_frog",
+        "script": "three_color_buttons",
         "node": 3,
         "thread": "default",
         "attachments": [
             {
                 "num": 0,
-                "title": "3. A Frog",
-                "text": "It's a Frog"
+                "title": "",
+                "text": "\"Below are three buttons that can change colors. To start the game 2/3 of your buttons must be the same color.\""
+            }
+        ]
+    },
+    {
+        "script": "safari_iguana",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "2. Iguana",
+                "text": "It's an Iguana"
             }
         ]
     },
@@ -298,26 +424,26 @@
         ]
     },
     {
-        "script": "few_dots_plaque",
+        "script": "safari_rhino",
         "node": 3,
         "thread": "default",
         "attachments": [
             {
                 "num": 0,
-                "title": "Plaque",
-                "text": "\"Random\""
+                "title": "4. A Rhino",
+                "text": "It's a Rhino"
             }
         ]
     },
     {
-        "script": "few_dots_plaque",
+        "script": "take_an_orb",
         "node": 3,
-        "thread": "event_random_few_dots_plaque",
+        "thread": "default",
         "attachments": [
             {
                 "num": 0,
-                "title": "Fallen Plaque",
-                "text": "The plaque fell off and is on the floor."
+                "title": "Got A Glowing Orb",
+                "text": "The orb fits snugly in the palm of your hand, shedding a faint light. What might you want to light up with a glowing ball?"
             }
         ]
     },
@@ -430,132 +556,6 @@
         ]
     },
     {
-        "script": "buttons",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Button Matrix",
-                "text": "Here are the nine buttons. They change colors: grey, green, and red. Press them to change colors."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "correct_orb",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "You entered a correct button sequence",
-                "text": "The air hums electrically, and a glowing orb appears in your hand. The orb fits snugly in your palm, shedding a faint light. What might you want to light up with a glowing ball?"
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "correct_safari",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "You entered a correct button sequence",
-                "text": "The animal pictures are replaced by a video."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "correct_random",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "You entered a correct button sequence",
-                "text": "You hear a faint click from a “random” direction."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "correct_hole",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "You entered a correct button sequence",
-                "text": "The room starts to rumble… The small dots painting falls of the wall. There is a hole there."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "correct_glyph",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "You entered a correct button sequence",
-                "text": "The room starts to rumble… The abstract symbol begins to shift. The glyphs form a circle and one symbol stands out in the center."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "wrong",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Button Matrix",
-                "text": "Nothing happens..."
-            }
-        ]
-    },
-    {
-        "script": "buttons",
-        "node": 3,
-        "thread": "repeat",
-        "attachments": []
-    },
-    {
-        "script": "three_color_buttons",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "\"Below are three buttons that can change colors. To start the game 2/3 of your buttons must be the same color.\""
-            }
-        ]
-    },
-    {
-        "script": "safari_plaque",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Plaque",
-                "text": "“Really Great Game Records”"
-            }
-        ]
-    },
-    {
-        "script": "safari_alligator",
-        "node": 3,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "8. An Alligator",
-                "text": "It's an Alligator... or a Crocodile... Or Maybe a Cayman, I can never tell."
-            }
-        ]
-    },
-    {
         "script": "safari_snake",
         "node": 3,
         "thread": "default",
@@ -564,6 +564,18 @@
                 "num": 0,
                 "title": "6. A Snake",
                 "text": "It's a Snake"
+            }
+        ]
+    },
+    {
+        "script": "sticky_note_1",
+        "node": 3,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "Congratulations on making it this far. You may be wondering at this point if Daedalus is a real AI who designed these puzzles, or if this is just a game. The truth is someplace in between. Daedalus is a real machine learning computer, and you really are training it to solve problems. However, it is not a _sentient_ AI. The puzzles were designed by a team of Northeastern University machine learning scientists, led by me. We hope you will enjoy the fictional elements of this puzzle, but do keep in mind that your actions have real import. We believe Daedalus will change the world. Thank you for your help.\n-Dr. M"
             }
         ]
     },
@@ -592,14 +604,14 @@
         ]
     },
     {
-        "script": "safari_iguana",
+        "script": "safari_elephant2",
         "node": 3,
         "thread": "default",
         "attachments": [
             {
                 "num": 0,
-                "title": "2. Iguana",
-                "text": "It's an Iguana"
+                "title": "9. An Elephant",
+                "text": "It's another Elephant"
             }
         ]
     },
@@ -622,16 +634,10 @@
         ]
     },
     {
-        "script": "safari_elephant2",
-        "node": 3,
+        "script": "tamagotchi_room",
+        "node": 4,
         "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "9. An Elephant",
-                "text": "It's another Elephant"
-            }
-        ]
+        "attachments": []
     },
     {
         "script": "egg_table_error",
@@ -652,22 +658,10 @@
         "attachments": []
     },
     {
-        "script": "tamagotchi_room",
+        "script": "egg_table",
         "node": 4,
         "thread": "default",
         "attachments": []
-    },
-    {
-        "script": "sticky_note_2",
-        "node": 4,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "It is a handwritten note. It reads:",
-                "text": "These eggs can be hatched. The creatures inside will yield a clue to escape this node. The cleverer players may realize that you can solve the puzzle by only hatching three of the five eggs. However, we ask that if you can, you hatch all five in order to help Daedalus learn. *If you hatch four eggs, you will receive an extra $10 and if you hatch all five you will receive an extra $20 if you complete the game.* Good luck.\n-Dr. M"
-            }
-        ]
     },
     {
         "script": "bookshelf",
@@ -694,16 +688,16 @@
         ]
     },
     {
-        "script": "egg_table",
+        "script": "sticky_note_2",
         "node": 4,
         "thread": "default",
-        "attachments": []
-    },
-    {
-        "script": "aris_projector",
-        "node": 5,
-        "thread": "default",
-        "attachments": []
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "These eggs can be hatched. The creatures inside will yield a clue to escape this node. The cleverer players may realize that you can solve the puzzle by only hatching three of the five eggs. However, we ask that if you can, you hatch all five in order to help Daedalus learn. *If you hatch four eggs, you will receive an extra $10 and if you hatch all five you will receive an extra $20 if you complete the game.* Good luck.\n-Dr. M"
+            }
+        ]
     },
     {
         "script": "aris_room",
@@ -712,16 +706,10 @@
         "attachments": []
     },
     {
-        "script": "sticky_note_3",
+        "script": "aris_projector",
         "node": 5,
         "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "It is a handwritten note. It reads:",
-                "text": "I’m glad you made it this far. The puzzles will be harder from here on out. You may be wondering exactly what kinds of “problems” you are helping Deadalus learn to solve. An AI such as Deadalus could be used to help solve nearly any problem from diagnosing illnesses, to predicting natural disasters, to redesigning our roads to reduce traffic accidents. The work you are doing here will save many lives. We hope you will continue all the way to the end of the game to receive your well-earned reward.\n-Dr. M"
-            }
-        ]
+        "attachments": []
     },
     {
         "script": "aris_door",
@@ -754,110 +742,14 @@
         ]
     },
     {
-        "script": "channel_8",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Eight",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "coffee_table",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "There is a *photo album*, a *tv guide*, and a *remote*."
-            }
-        ]
-    },
-    {
-        "script": "channel_4",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Four",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "desk",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "On the desk sits pad of yellow *post-its* and a *telegraph key*. It’s hooked up to a phonograph. The desk *drawer* is slightly ajar."
-            }
-        ]
-    },
-    {
-        "script": "channel_2",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Two",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "channel_3",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Three",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "remote",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "You pick up the remote and the TV turns on. Must be the animal channel or something… want to try another *channel*?"
-            }
-        ]
-    },
-    {
-        "script": "sticky_note_4",
-        "node": 6,
+        "script": "sticky_note_3",
+        "node": 5,
         "thread": "default",
         "attachments": [
             {
                 "num": 0,
                 "title": "It is a handwritten note. It reads:",
-                "text": "Don’t give up, you’re nearly to the end! Oh, and if you’re having trouble deciphering the clues in this room, *think about the pigpen cipher.*\n-Dr. M"
-            }
-        ]
-    },
-    {
-        "script": "main_room",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "You find yourself in a well appointed study, decorated and furnished as if by a 19th century gentleman, with a few strange exceptions. On the north wall a raging fireplace throws off radiant heat. Against the east wall is an ornate *desk* stuffed with papers. Sitting on top is a brass contraption connected by a cord to a phonograph. The south wall features a large, oak *door* with a high-tech keypad. The west wall is dominated by a floor to ceiling CRT television set. Next to you, in the center of the room, is a *coffee table*, upon which sits a remote control and a leather-bound photo album."
+                "text": "I’m glad you made it this far. The puzzles will be harder from here on out. You may be wondering exactly what kinds of “problems” you are helping Deadalus learn to solve. An AI such as Deadalus could be used to help solve nearly any problem from diagnosing illnesses, to predicting natural disasters, to redesigning our roads to reduce traffic accidents. The work you are doing here will save many lives. We hope you will continue all the way to the end of the game to receive your well-earned reward.\n-Dr. M"
             }
         ]
     },
@@ -874,6 +766,78 @@
         ]
     },
     {
+        "script": "desk",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "On the desk sits pad of yellow *post-its* and a *telegraph key*. It’s hooked up to a phonograph. The desk *drawer* is slightly ajar."
+            }
+        ]
+    },
+    {
+        "script": "channel_3",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Three",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "main_room",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "You find yourself in a well appointed study, decorated and furnished as if by a 19th century gentleman, with a few strange exceptions. On the north wall a raging fireplace throws off radiant heat. Against the east wall is an ornate *desk* stuffed with papers. Sitting on top is a brass contraption connected by a cord to a phonograph. The south wall features a large, oak *door* with a high-tech keypad. The west wall is dominated by a floor to ceiling CRT television set. Next to you, in the center of the room, is a *coffee table*, upon which sits a remote control and a leather-bound photo album."
+            }
+        ]
+    },
+    {
+        "script": "photo_album",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There is a message inscribed from Daedalus. It says, “Memories from your journey and a few things you missed.” Wanna look at the *pictures*?"
+            }
+        ]
+    },
+    {
+        "script": "remote",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "You pick up the remote and the TV turns on. Must be the animal channel or something… want to try another *channel*?"
+            }
+        ]
+    },
+    {
+        "script": "channel_8",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Eight",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
         "script": "channel_5",
         "node": 6,
         "thread": "default",
@@ -881,6 +845,48 @@
             {
                 "num": 0,
                 "title": "Channel Five",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "channel_9",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Nine",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "tv_guide",
+        "node": 6,
+        "thread": "default",
+        "attachments": []
+    },
+    {
+        "script": "sticky_note_4",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "It is a handwritten note. It reads:",
+                "text": "Don’t give up, you’re nearly to the end! Oh, and if you’re having trouble deciphering the clues in this room, *think about the pigpen cipher.*\n-Dr. M"
+            }
+        ]
+    },
+    {
+        "script": "channel_2",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Two",
                 "text": "The channel seems to be blocked by a password. Check the TV guide."
             }
         ]
@@ -1018,6 +1024,78 @@
         ]
     },
     {
+        "script": "channel_4",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Four",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "post-its",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There’s a handwritten note. It says, “Think about the Pigpen Cipher.\""
+            }
+        ]
+    },
+    {
+        "script": "coffee_table",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "There is a *photo album*, a *tv guide*, and a *remote*."
+            }
+        ]
+    },
+    {
+        "script": "channel_1",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel One",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "channel_6",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Channel Six",
+                "text": "The channel seems to be blocked by a password. Check the TV guide."
+            }
+        ]
+    },
+    {
+        "script": "door",
+        "node": 6,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "",
+                "text": "It’s locked. There is a keypad next to it."
+            }
+        ]
+    },
+    {
         "script": "keypad",
         "node": 6,
         "thread": "default",
@@ -1054,48 +1132,6 @@
         ]
     },
     {
-        "script": "photo_album",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "There is a message inscribed from Daedalus. It says, “Memories from your journey and a few things you missed.” Wanna look at the *pictures*?"
-            }
-        ]
-    },
-    {
-        "script": "channel_9",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Nine",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "animal_channel",
-        "node": 6,
-        "thread": "default",
-        "attachments": []
-    },
-    {
-        "script": "channel_1",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel One",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
         "script": "channel_7",
         "node": 6,
         "thread": "default",
@@ -1108,43 +1144,7 @@
         ]
     },
     {
-        "script": "post-its",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "There’s a handwritten note. It says, “Think about the Pigpen Cipher.\""
-            }
-        ]
-    },
-    {
-        "script": "channel_6",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Channel Six",
-                "text": "The channel seems to be blocked by a password. Check the TV guide."
-            }
-        ]
-    },
-    {
-        "script": "door",
-        "node": 6,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "",
-                "text": "It’s locked. There is a keypad next to it."
-            }
-        ]
-    },
-    {
-        "script": "tv_guide",
+        "script": "animal_channel",
         "node": 6,
         "thread": "default",
         "attachments": []
@@ -1154,6 +1154,42 @@
         "node": 6,
         "thread": "default",
         "attachments": []
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "default",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 1/3",
+                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
+            }
+        ]
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "success_2",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 2/3",
+                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
+            }
+        ]
+    },
+    {
+        "script": "prisoners_success",
+        "node": 7,
+        "thread": "success_3",
+        "attachments": [
+            {
+                "num": 0,
+                "title": "Group Shares: 3/3",
+                "text": "You all agreed to share the prize. Congratulations! You've will all receive an equal share of the cash prize!"
+            }
+        ]
     },
     {
         "script": "prisoners_dilemma",
@@ -1225,42 +1261,6 @@
                 "num": 0,
                 "title": "All Sharing Players are banned.",
                 "text": "If any of you are left, congratulations! You get to share the prize!"
-            }
-        ]
-    },
-    {
-        "script": "prisoners_success",
-        "node": 7,
-        "thread": "default",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Group Shares: 1/3",
-                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
-            }
-        ]
-    },
-    {
-        "script": "prisoners_success",
-        "node": 7,
-        "thread": "success_2",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Group Shares: 2/3",
-                "text": "You all agreed to share the prize. To confirm, select “Share” again. You must all share three times in a row to split the prize evenly. You may also change your selection now."
-            }
-        ]
-    },
-    {
-        "script": "prisoners_success",
-        "node": 7,
-        "thread": "success_3",
-        "attachments": [
-            {
-                "num": 0,
-                "title": "Group Shares: 3/3",
-                "text": "You all agreed to share the prize. Congratulations! You've will all receive an equal share of the cash prize!"
             }
         ]
     }

@@ -22,7 +22,6 @@ const { WebClient } = require('@slack/client');
 // An access token (from your Slack app or custom integration - xoxp, xoxb, or xoxa)
 const token = process.env.slackToken;
 
-var web = new WebClient(token);
 
 module.exports = function(controller) {
   
@@ -46,6 +45,25 @@ module.exports = function(controller) {
     
     controller.trigger("grab_text", [bot, message]);
       
+
+  });
+  
+  controller.hears('clear', 'direct_message', function(bot,message) {
+    
+    controller.storage.teams.get(message.team, function(err, team) {
+      var web = new WebClient(bot.config.bot.token);
+      
+      web.conversations.history(message.channel).then(res => {
+        _.each(res.messages, function(ms) {
+          var web = new WebClient(team.oauth_token);
+          web.chat.delete(ms.ts, message.channel).then(res => {
+            console.log(res);
+          }).catch(err => console.log(err));
+        });
+      }).catch(err => console.log(err));
+                                                      
+    });
+        
 
   });
   
@@ -90,7 +108,7 @@ module.exports = function(controller) {
   });
 
   
-  var deleteThisMsg = function(message, callback, params) {
+  var deleteThisMsg = function(message, callback) {
     controller.storage.teams.get(message.team, function(err, team) {
       var token = team.bot.app_token;
 
@@ -98,7 +116,7 @@ module.exports = function(controller) {
       
       web.chat.delete(message.ts, message.channel).then(res => {
         console.log(res);
-        callback(params);
+        callback();
       }).catch(err => console.log(err));
       
     });

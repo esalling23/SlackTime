@@ -27,7 +27,8 @@
     "fs": "^0.0.2",
     "sorted-object": "^2.0.1",
     "cloudinary": "^1.10.0",
-    "bson": "^2.0.5"
+    "bson": "^2.0.5",
+    "@slack/events-api": "^1.0.1"
   },
   "engines": {
     "node": "9.0.0"

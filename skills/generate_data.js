@@ -10,14 +10,6 @@ var team,
     user, 
     channel;
 
-function isUser(member) {
-  console.log(member.name, "is the member being checked");
-  if (member.is_bot || member.name == process.env.botName || member.name == "slackbot")
-    return false;
-  else
-    return true;
-}
-
 module.exports = function(controller) {
   
   controller.on("generation_event", function(options) {
@@ -64,10 +56,9 @@ module.exports = function(controller) {
       // add users array
       var web = new WebClient(teamData.oauth_token);
       
-      
         web.users.list().then(res => {
           _.each(res.members, function(user) {
-            if (isUser(user))
+            if (controller.isUser(user, false))
               teamData.users.push({ userId: user.id, name: user.name });
           });
 

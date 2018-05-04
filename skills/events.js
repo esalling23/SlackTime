@@ -14,7 +14,6 @@ module.exports = function(controller) {
   
     controller.on("count_colors", function (bot, event, team) {
 
-      var web = new WebClient(team.bot.token);
       var length = (team.users.length * 3)/2;
       var ready = false;
 
@@ -41,26 +40,52 @@ module.exports = function(controller) {
       
       if(redCount >= length || greenCount >= length || greyCount >= length) {
         console.log("we did it!");
-         _.each(team.users, function(user) {
-            web.im.list().then(function(list) {
-              var thisIM = _.findWhere(list.ims, { user: user.userId });
-              var channel = thisIM.id;
-              var context = { user: user.userId, channel: channel };
-              bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
-                    console.log(err, direct_message);
-                    console.log(direct_message, "opened the onboarding message");
+        // var user = team.users[0];
+        var web = new WebClient(bot.config.bot.token);
 
-                    if (err) {
-                      console.log('Error sending onboarding message:', err);
-                    } else {
-                      // console.log(user.id);
-                      controller.studio.runTrigger(bot, 'input_nodes_1', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
-                      });
+        web.conversations.list({types: "im, private_channel"}).then(function(list) {
+          _.each(team.users, function(user) {
+            console.log(list.channels, user);
 
-                    }
+            var thisIM = _.findWhere(list.channels, { user: user.userId });
+            var channel = thisIM.id;
+            
+            web.conversations.history(channel).then(function(ims) {
+              console.log(ims);
+              console.log(ims.messages);
+              var btn_message;
+              _.map(ims.messages, function(msg) {
+                if (msg.attachments.length > 0) {
+                  if (msg.attachments[0].callback_id == "three_color_buttons") {
+                    btn_message = msg;
+                  }
+                }
+              });
+              
+              if (!btn_message) {
+                btn_message = ims.messages[0];
+              }
+              
+              if (!btn_message)
+                return;
+              
+              btn_message.channel = channel;
+              
+              controller.makeCard(bot, btn_message, "input_nodes_1", "default", {}, function(card) {
+                bot.api.chat.update({
+                  channel: btn_message.channel, 
+                  ts: btn_message.ts, 
+                  attachments: card.attachments
+                }, function(err, updated) {
                 });
-            }).catch(err => console.log(err));
-         });
+                // bot.replyInteractive(btn_message, card);
+              });
+              
+            }).catch(err => console.log("conversation history error: ", err));
+            
+          });
+
+        }).catch(err => console.log("im list error: ", err));
       }      
 
     });

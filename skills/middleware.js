@@ -26,9 +26,9 @@ module.exports = function(controller) {
     controller.middleware.receive.use(function(bot, message, next) {
     
 //         // do something...
-        // console.log('RCVD:', message);
+        console.log('RCVD:', message);
       
-        if (message.file) {
+        if (message.file && message.file.created) {
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
             var messId = message.team.id ? message.team.id : message.team;
             controller.storage.teams.get(messId, function(err, team){
@@ -41,6 +41,8 @@ module.exports = function(controller) {
           }
           
         }
+      
+        
         next();
     
     });
@@ -49,7 +51,19 @@ module.exports = function(controller) {
     controller.middleware.send.use(function(bot, message, next) {
     
         // do something...
-        // console.log('SEND:', message);
+        console.log('SEND:', message);
+        
+          if (message.type == "dilemma") {
+          
+            controller.storages.teams.get(bot.config.id, function(err, team) {
+              
+              var user = _.findWhere(team.prisoner_players, { userId: message.user });
+              
+              controller.store_prisoners_msg(message, user, team);
+
+            });
+          }
+
       
         if (message.type == "feedback") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
@@ -82,6 +96,59 @@ module.exports = function(controller) {
             }, 1000);
           });
         } 
+      
+      if (message.album) {
+        controller.storage.teams.get(bot.config.id, function(err, team) {
+          var token = team.oauth_token;
+
+          var web = new WebClient(token);
+          
+          setTimeout(function() {
+            web.groups.history(message.channel).then(res => {
+              console.log(res.messages);
+              var thisMsg = _.filter(res.messages, function(msg) {
+                if (msg.attachments) {
+                  return msg.attachments[0].title == "Uploaded Images:";
+                }
+              })[0];
+              
+              team.image_album = thisMsg;
+              
+              controller.storage.teams.save(team, function(err, saved) {
+                console.log(err, saved.image_album);
+              });
+              
+            }).catch(err => console.log(err));
+          }, 1000);
+        });
+      } 
+      
+      if (message.pin) {
+        controller.storage.teams.get(bot.config.id, function(err, team) {
+          var token = team.oauth_token;
+
+          var web = new WebClient(token);
+          
+          setTimeout(function() {
+            web.groups.history(message.channel).then(res => {
+              console.log(res.messages);
+              var thisMsg = _.filter(res.messages, function(msg) {
+                if (msg.attachments) {
+                  return msg.attachments[0].title == "Remember:";
+                }
+              })[0];
+              
+              bot.api.pins.add({
+                channel: message.channel, 
+                timestamp: thisMsg.ts
+              }, function(err, res) {
+                console.log(err, res);
+              });
+              
+            }).catch(err => console.log(err));
+          }, 1000);
+        });
+      } 
       
       if (message.type == "already_complete") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
