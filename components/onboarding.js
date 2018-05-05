@@ -28,7 +28,9 @@ module.exports = function(controller) {
       var web = new WebClient(token);
       controller.storage.teams.get(team.id, function (error, team) {
        web.users.list().then((res) => {
-                
+             
+         team.oauth_token = auth.access_token;
+
          // reset data
          team.users = [];
          team.currentState = 'default';
@@ -85,7 +87,6 @@ module.exports = function(controller) {
 
          });
          
-         team.oauth_token = auth.access_token;
          
          // console.log(saved, " we onboarded this team");              
           web.groups.create(process.env.progress_channel).then((channel, err) => {
@@ -115,9 +116,8 @@ module.exports = function(controller) {
                 controller.storage.teams.save(team, function(err, saved) {
                   console.log("saved in the onboarding: ", saved);
                   controller.gamelogMessage(bot, saved);
-
                 });
-              }, 100 * data.length);
+              }, 1000 * data.length);
             });
 
           }).catch(err => console.log(err));
