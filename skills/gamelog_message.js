@@ -38,7 +38,7 @@ module.exports = function(controller) {
           return att;
         } else if (unlockedStages.includes(id - 1)) {
           // do stuff to the text?
-          att.text = controller.gamelogRefresh(id, team);
+          att.text = controller.gamelogRefresh(id - 1, team);
           console.log(att);
           return att;
 

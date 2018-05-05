@@ -131,7 +131,7 @@ module.exports = function(controller) {
           // SAVE TO TEAM //
           // ************ //
 
-          deleteThisMsg(params.message, token, function() { 
+          controller.deleteThisMsg(params.message, token, function() { 
 
             console.log("deleted") 
             if (!team.uploadedImages) team.uploadedImages = [];
@@ -226,7 +226,7 @@ module.exports = function(controller) {
               
           }
 
-          deleteThisMsg(params.message, team.oauth_token, function() {
+          controller.deleteThisMsg(params.message, team.oauth_token, function() {
             
             controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved);
 
@@ -285,17 +285,4 @@ module.exports = function(controller) {
 
   };// End channel Join
   
-  var deleteThisMsg = function(message, token, callback) {
-    
-    // console.log(message, "we are deleting this");
-    
-    var ts = message.message_ts ? message.message_ts : message.ts;
-    
-    var web = new WebClient(token);
-      
-    web.chat.delete(ts, message.channel).then(res => {
-      // console.log(res, "deleted");
-      callback();
-    }).catch(err => console.log(err));
-  }
 }

@@ -14,7 +14,7 @@ module.exports = function(webserver, controller) {
 
       controller.trigger("download", [opt]);
 
-      if(file == "tangramsZipped.zip") {
+      if(file == "tangramsAll.zip") {
         filePath = "http://res.cloudinary.com/extraludic/raw/upload/v1/escape-room/" + file;
       }
       else {
