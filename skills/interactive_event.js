@@ -418,14 +418,14 @@ module.exports = function(controller) {
     
     if (event.actions[0].name.match(/^prisoner/)) {
       
-//       if (process.env.glitch_domain == "escape-room-dev") {
-//         controller.storage.teams.get(event.team.id, function(err, team) {
+      if (process.env.glitch_domain == "escape-room-dev") {
+        controller.storage.teams.get(event.team.id, function(err, team) {
 
-//           if (!team.prisoners_dilemma || team.prisoners_dilemma.length <= 0)
-//             controller.trigger("prisoners_onboard", [bot, event]);
+          if (!team.prisoners_dilemma || team.prisoners_dilemma.length <= 0)
+            controller.trigger("prisoners_onboard", [bot, event]);
 
-//         });
-//       } else {
+        });
+      } else {
         
          controller.storage.teams.get(event.team.id).then((res) => {
 
@@ -445,7 +445,7 @@ module.exports = function(controller) {
 
          });
 
-      // }
+      }
       
     }
     
