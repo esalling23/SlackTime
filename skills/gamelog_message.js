@@ -19,13 +19,7 @@ module.exports = function(controller) {
       var attachments = _.filter(template.attachments, function(att) {
         var id = template.attachments.indexOf(att);
         
-        if (unlockedStages.includes(id)) {
-          // do stuff to the text?
-          att.text = controller.gamelogRefresh(id, team);
-          console.log(att);
-          return att;
-
-        } else if (id == 0) {
+        if (id == 0) {
           var url = "http://res.cloudinary.com/extraludic/image/upload/v1/node-maps/nodemap_";
           
           var nodestep = team.movements.length == 0 ? 0 : _.max(team.movements, function(node){ return node; });
@@ -39,7 +33,16 @@ module.exports = function(controller) {
           
           att.image_url = url;
           return att;
-        }
+        } else if (id == 1) {
+          console.log("video channel");
+          return att;
+        } else if (unlockedStages.includes(id - 1)) {
+          // do stuff to the text?
+          att.text = controller.gamelogRefresh(id, team);
+          console.log(att);
+          return att;
+
+        } 
         
         
       });
