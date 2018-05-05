@@ -426,23 +426,25 @@ module.exports = function(controller) {
 
         });
       } else {
+        
          controller.storage.teams.get(event.team.id).then((res) => {
-                              
+
           controller.studio.get(bot, "exit", event.user, event.channel).then((currentScript) => {
             var opt = {
               bot: bot, 
               event: event, 
               team: res, 
               user: _.findWhere(res.users, { userId: event.user }), 
-              data: event.actions[0], 
+              data: { value: "exit" }, 
               script: currentScript
             }
-            
+
             controller.confirmMovement(opt);
-            
+
           });
 
-        });
+         });
+
       }
       
     }

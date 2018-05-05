@@ -7,8 +7,11 @@ module.exports = function(controller) {
     controller.on('team_join', function(bot, message) {
 
         console.log("a user joined", message);
+        if (!controller.isUser(message.user)) return;
       
         controller.storage.teams.get(message.team_id, function(err, team) {
+          
+          if (_.findWhere(team.users, { userId: message.user.id })) return;
           
           team.users.push({
             userId: message.user.id, 

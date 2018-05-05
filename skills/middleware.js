@@ -178,14 +178,15 @@ module.exports = function(controller) {
         controller.storage.teams.get(bot.config.id, function(err, team) {
           console.log("this team's movements: ", team.movements);
           if (!team.movements) team.movements = [];
+          var movement = parseInt(message.movement);
           
-          if (team.movements.includes(message.movement)) return;
+          if (team.movements.includes(movement)) return;
             
-          team.movements.push(message.movement);
+          team.movements.push(movement);
           
           controller.storage.teams.save(team, function(err, saved) {
           
-            var phase = message.movement <= 3 ? 1 : message.movment - 2;
+            var phase = movement <= 3 ? 1 : movement - 2;
 
             var log = {
               bot: bot, 
@@ -194,7 +195,7 @@ module.exports = function(controller) {
             }
 
             controller.trigger('gamelog_update', [log]);
-            console.log("saved the movement to node ", message.movement);
+            console.log("saved the movement to node ", movement);
             console.log(saved.movements);
           });
         });
