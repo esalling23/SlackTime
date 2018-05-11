@@ -30,6 +30,8 @@ module.exports = function(controller) {
     });
   }
   
+  
+  
   controller.prisoners_message = function(bot, id, thread) {
       
     controller.storage.teams.get(id, function(err, team) {

@@ -11,42 +11,6 @@ const correctButtonCodes = {
   orb: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
 }
 
-const correctTelegraphKeyCode = {
-  0: [process.env.telegraph_key_1.split(",")[0], process.env.telegraph_key_1.split(",")[1], process.env.telegraph_key_1.split(",")[2]],
-  1: [process.env.telegraph_key_2.split(",")[0], process.env.telegraph_key_2.split(",")[1], process.env.telegraph_key_2.split(",")[2]],
-  2: [process.env.telegraph_key_3.split(",")[0], process.env.telegraph_key_3.split(",")[1], process.env.telegraph_key_3.split(",")[2]],
-  3: [process.env.telegraph_key_4.split(",")[0], process.env.telegraph_key_4.split(",")[1], process.env.telegraph_key_4.split(",")[2]],
-  4: [process.env.telegraph_key_5.split(",")[0], process.env.telegraph_key_5.split(",")[1], process.env.telegraph_key_5.split(",")[2]], 
-  5: [process.env.telegraph_key_6.split(",")[0], process.env.telegraph_key_6.split(",")[1], process.env.telegraph_key_6.split(",")[2]],
-  6: [process.env.telegraph_key_7.split(",")[0], process.env.telegraph_key_7.split(",")[1], process.env.telegraph_key_7.split(",")[2]],
-  7: [process.env.telegraph_key_8.split(",")[0], process.env.telegraph_key_8.split(",")[1], process.env.telegraph_key_8.split(",")[2]],
-  8: [process.env.telegraph_key_9.split(",")[0], process.env.telegraph_key_9.split(",")[1], process.env.telegraph_key_9.split(",")[2]],
-};
-
-const correctBookCode = {
-  0: parseInt(process.env.book), 
-  1: parseInt(process.env.page), 
-  2: parseInt(process.env.line)
-};
-
-const correctSafeCode = {
-  0: process.env.safe_code.split("-")[0],
-  1: process.env.safe_code.split("-")[1],
-  2: process.env.safe_code.split("-")[2]
-};
-
-const correctArisCode = {
-  0: process.env.aris_code.split("-")[0],
-  1: process.env.aris_code.split("-")[1],
-  2: process.env.aris_code.split("-")[2]
-};
-
-const correctKeypadCode = {
-  0: process.env.keypad_code.split("-")[0],
-  1: process.env.keypad_code.split("-")[1],
-  2: process.env.keypad_code.split("-")[2]
-};
-
 module.exports = function(controller) {
   
   controller.on("code_entered", function(params) {
@@ -62,16 +26,16 @@ module.exports = function(controller) {
       
       if (['safe', 'bookshelf', 'aris_door', 'keypad'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
-          correctCodes = correctSafeCode;
+          correctCodes = controller.safeCode;
           params.phaseUnlocked = "phase_2";
         } else if (params.codeType == 'bookshelf') {
-          correctCodes = correctBookCode;
+          correctCodes = controller.bookCode;
           params.phaseUnlocked = "phase_3";
         } else if (params.codeType == 'aris_door') {
-          correctCodes = correctArisCode;
+          correctCodes = controller.arisCode;
           params.phaseUnlocked = "phase_4";
         } else if (params.codeType == 'keypad') {
-          correctCodes = correctKeypadCode;
+          correctCodes = controller.keypadCode;
           params.phaseUnlocked = "phase_5";
         }
         
@@ -84,7 +48,7 @@ module.exports = function(controller) {
           correctCodes = correctButtonCodes;
           
         }  else if (params.codeType == 'telegraph_key') {
-          correctCodes = correctTelegraphKeyCode;
+          correctCodes = controller.telegraphKeys;
           params.code = [params.code[0], params.code[1], params.code[2]];
         }
         
@@ -92,13 +56,16 @@ module.exports = function(controller) {
 
       }
       
-      console.log(code, "is the code");
+      controller.dataStore(params.event, "code", { code: code, codeType: params.codeType })
+        .then(data => console.log("logged: ", data))
+        .catch(err => console.log("code loggin error: ", err));
       
+      // console.log(code, "is the code");
       
       if (code.correct == true) {
         
         if (params.codeType == "telegraph_key")
-          code.code = parseInt(code.code) + 1;
+          code.puzzle = parseInt(code.puzzle) + 1;
         
         params.key = code;
         params.team = res;
@@ -108,7 +75,6 @@ module.exports = function(controller) {
         if (code.code == 'safari')
           controller.trigger("image_counter_onboard", [bot, params.event]);
 
-        
       } else {
                     
          var vars = {
@@ -160,12 +126,12 @@ module.exports = function(controller) {
           console.log("correct");
           console.log(correctCodes[key], key);
 
-          return { correct: true, code: key };
+          return { correct: true, puzzle: key, code: code };
       } 
 
     }
 
-    return { correct: false };
+    return { correct: false, code: code };
 
   }
   
@@ -188,14 +154,14 @@ module.exports = function(controller) {
         console.log("correct");
         
         if ( count == Object.keys(correctCode).length ) {
-           return { correct: true };
+           return { correct: true, code: code };
         }
 
       }
 
     }
     
-    return { correct: false };
+    return { correct: false, code: code };
     
   }
   

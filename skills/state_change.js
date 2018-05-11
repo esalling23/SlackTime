@@ -16,14 +16,15 @@ module.exports = function(controller) {
     
     console.log(options.key, "in the state change");
     var res = options.team;
-    var code = options.key.code;
+    var code = options.key.puzzle;
+    var thisUser = _.findWhere(res.users, { userId: options.user });
 
     // safety check
-    if (!res.events) res.events = [];
-    if (!res.codesEntered) res.codesEntered = [];
+    if (!thisUser.events) thisUser.events = [];
+    if (!thisUser.codesEntered) thisUser.codesEntered = [];
     // safety check
-    if (!res.currentState) {
-      res.currentState = "default";
+    if (!thisUser.currentState) {
+      thisUser.currentState = "default";
     }
     
     var thread = 'correct';
@@ -34,7 +35,7 @@ module.exports = function(controller) {
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
-    if (res.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType) && code != "orb") {
+    if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType) && code != "orb") {
       var vars = {};
       
       if (options.codeType == 'buttons') vars.recap = thread;
@@ -49,26 +50,30 @@ module.exports = function(controller) {
       
       if (options.phaseUnlocked) {
         if (!res.phasesUnlocked) res.phasesUnlocked = ["phase_1"];
-        res.phasesUnlocked.push(options.phaseUnlocked);
+        if (!res.phasesUnlocked.includes(options.phaseUnlocked)) 
+          res.phasesUnlocked.push(options.phaseUnlocked);
+        
+        // sanity check
+        res.phasesUnlocked = _.filter(res.phasesUnlocked, function(phase) {
+          return phase != null;
+        });
       }
       
-      if (['random', 'safe'].includes(code)) {
+      if (['random', 'safe', 'orb'].includes(code)) {
         
-        if (!res.events.includes(code))
-            res.events.push(code);
+        if (!thisUser.events.includes(code))
+            thisUser.events.push(code);
         
-      } else if (code == "orb") {
-        var thisUser = _.findWhere(res.users, { userId: options.user });
-        thisUser.hasOrb = true;
-        res.users = _.map(res.users, function(user) {
-          if (user.userId == thisUser.userId)
-            return thisUser;
-          else 
-            return user;
-        });
       } else {
-        res.currentState = findState(res.currentState, code);
+        thisUser.currentState = findState(thisUser.currentState, code);
       }
+      
+      res.users = _.map(res.users, function(user) {
+        if (user.userId == thisUser.userId)
+          return thisUser;
+        else 
+          return user;
+      });
 
       controller.storage.teams.save(res).then((updated) => {
 
@@ -93,10 +98,12 @@ module.exports = function(controller) {
 
           });
           
-          if (updated.codesEntered.includes(code)) return;
+          thisUser = _.findWhere(updated.users, { userId: options.user });
+          
+          if (thisUser.codesEntered.includes(code)) return;
           
           if (options.codeType != "bookshelf")
-            updated.codesEntered.push(code);
+            thisUser.codesEntered.push(code);
           
           controller.storage.teams.save(updated).then((saved) => {
 
@@ -106,7 +113,8 @@ module.exports = function(controller) {
               phase: thisPhase, 
               event: options.event,
               codeType: options.codeType,
-              player: options.event.user
+              player: options.event.user, 
+              code: options.key.code
             }
 
             if (log.codeType == "buttons" || log.codeType == "telegraph_key")

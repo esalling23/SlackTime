@@ -29,6 +29,8 @@ module.exports = function(controller) {
         // console.log('RCVD:', message);
       
         if (message.file && message.file.created) {
+          
+          controller.dataStore(message, "chat").catch(err => console.log(err));
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
             var messId = message.team.id ? message.team.id : message.team;
             controller.storage.teams.get(messId, function(err, team){

@@ -110,7 +110,12 @@ module.exports = function(controller) {
             var results = Promise.all(mapPromises);
 
             results.then(members => {
-              console.log("completed promises");
+              return web.channels.list();
+            }).then(res => {
+              channel = _.findWhere(res.channels, { name: "general" }).id;
+              return web.channels.invite(channel, team.bot.user_id);
+            }).then(res => {
+              console.log("completed promises", res);
 
               setTimeout(function() {
                 controller.storage.teams.save(team, function(err, saved) {
@@ -118,13 +123,11 @@ module.exports = function(controller) {
                   controller.gamelogMessage(bot, saved);
                 });
               }, 1000 * data.length);
-            });
+            }).catch(err => console.log(err));
 
-          }).catch(err => console.log(err));
-
-            
+          }).catch(err => console.log(err));            
                    
-       }).catch((err) => { console.log(err) }); // End users.list call
+       }).catch((err) => console.log(err) ); // End users.list call
 
     
     });

@@ -13,7 +13,7 @@ const puzzleNames = {
 
 const eggNames = {
   chicken: "Clucking",
-  snake: "Slivery", 
+  snake: "Slithery", 
   shrimp: "Squishy", 
   lizard: "Scaly", 
   turtle: "Flipping"
@@ -49,7 +49,7 @@ module.exports = function(controller) {
     
     switch (event.type) {
       case 'buttons': 
-        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle";
+        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle with code _" + controller.puzzleCodes[event.puzzle] + "_";
         break;
         
       case 'download': 
@@ -81,23 +81,23 @@ module.exports = function(controller) {
         break;
         
       case 'safe': 
-        message += " unlocked the safe in node 2, which lead to node 4";
+        message += " unlocked the safe with _" + process.env.safe_code + "_ in node 2, which lead to node 4";
         break;
         
       case 'telegraph_key': 
-        message += " heard a phonograph message about Channel " + event.puzzle;
+        message += " heard a phonograph message about Channel " + event.puzzle + " by putting in *" + controller.telegraphKeys[event.puzzle].toString().replace(/,/g, " ") + "*";
         break;
       
       case 'aris_door':
-        message += " unlocked the door out of node 5 and found node 6";
+        message += " unlocked the door with code _"  + process.env.aris_code + "_ out of node 5 and found node 6";
         break;
         
       case 'keypad':
-        message += " put in the correct keypad code and made it to the final node";
+        message += " put _" + process.env.keypad_code + "_ into the keypad and made it to the final node";
         break;
      }
     
-    message += " at _" + date.toDateString() + "_\n\n";
+    message += " on _" + date.toDateString() + "_\n\n";
     
     return message;
   }

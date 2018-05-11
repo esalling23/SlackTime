@@ -43,7 +43,7 @@ module.exports = function(controller) {
         // var user = team.users[0];
         var web = new WebClient(bot.config.bot.token);
 
-        web.conversations.list({types: "im, private_channel"}).then(function(list) {
+        web.conversations.list({types: "im"}).then(function(list) {
           _.each(team.users, function(user) {
             console.log(list.channels, user);
 
@@ -125,6 +125,32 @@ module.exports = function(controller) {
         
 
     });
+  
+    controller.on('garden_channel', function(bot, id) {
+      controller.storage.teams.get(id, function(err, team) {
+        var web = new WebClient(team.oauth_token);
+        web.groups.create("garden").then(res => {
+
+          var channelId = res.channel.id;
+          var data = _.map(team.users, function(user) {
+            return [ channelId, user.userId ]
+          });
+
+          data.push([ channelId, team.bot.user_id ]);
+
+          var mapPromises = data.map(web.groups.invite);
+
+          var results = Promise.all(mapPromises);
+
+          return results;
+
+        }).then(results => {
+          console.log(results);
+        });
+
+
+      });
+    });
     
     // Tagged a message
     controller.on('message_tagged', function(bot, message, tag) {
@@ -180,7 +206,7 @@ module.exports = function(controller) {
 
       console.log(log.codeType, log.puzzle);
 
-      controller.trigger('gamelog_update', [log]);
+      // controller.trigger('gamelog_update', [log]);
 
       // request.get(process.env.domain + '/download/' + event.actions[0].value);
       
