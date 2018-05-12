@@ -21,6 +21,18 @@ var aris_codes = {
 
 module.exports = function(controller) {
   
+  controller.studio.before("three_buttons", function(convo, next) {
+    var id = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
+    controller.storage.teams.get(id, function(team, err) {
+      _.map(team.users, function(user) {
+        if (!user.startBtns || user.startBtns.length <= 3)
+          user.startBtns = ["primary","danger","default"];
+        
+        return user;
+      });
+    });
+  });
+  
   controller.studio.before("bookshelf", function(convo, next) {
     var menus = convo.threads.default[0].attachments[0].actions;
     
@@ -83,6 +95,37 @@ module.exports = function(controller) {
     var btns = convo.threads.default[0].attachments[0].actions;
 
     request.get('https://tamagotchi-production.glitch.me/check/' + team, function(err, res, body) {
+      // console.log(body, btns);
+      body = JSON.parse(body);
+      
+      _.each(body.grabbed, function(user) {
+          var userBtn = _.filter(btns, function(btn) {
+            // console.log(btn.url, user.type);
+            return btn.url.includes(user.type);
+          })[0];
+        // console.log(userBtn);
+        
+          if (userBtn) {
+            userBtn.text = "~" + userBtn.text + "~";
+            userBtn.name = "taken";
+            userBtn.url = "";
+            userBtn.style = "danger";
+          }
+          // console.log(userBtn);        
+      });
+      
+      next();
+    });
+    
+  });
+  
+  controller.studio.before("egg_table_dev", function(convo, next) {
+    
+    var team = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
+
+    var btns = convo.threads.default[0].attachments[0].actions;
+
+    request.get('https://tamagotchi-dev.glitch.me/check/' + team, function(err, res, body) {
       // console.log(body, btns);
       body = JSON.parse(body);
       

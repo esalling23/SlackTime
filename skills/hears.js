@@ -26,18 +26,42 @@ const token = process.env.slackToken;
 module.exports = function(controller) {
   
   
-  controller.hears('(.*)', 'ambient', function(bot,message) {
+  controller.hears('(.*)', 'ambient,direct_mention', function(bot,message) {
     
     
     // If we hear anything in the no-chat channels, delete it
     controller.storage.teams.get(message.team, function(err, team) {
 
       if (team.noChatChannels.includes(message.channel))
-        deleteThisMsg(message, botReply, [message, 'sorry we had to delete that']);
+        controller.deleteThisMsg(message, team.bot.app_token);
+      else {
+        controller.dataStore(message, "chat");
+
+      }
 
     });
       
 
+  });
+  
+  controller.hears('invite', 'direct_message', function(bot, message) {
+    
+    controller.storage.teams.get(message.team, function(err, team) {
+      
+      var web = new WebClient(team.oauth_token);
+      
+      web.channels.list()
+        .then(res => {
+        console.log(res.channels);
+          return _.findWhere(res.channels, { name: "general" }).id;
+        })
+        .then(channel => { return web.channels.invite(channel, team.bot.user_id) })
+        .then(res => {
+          console.log(res, "is the channel res");
+        }).catch((err) => { console.log(err) });
+      
+    });
+    
   });
   
   controller.hears('grab', 'ambient,direct_message', function(bot,message) {
@@ -110,18 +134,13 @@ module.exports = function(controller) {
   });
 
   
-  var deleteThisMsg = function(message, callback) {
-    controller.storage.teams.get(message.team, function(err, team) {
-      var token = team.bot.app_token;
+  var deleteThisMsg = function(message, token) {
+    var web = new WebClient(token);
 
-      var web = new WebClient(token);
-      
-      web.chat.delete(message.ts, message.channel).then(res => {
-        console.log(res);
-        callback();
-      }).catch(err => console.log(err));
-      
-    });
+    web.chat.delete(message.ts, message.channel).then(res => {
+      console.log(res);
+    }).catch(err => console.log(err));
+
   }
   
   var botReply = function(params) {

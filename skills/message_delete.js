@@ -19,11 +19,12 @@ module.exports = function(controller) {
     }).catch(err => {
       console.log("delete error: ", err); 
       console.log("couldn't delete: ", message);
-      callback();
+      if (callback)
+        callback();
     });
   }
   
-  controller.deleteHistory = function(channel, token, who, cb) {
+  controller.deleteHistory = function(channel, token, cb) {
     
     var count = 0;
     var num = 0;

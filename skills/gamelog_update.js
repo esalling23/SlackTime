@@ -34,12 +34,24 @@ module.exports = function(controller) {
           var thisUser = _.findWhere(res.users, { userId: userId });
 
           console.log(userId);
-          
-          res.gamelog[params.phase].push({
-            event: { type: params.codeType, puzzle: params.puzzle },
-            unlockedBy: thisUser,
-            date: new Date()
+          var event = { 
+              type: params.codeType, 
+              puzzle: params.puzzle,
+              code: params.code
+          }
+          var repeat;
+          _.each(res.gamelog[params.phase], function(log) {
+            if (log.event.type == event.type && log.event.puzzle == event.puzzle)
+              repeat = log;
           });
+          
+          if (!repeat) {
+            res.gamelog[params.phase].push({
+              event: event,
+              unlockedBy: thisUser,
+              date: new Date()
+            });
+          }
           
         }
         

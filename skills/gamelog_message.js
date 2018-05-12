@@ -6,7 +6,11 @@ module.exports = function(controller) {
     
     var user = bot.config.createdBy;
     
-    var unlockedStages = _.map(team.phasesUnlocked, function(stage) { 
+    var unlockedStages = _.filter(team.phasesUnlocked, function(stage) { 
+      return stage != null;
+    });
+    
+    unlockedStages = _.map(unlockedStages, function(stage) {
       return parseInt(stage.split("_")[1]);
     });
         

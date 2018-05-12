@@ -29,6 +29,8 @@ module.exports = function(controller) {
         // console.log('RCVD:', message);
       
         if (message.file && message.file.created) {
+          
+          controller.dataStore(message, "chat").catch(err => console.log(err));
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
             var messId = message.team.id ? message.team.id : message.team;
             controller.storage.teams.get(messId, function(err, team){
@@ -187,6 +189,9 @@ module.exports = function(controller) {
           controller.storage.teams.save(team, function(err, saved) {
           
             var phase = movement <= 3 ? 1 : movement - 2;
+            
+            if (phase == 3)
+              controller.trigger("garden_channel", [bot, team.id]);
 
             var log = {
               bot: bot, 
