@@ -129,7 +129,7 @@ module.exports = function(controller) {
     controller.on('garden_channel', function(bot, id) {
       controller.storage.teams.get(id, function(err, team) {
         var web = new WebClient(team.oauth_token);
-        web.groups.create("garden").then(res => {
+        web.groups.create(process.env.garden_channel).then(res => {
 
           var channelId = res.group.id;
           var data = _.map(team.users, function(user) {
@@ -143,9 +143,13 @@ module.exports = function(controller) {
           Promise.all(mapPromises).then(() => {
             console.log("invited all");
             
-            web.groups.setTopic(channelId, "Channel dedicated to team chat about the ARIS game puzzle.").then(res => console.log(res)).catch(err => console.log(err));
-            web.groups.setPurpose(channelId, "Only use this channel for chat about the ARIS puzzle.").then(res => console.log(res)).catch(err => console.log(err));
+            web.groups.setTopic(channelId, "Channel dedicated to team chat about the ARIS game Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
+            web.groups.setPurpose(channelId, "Only use this channel for chat about the ARIS Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
             
+            team.garden_channel.id = channelId;
+            controller.storage.teams.save(team, function(err, saved) {
+              console.log("saved the garden channel, ", channelId);
+            });
           }).catch(err => console.log(err));
           
         }).then(results => {

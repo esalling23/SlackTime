@@ -312,6 +312,20 @@ module.exports = function(controller) {
 
 
       }
+      
+      if (event.actions[0].name.match(/^tamagotchi/)) {
+        
+        var data = {
+          team: event.team.id ? event.team.id : event.team, 
+          player: event.user, 
+          type: event.actions[0].value
+        }
+
+        request.post({ url: 'https://tamagotchi-dev.glitch.me/pickup', form: data }, function(err, req, body) {
+
+        });
+
+      }
 
       if (event.actions[0].name.match(/^start/)) {
 

@@ -94,21 +94,21 @@ module.exports = function(controller) {
 
     var btns = convo.threads.default[0].attachments[0].actions;
 
-    request.get('https://tamagotchi-production.glitch.me/check/' + team, function(err, res, body) {
+    request.get('https://tamagotchi-dev.glitch.me/check/' + team, function(err, res, body) {
       // console.log(body, btns);
       body = JSON.parse(body);
       
       _.each(body.grabbed, function(user) {
           var userBtn = _.filter(btns, function(btn) {
             // console.log(btn.url, user.type);
-            return btn.url.includes(user.type);
+            return btn.value == user.type;
           })[0];
         // console.log(userBtn);
         
           if (userBtn) {
             userBtn.text = "~" + userBtn.text + "~";
             userBtn.name = "taken";
-            userBtn.url = "";
+            userBtn.value = "";
             userBtn.style = "danger";
           }
           // console.log(userBtn);        
