@@ -189,6 +189,9 @@ module.exports = function(controller) {
           controller.storage.teams.save(team, function(err, saved) {
           
             var phase = movement <= 3 ? 1 : movement - 2;
+            
+            if (phase == 3)
+              controller.trigger("garden_channel", [bot, team.id]);
 
             var log = {
               bot: bot, 

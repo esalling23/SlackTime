@@ -28,7 +28,7 @@ module.exports = function(controller) {
     }
     
     var thread = 'correct';
-
+    
     if (options.codeType == 'buttons' || options.codeType == "telegraph_key")
       thread += '_' + code;
     

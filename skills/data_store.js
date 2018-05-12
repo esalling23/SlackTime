@@ -19,11 +19,18 @@ module.exports = function(controller) {
 
       if (type == "button" || type == "code") {
         var value = event.actions[0].value ? event.actions[0].value : event.actions[0].selected_options[0].value;
+        var action = event.actions[0].name ? event.actions[0].name : event.actions[0].selected_options[0].name;
+        
         var attachment = event.original_message.attachments[event.attachment_id - 1];
-        var button = _.findWhere(attachment.actions, { value: value });
+        var button;
+        
+        if (event.actions[0].selected_options)
+          button = _.findWhere(_.findWhere(attachment.actions, { name: action }).options, { value: value });
+        else 
+          button = _.findWhere(attachment.actions, { value: value });
 
         dataEvent.type = event.actions[0].type;
-        dataEvent.action = event.actions[0].name;
+        dataEvent.action = action;
         dataEvent.btnText = button.text;
         dataEvent.value = value;
         dataEvent.from = event.callback_id;
