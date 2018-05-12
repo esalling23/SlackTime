@@ -36,7 +36,6 @@ module.exports = function(controller) {
         controller.deleteThisMsg(message, team.bot.app_token);
       else {
         controller.dataStore(message, "chat");
-
       }
 
     });
@@ -44,22 +43,38 @@ module.exports = function(controller) {
 
   });
   
-  controller.hears('invite', 'direct_message', function(bot, message) {
+  controller.hears('gamestart', 'direct_message', function(bot, message) {
     
     controller.storage.teams.get(message.team, function(err, team) {
       
-      var web = new WebClient(team.oauth_token);
+       team.users = _.map(team.users, function(user) {
+
+          bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
+            console.log(err, direct_message);
+            console.log(direct_message, "opened the onboarding message");
+            user.bot_chat = direct_message.channel.id;
+
+            if (err) {
+              console.log('Error sending onboarding message:', err);
+            } else {
+              // console.log(user.id);
+              controller.studio.runTrigger(bot, 'welcome', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
+                console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
+              });
+
+            }
+
+          });
+
+         return user;
+
+       });
       
-      web.channels.list()
-        .then(res => {
-        console.log(res.channels);
-          return _.findWhere(res.channels, { name: "general" }).id;
-        })
-        .then(channel => { return web.channels.invite(channel, team.bot.user_id) })
-        .then(res => {
-          console.log(res, "is the channel res");
-        }).catch((err) => { console.log(err) });
+      team.gameStarted = true;
       
+       controller.storage.teams.save(team, function(err, saved) {
+         console.log(saved);
+       });
     });
     
   });

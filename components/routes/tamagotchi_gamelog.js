@@ -17,5 +17,7 @@ module.exports = function(webserver, controller) {
 
     controller.trigger('gamelog_update', [log]);
     
+    res.send('success');
+    
   });
 }

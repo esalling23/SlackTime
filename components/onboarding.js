@@ -30,6 +30,7 @@ module.exports = function(controller) {
        web.users.list().then((res) => {
              
          team.oauth_token = auth.access_token;
+         team.gameStarted = false;
 
          // reset data
          team.users = [];
@@ -37,6 +38,9 @@ module.exports = function(controller) {
          team.events = [];
          team.codesEntered = [];
          team.uploadedImages = [];
+         
+         team.progress_channel_id = "";
+         team.garden_channel_id = "";
          
          team.albumImages = undefined;
          team.imagesComplete = false;
@@ -62,29 +66,6 @@ module.exports = function(controller) {
             if (isUser(user) && !thisUser) 
               team.users.push({ userId: user.id, name: user.name });
                                       
-         });
-         
-         team.users = _.map(team.users, function(user) {
-            
-            bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
-              console.log(err, direct_message);
-              console.log(direct_message, "opened the onboarding message");
-              user.bot_chat = direct_message.channel.id;
-
-              if (err) {
-                debug('Error sending onboarding message:', err);
-              } else {
-                // console.log(user.id);
-                controller.studio.runTrigger(bot, 'welcome', user.userId, direct_message.channel.id, direct_message).catch(function(err) {
-                  debug('Error: encountered an error loading onboarding script from Botkit Studio:', err);
-                });
-                
-              }
-
-            });
-           
-           return user;
-
          });
          
          

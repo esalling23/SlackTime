@@ -23,6 +23,37 @@ module.exports = function(controller) {
           controller.storage.teams.save(team, function(err, saved) {
             console.log(saved, "someone joined so we added them to the users list");
             
+            
+            var web = new WebClient(team.oauth_token);
+
+            web.groups.list().then(list => {
+              var channel = _.findWhere(list.groups, { name: process.env.progress_channel }).id;
+
+              web.groups.invite(channel, message.user.id)
+              .then(res => {
+
+                var image = _.findWhere(list.groups, { name: process.env.image_counter_channel });
+                if (image) {
+                   web.groups.invite(image.id, message.user.id)
+                  .then(res => {
+                    console.log(res);
+                  }).catch((err) => { console.log(err) });
+                }
+
+                var garden = _.findWhere(list.groups, { name: process.env.garden_channel });
+                if (garden) {
+                   web.groups.invite(garden.id, message.user.id)
+                  .then(res => {
+                    console.log(res);
+                  }).catch((err) => { console.log(err) });
+                }
+
+              }).catch((err) => { console.log(err) });
+
+            }).catch(err => console.log(err));
+
+            if (!saved.gameStarted) return;
+            
             bot.api.im.open({ user: message.user.id }, function(err, direct_message) { 
 
               if (err) {
@@ -32,25 +63,6 @@ module.exports = function(controller) {
                 controller.studio.runTrigger(bot, 'welcome', message.user.id, direct_message.channel.id, direct_message).catch(function(err) {
                   console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
                 });
-                var web = new WebClient(team.oauth_token);
-                
-                web.groups.list().then(list => {
-                  var channel = _.findWhere(list.groups, { name: process.env.progress_channel }).id;
-                  
-                  web.groups.invite(channel, message.user.id)
-                  .then(res => {
-                    console.log(res);
-                    var image = _.findWhere(list.groups, { name: process.env.image_counter_channel });
-                    if (image) {
-                       web.groups.invite(image.id, message.user.id)
-                      .then(res => {
-                        console.log(res);
-                      }).catch((err) => { console.log(err) });
-                    }
-                  }).catch((err) => { console.log(err) });
-
-                }).catch(err => console.log(err));
-                
               }
 
             });

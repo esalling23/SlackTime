@@ -129,25 +129,38 @@ module.exports = function(controller) {
     controller.on('garden_channel', function(bot, id) {
       controller.storage.teams.get(id, function(err, team) {
         var web = new WebClient(team.oauth_token);
-        web.groups.create("garden").then(res => {
+        web.groups.create(process.env.garden_channel).then(res => {
 
-          var channelId = res.channel.id;
+          var channelId = res.group.id;
           var data = _.map(team.users, function(user) {
             return [ channelId, user.userId ]
           });
 
           data.push([ channelId, team.bot.user_id ]);
 
-          var mapPromises = data.map(web.groups.invite);
+          var mapPromises = data.map(invite);
 
-          var results = Promise.all(mapPromises);
-
-          return results;
-
+          Promise.all(mapPromises).then(() => {
+            console.log("invited all");
+            
+            web.groups.setTopic(channelId, "Channel dedicated to team chat about the ARIS game Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
+            web.groups.setPurpose(channelId, "Only use this channel for chat about the ARIS Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
+            
+            team.garden_channel.id = channelId;
+            controller.storage.teams.save(team, function(err, saved) {
+              console.log("saved the garden channel, ", channelId);
+            });
+          }).catch(err => console.log(err));
+          
         }).then(results => {
           console.log(results);
-        });
+        }).catch(err => console.log(err));
 
+        var invite = function(params) {
+          return web.groups.invite(params[0], params[1]).then(res => {
+            console.log("invited to garden ", params[1]);
+          }).catch(err => console.log(err));
+        }
 
       });
     });
