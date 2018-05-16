@@ -94,7 +94,7 @@ module.exports = function(controller) {
 
     var btns = convo.threads.default[0].attachments[0].actions;
 
-    request.get('https://tamagotchi-dev.glitch.me/check/' + team, function(err, res, body) {
+    request.get('https://tamagotchi-production.glitch.me/check/' + team, function(err, res, body) {
       // console.log(body, btns);
       body = JSON.parse(body);
       

@@ -119,7 +119,7 @@ module.exports = function(controller) {
 
             if (log.codeType == "buttons" || log.codeType == "telegraph_key")
               log.puzzle = code;
-            else if (["bookshelf", "safe", "aris_door"].includes(log.codeType))
+            else if (["bookshelf", "safe", "aris_door", "keypad"].includes(log.codeType))
               log.puzzle = log.codeType;
 
             console.log(log.codeType, log.puzzle);
