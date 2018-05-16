@@ -123,6 +123,7 @@ module.exports = function(controller) {
             }).catch(err => console.log(err));
           }, 1000);
         });
+        
       } 
       
       if (message.pin) {
@@ -137,7 +138,8 @@ module.exports = function(controller) {
               var thisMsg = _.filter(res.messages, function(msg) {
                 if (msg.attachments) {
                   return msg.attachments[0].title == "Remember:";
-                }
+                } else 
+                  return msg.text == message.text;
               })[0];
               
               bot.api.pins.add({

@@ -6,7 +6,7 @@ module.exports = function(controller) {
     random: 'red, red, green, grey, grey, green, green, red, grey',
     safari: 'grey, green, green, grey, grey, red, red, green, red',
     hole: 'grey, grey, red, red, red, green, grey, red, grey', 
-    glyph: 'grey, green, grey, grey, grey, grey, grey, grey, grey',
+    glyph: 'grey, green, grey, grey, grey, grey, grey, grey, red',
     orb: 'red, green, grey, grey, grey, green, grey, red, grey'
   }
   
@@ -46,4 +46,11 @@ module.exports = function(controller) {
     2: process.env.keypad_code.split("-")[2]
   };
   
+  controller.bookSpecs = {
+    snake: process.env.page + " Page", 
+    chicken: process.env.book + " Book", 
+    lizard: process.env.book + " Book", 
+    shrimp: process.env.line + " Line", 
+    turtle: process.env.page + " Page"
+  }
 }

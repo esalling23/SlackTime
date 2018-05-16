@@ -7,7 +7,7 @@ const correctButtonCodes = {
   random: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
   safari: ['grey','green','green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
   hole: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'], 
-  glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey'],
+  glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'red'],
   orb: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
 }
 
@@ -22,7 +22,7 @@ module.exports = function(controller) {
       var correctCodes;
       var code;
       
-      console.log(params.codeType, params.code);
+      // console.log(params.codeType, params.code);
       
       if (['safe', 'bookshelf', 'aris_door', 'keypad'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
@@ -36,7 +36,7 @@ module.exports = function(controller) {
           params.phaseUnlocked = "phase_4";
         } else if (params.codeType == 'keypad') {
           correctCodes = controller.keypadCode;
-          params.phaseUnlocked = "phase_5";
+          // params.phaseUnlocked = "phase_5";
         }
         
         code = checkCodeObject(params.code, correctCodes);
@@ -72,7 +72,7 @@ module.exports = function(controller) {
         
         controller.trigger("state_change", [params]);
 
-        if (code.code == 'safari')
+        if (code.puzzle == 'safari')
           controller.trigger("image_counter_onboard", [bot, params.event]);
 
       } else {

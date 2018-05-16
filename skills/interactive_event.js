@@ -32,7 +32,7 @@ module.exports = function(controller) {
           var value = event.actions[0].selected_options[0].value;
           var choice;
 
-        console.log(value);
+        // console.log(value);
 
           var actions = reply.attachments[0].actions;
 
@@ -54,7 +54,7 @@ module.exports = function(controller) {
 
           }
 
-        console.log(choice);
+        // console.log(choice);
 
           // Take the original message attachment
           var menuAttachment = reply.attachments[0].actions[0];
@@ -67,7 +67,7 @@ module.exports = function(controller) {
           if (!_.findWhere(choiceSelect, { user: event.user })) {
 
             if (event.actions[0].name.includes("multi")) {
-              console.log(event.actions[0].name);
+              // console.log(event.actions[0].name);
 
               var key = parseInt(event.actions[0].name.match(/\d+/));
               console.log(key);
@@ -127,7 +127,7 @@ module.exports = function(controller) {
 
           }
 
-        console.log(choiceSelect, "is the choice select");
+        // console.log(choiceSelect, "is the choice select");
 
        }
 
@@ -193,11 +193,11 @@ module.exports = function(controller) {
           _.each(attachment.actions, function(action) {
 
             if (type.includes('safe') || type.includes('aris') || type.includes('keypad') || type.includes('bookshelf') || type.includes('telegraph_key')) {
-              console.log("confirming safe/door enter code");
+              // console.log("confirming safe/door enter code");
 
               var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
               var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
-              console.log(confirmedChoice, "is the codeType");
+              // console.log(confirmedChoice, "is the codeType");
 
               options.code = confirmedChoice.choice;
 
@@ -220,7 +220,7 @@ module.exports = function(controller) {
                     break;
                 }
                 code.push(color);
-                console.log(code);
+                // console.log(code);
 
               } 
 
@@ -233,14 +233,14 @@ module.exports = function(controller) {
           });
         });
 
-        console.log(options.code, options.codeType);
+        // console.log(options.code, options.codeType);
 
         options.event = event;
         options.user = event.user;
         options.team = event.team.id;
         options.bot = bot;
 
-        console.log("code has been entered");
+        // console.log("code has been entered");
 
         controller.trigger("code_entered", [options]);
 
@@ -286,7 +286,7 @@ module.exports = function(controller) {
             // console.log(event.team.id);
 
             controller.storage.teams.get(event.team.id, function (error, team) {
-              console.log(error, team);
+              // console.log(error, team);
               var thisUser = _.findWhere(team.users, { userId: event.user });
               if (!thisUser.startBtns) thisUser.startBtns = [];
               _.each(updated.message.attachments[0].actions, function(btn) {
@@ -302,7 +302,7 @@ module.exports = function(controller) {
 
               controller.storage.teams.save(team, function(err, saved) {
 
-                console.log(saved.users, " we saved these users");
+                // console.log(saved.users, " we saved these users");
                 controller.trigger("count_colors", [bot, event, saved]);
               });
 
@@ -321,7 +321,7 @@ module.exports = function(controller) {
           type: event.actions[0].value
         }
 
-        request.post({ url: 'https://tamagotchi-dev.glitch.me/pickup', form: data }, function(err, req, body) {
+        request.post({ url: 'https://tamagotchi-production.glitch.me/pickup', form: data }, function(err, req, body) {
 
         });
 
@@ -346,11 +346,11 @@ module.exports = function(controller) {
       }
 
       if (event.actions[0].name.match(/^picture(.*)/)) {
-        console.log(event);
+        // console.log(event);
         var reply = event.original_message;
         var type = event.actions[0].value;
         var url = reply.attachments[0].image_url;
-        console.log(reply.attachments[0].image_url);
+        // console.log(reply.attachments[0].image_url);
 
         controller.storage.teams.get(event.team.id, function(err, team) {
           var album = _.filter(team.uploadedImages, function(img) { return img.location != undefined });
@@ -373,7 +373,7 @@ module.exports = function(controller) {
               pos = album.length - 1;
           }
 
-          console.log(pos, album.length);
+          // console.log(pos, album.length);
 
           reply.attachments[0].image_url = album[pos].url;
 

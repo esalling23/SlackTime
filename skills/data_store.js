@@ -14,8 +14,8 @@ module.exports = function(controller) {
         time: new Date()
       }
 
-      console.log(event, event.raw_message);
-      console.log(event.original_message);
+      // console.log(event, event.raw_message);
+      // console.log(event.original_message);
 
       if (type == "button" || type == "code") {
         var value = event.actions[0].value ? event.actions[0].value : event.actions[0].selected_options[0].value;
@@ -57,7 +57,7 @@ module.exports = function(controller) {
         dataEvent.type = opt.codeType;
       }
 
-      console.log(dataEvent);
+      // console.log(dataEvent);
 
       controller.storage.events.save(dataEvent, function(err, saved) {
         console.log(err, saved, "SAVED!!");

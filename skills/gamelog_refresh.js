@@ -49,7 +49,7 @@ module.exports = function(controller) {
     
     switch (event.type) {
       case 'buttons': 
-        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle with code _" + controller.puzzleCodes[event.puzzle] + "_";
+        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle with the code _" + controller.puzzleCodes[event.puzzle] + "_";
         break;
         
       case 'download': 
@@ -59,13 +59,17 @@ module.exports = function(controller) {
       case 'image_count': 
         message += " uploaded the last image needed for _*" + locationNames[event.puzzle] + "*_";
         break;
+        
+      case 'image_complete':
+        message += " completed the image uploads and got code _*" + process.env.safe_code + "*_";
+        break;
       
       case 'bookshelf': 
         message += " found a special line from the bookshelf! The line turned into a black hole and lead to node 5";
         break;
         
       case 'tamagotchi_complete': 
-        message += " satiated the _*" + evolveNames[event.puzzle] + "*_, and got a special clue as a reward";
+        message += " satiated the _*" + evolveNames[event.puzzle] + "*_, and was told to look at the _*" + controller.bookSpecs[event.puzzle] + "*_";
         break;
         
       case 'tamagotchi_evolve': 
@@ -85,11 +89,11 @@ module.exports = function(controller) {
         break;
         
       case 'telegraph_key': 
-        message += " heard a phonograph message about Channel " + event.puzzle + " by putting in *" + controller.telegraphKeys[event.puzzle].toString().replace(/,/g, " ") + "*";
+        message += " heard a phonograph message about Channel " + event.puzzle + " by putting in   *" + controller.telegraphKeys[event.puzzle - 1].toString().replace(/,/g, "  ") + "*   ";
         break;
       
       case 'aris_door':
-        message += " unlocked the door with code _"  + process.env.aris_code + "_ out of node 5 and found node 6";
+        message += " unlocked the door with the code _"  + process.env.aris_code + "_ out of node 5 and found node 6";
         break;
         
       case 'keypad':

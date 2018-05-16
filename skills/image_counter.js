@@ -43,7 +43,7 @@ module.exports = function(controller) {
         team.noChatChannels.push(channelId);
         
         controller.storage.teams.save(team, function(err, savedTeam) {
-          console.log(err, savedTeam);
+          // console.log(err, savedTeam);
           console.log("WE SAVED THE TEAM AFTER MAKING THE CHANNEL");
           
           var data = _.map(team.users, function(user) {
@@ -209,29 +209,26 @@ module.exports = function(controller) {
           vars.count = _.where(saved.uploadedImages, { location: params.location }).length;
           vars.max = 6;
           
-          if (vars.count == vars.max) {
-            
-            var message = { user: userUploaded, channel: saved.gamelog_channel_id };
-            
-            console.log(message);
-  
-            controller.trigger('gamelog_update', [{
-              bot: params.bot, 
-              event: message, 
-              team: saved, 
-              codeType: 'image_count', 
-              phase: "phase_1",
-              puzzle: params.location
-            }]);
-              
-          }
-
           controller.deleteThisMsg(params.message, team.oauth_token, function() {
             
             controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved);
 
             if(saved.imagesComplete) {
+              var message = { user: userUploaded, channel: saved.gamelog_channel_id };
+
+              console.log(message);
+
+              controller.trigger('gamelog_update', [{
+                bot: params.bot, 
+                event: message, 
+                team: saved, 
+                codeType: 'image_complete', 
+                phase: "phase_1",
+                puzzle: 'image_counter'
+              }]);
+              
               setTimeout(function() {
+                
                 vars.code = process.env.safe_code.replace(/-/g, "").toString();
                 controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
                   params.bot.replyInteractive(params.message, card);            

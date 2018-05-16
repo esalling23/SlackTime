@@ -12,7 +12,7 @@ module.exports = function(webserver, controller) {
 
     controller.trigger("download", [opt]);
 
-    var filePath = "http://res.cloudinary.com/extraludic/image/upload/fl_attachment/v1/escape-room/" + file;
+    var filePath = "http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/" + file;
 
     console.log(filePath, "is the filepath");
 

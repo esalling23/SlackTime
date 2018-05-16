@@ -51,7 +51,8 @@ module.exports = function(controller) {
               unlockedBy: thisUser,
               date: new Date()
             });
-          }
+          } else return;
+        
           
         }
         
