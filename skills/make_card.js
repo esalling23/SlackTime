@@ -48,6 +48,9 @@ module.exports = function(controller) {
         if (vars.location)
           template.location = vars.location;
         
+        template.username = process.env.username;
+        template.icon_url = process.env.icon_url;
+        
         console.log(template);
         
         convo.stop('card_only');

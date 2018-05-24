@@ -22,6 +22,7 @@ module.exports = function(controller) {
     // safety check
     if (!thisUser.events) thisUser.events = [];
     if (!thisUser.codesEntered) thisUser.codesEntered = [];
+    if (!res.codesEntered) res.codesEntered = [];
     // safety check
     if (!thisUser.currentState) {
       thisUser.currentState = "default";
@@ -35,7 +36,7 @@ module.exports = function(controller) {
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
-    if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType) && code != "orb") {
+    if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType)) {
       var vars = {};
       
       if (options.codeType == 'buttons') vars.recap = thread;
@@ -102,8 +103,10 @@ module.exports = function(controller) {
           
           if (thisUser.codesEntered.includes(code)) return;
           
-          if (options.codeType != "bookshelf")
+          if (options.codeType != "bookshelf") {
             thisUser.codesEntered.push(code);
+            team.codesEntered.push(code);
+          }
           
           controller.storage.teams.save(updated).then((saved) => {
 

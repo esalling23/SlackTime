@@ -3,11 +3,11 @@
 module.exports = function(controller) {
   
   controller.puzzleCodes = {
-    random: 'red, red, green, grey, grey, green, green, red, grey',
-    safari: 'grey, green, green, grey, grey, red, red, green, red',
-    hole: 'grey, grey, red, red, red, green, grey, red, grey', 
-    glyph: 'grey, green, grey, grey, grey, grey, grey, grey, red',
-    orb: 'red, green, grey, grey, grey, green, grey, red, grey'
+    random: 'red, red, green, white, white, green, green, red, white',
+    safari: 'white, green, green, white, white, red, red, green, red',
+    hole: 'white, white, red, red, red, green, white, red, white', 
+    glyph: 'white, green, white, white, white, white, white, white, red',
+    orb: 'red, green, white, white, white, green, white, red, white'
   }
   
   controller.telegraphKeys = {
@@ -41,9 +41,7 @@ module.exports = function(controller) {
   };
 
   controller.keypadCode = {
-    0: process.env.keypad_code.split("-")[0],
-    1: process.env.keypad_code.split("-")[1],
-    2: process.env.keypad_code.split("-")[2]
+    0: process.env.keypad_code.split(',')
   };
   
   controller.bookSpecs = {

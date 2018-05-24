@@ -24,7 +24,7 @@ module.exports = function(controller) {
       
       // console.log(params.codeType, params.code);
       
-      if (['safe', 'bookshelf', 'aris_door', 'keypad'].includes(params.codeType)) {
+      if (['safe', 'bookshelf', 'aris_door'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = controller.safeCode;
           params.phaseUnlocked = "phase_2";
@@ -34,9 +34,6 @@ module.exports = function(controller) {
         } else if (params.codeType == 'aris_door') {
           correctCodes = controller.arisCode;
           params.phaseUnlocked = "phase_4";
-        } else if (params.codeType == 'keypad') {
-          correctCodes = controller.keypadCode;
-          // params.phaseUnlocked = "phase_5";
         }
         
         code = checkCodeObject(params.code, correctCodes);
@@ -46,10 +43,13 @@ module.exports = function(controller) {
         
         if (params.codeType == "buttons") {
           correctCodes = correctButtonCodes;
-          
-        }  else if (params.codeType == 'telegraph_key') {
+        } 
+        else if (params.codeType == 'telegraph_key') {
           correctCodes = controller.telegraphKeys;
           params.code = [params.code[0], params.code[1], params.code[2]];
+        } 
+        else if (params.codeType == 'keypad') {
+          correctCodes = controller.keypadCode;
         }
         
         code = checkCodeArray(params.code, correctCodes);

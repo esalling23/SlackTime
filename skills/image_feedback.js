@@ -8,6 +8,9 @@ module.exports = function(controller) {
       convo.changeTopic("thanks");
 
       var template = convo.threads["thanks"][0];
+      
+      template.username = process.env.username;
+      template.icon_url = process.env.icon_url;
 
       convo.vars.mit = _.where(team.uploadedImages, { location: "mit" }).length;
       convo.vars.bpl = _.where(team.uploadedImages, { location: "bpl" }).length;
@@ -36,8 +39,12 @@ module.exports = function(controller) {
 
     // upon image upload, show menu asking for player to tag the image location
     controller.studio.get(bot, "image_tag", message.user, message.channel).then(convo => {
+      
+      var template = convo.threads.default[0];
 
-      convo.threads.default[0].attachments[0].image_url = url;
+      template.attachments[0].image_url = url;
+      template.username = process.env.username;
+      template.icon_url = process.env.icon_url;
 
       convo.activate();
 
@@ -50,6 +57,10 @@ module.exports = function(controller) {
 
       convo.changeTopic('default');
       var template = convo.threads['default'][0];
+      
+      template.username = process.env.username;
+      template.icon_url = process.env.icon_url;
+      
       var images = _.filter(team.uploadedImages, function(img) { return img.location });
       var url;
       

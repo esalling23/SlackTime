@@ -189,21 +189,21 @@ module.exports = function(controller) {
 
         var type = event.actions[0].name;
 
-        _.each(reply.attachments, function(attachment) {
-          _.each(attachment.actions, function(action) {
+        if (type.includes('safe') || type.includes('aris') || type.includes('bookshelf') || type.includes('telegraph_key')) {
+          // console.log("confirming safe/door enter code");
 
-            if (type.includes('safe') || type.includes('aris') || type.includes('keypad') || type.includes('bookshelf') || type.includes('telegraph_key')) {
-              // console.log("confirming safe/door enter code");
+          var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
+          var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
+          // console.log(confirmedChoice, "is the codeType");
 
-              var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-              var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
-              // console.log(confirmedChoice, "is the codeType");
+          options.code = confirmedChoice.choice;
 
-              options.code = confirmedChoice.choice;
+          options.codeType = callback_id;
 
-              options.codeType = callback_id;
+        } else if (type.includes('buttons')) {
 
-            } else if (type.includes('buttons')) {
+          _.each(reply.attachments, function(attachment) {
+            _.each(attachment.actions, function(action) {
 
               if (action.name == "color") {
                 var color;
@@ -220,20 +220,31 @@ module.exports = function(controller) {
                     break;
                 }
                 code.push(color);
-                // console.log(code);
+              }
 
-              } 
-
-              options.codeType = 'buttons';
-              options.code = code;
-
-            } 
-
-
+            });
           });
-        });
 
-        // console.log(options.code, options.codeType);
+          options.codeType = 'buttons';
+          options.code = code;
+
+        } else if (type.includes('keypad')) {
+
+           _.each(reply.attachments, function(attachment) {
+            _.each(attachment.actions, function(action) {
+
+              if (action.name == "letter") {
+                code.push(action.text);
+              }
+
+            });
+          });
+          
+          options.code = code;
+          options.codeType = 'keypad';
+
+        }
+        console.log(options.code, options.codeType);
 
         options.event = event;
         options.user = event.user;
@@ -245,6 +256,40 @@ module.exports = function(controller) {
         controller.trigger("code_entered", [options]);
 
       }
+      
+      // Text Button Updates (Changes letter on click, starting from A and going to I)
+      if (event.actions[0].name.match(/^letter/)) {
+        
+        const letters = ['A','B','C','D','E','F','G','H','I'];
+
+        console.log(event);
+        var callback_id = event.callback_id;
+        var reply = event.original_message;
+        // we need to change this button's color homie
+        _.each(reply.attachments, function(attachment) {
+          attachment = _.map(attachment.actions, function(action) {
+            // console.log(action);
+            if (action.value == event.actions[0].value) {
+              var spot = letters.indexOf(action.text);
+              var nextSpot = !letters[spot+1] ? letters[0] : letters[spot+1];
+              action.text = nextSpot;
+            }
+            return action;
+          });
+        });
+
+        bot.api.chat.update({
+          channel: event.channel, 
+          ts: reply.ts, 
+          attachments: reply.attachments
+        }, function(err, updated) { 
+
+          console.log("letter update");
+        });
+
+
+      }
+      
 
       // button color change
       if (event.actions[0].name.match(/^color/)) {
@@ -399,8 +444,8 @@ module.exports = function(controller) {
         var type = event.actions[0].value;
         var url = reply.attachments[0].image_url;
 
-        var pos = parseInt(reply.attachments[0].image_url.split("Guide-")[1].replace(".pdf", ""));
-        var url = "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/Guide-";
+        var pos = parseInt(reply.attachments[0].image_url.split("TV-Guide")[1].replace(".png", ""));
+        var url = "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/TV-Guide";
 
         if (type == "next") {
           pos++;
@@ -421,7 +466,7 @@ module.exports = function(controller) {
           channel: event.channel, 
           ts: reply.ts, 
           attachments: reply.attachments
-        }, function(err, updated) { console.log(err, updated)});
+        }, function(err, updated) { console.log(err, updated) });
 
       }
 

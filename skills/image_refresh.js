@@ -12,11 +12,12 @@ cloudinary.config({
 });
 
 
-module.exports = function(controller) {
+module.exports = function(controller, cb) {
  
-  controller.imageRemove = function(bot, message, channel, team) {
+  controller.imageRemove = function(bot, message, channel, team, cb) {
     
     var web = new WebClient(team.oauth_token);
+    var count = 0;
     
     web.groups.history(channel).then(res => {
       _.each(res.messages, function(msg) {
@@ -24,6 +25,10 @@ module.exports = function(controller) {
           msg.channel = team.image_channel_id;
           controller.deleteThisMsg(msg, team.oauth_token, function() {});
         }
+        count++;
+        
+        if (count == res.messages.length && cb)
+          cb();
       });
     }).catch(err => console.log(err));
   }
@@ -32,20 +37,26 @@ module.exports = function(controller) {
     
     var web = new WebClient(team.oauth_token);
     
-    controller.imageRemove(bot, message, channel, team);
-    
-    setTimeout(function() {
-      controller.imageFeedback(bot, message, channel, team);
+    return new Promise((resolve, reject) => {
       
-      _.each(team.uploadedImages, function(img) {
-        if (!img.location) {
-          controller.imageTag(bot, message, img.url);
-        }
+      controller.imageRemove(bot, message, channel, team, function() {
+        controller.imageFeedback(bot, message, channel, team);
+
+        _.each(team.uploadedImages, function(img) {
+          if (!img.location) {
+            controller.imageTag(bot, message, img.url);
+          }
+        });
+
+        controller.imageAlbum(bot, message, team);
+        
+        setTimeout(function() {
+          resolve();
+        }, 500);
+
       });
-            
-      controller.imageAlbum(bot, message, team);
-            
-    }, 500);
+      
+    });
     
   }
 }

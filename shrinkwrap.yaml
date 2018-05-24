@@ -3327,7 +3327,7 @@ packages:
       tarball: 'https://github.com/dodo/reconnect-core/tarball/merged'
     version: 0.0.1
 registry: 'https://registry.npmjs.org/'
-shrinkwrapMinorVersion: 5
+shrinkwrapMinorVersion: 6
 shrinkwrapVersion: 3
 specifiers:
   '@slack/client': ^3.16.0
