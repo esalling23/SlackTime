@@ -49,7 +49,7 @@ module.exports = function(controller) {
     
     switch (event.type) {
       case 'buttons': 
-        message += " solved the _*" + puzzleNames[event.puzzle] + "*_ puzzle with the code _" + controller.puzzleCodes[event.puzzle] + "_";
+        message += " solved a puzzle with the code _" + controller.puzzleCodes[event.puzzle] + "_";
         break;
         
       case 'download': 

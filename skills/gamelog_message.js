@@ -20,6 +20,9 @@ module.exports = function(controller) {
 
       var template = convo.threads.default[0];
       
+      template.username = process.env.username;
+      template.icon_url = process.env.icon_url;
+      
       var attachments = _.filter(template.attachments, function(att) {
         var id = template.attachments.indexOf(att);
         
@@ -39,6 +42,15 @@ module.exports = function(controller) {
           return att;
         } else if (id == 1) {
           console.log("video channel");
+          if (team.codesEntered.includes('safari')) {
+            att.actions.push({
+                              "type": "button",
+                              "url": "https://vimeo.com/267825256/2692ac4f0a",
+                              "name": "link_button",
+                              "text": "Safari Video"
+                            });
+          }
+            
           return att;
         } else if (unlockedStages.includes(id - 1)) {
           // do stuff to the text?

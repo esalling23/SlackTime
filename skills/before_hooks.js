@@ -154,9 +154,9 @@ module.exports = function(controller) {
   
     var team = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
     var altered = {
-      bpl: "http://res.cloudinary.com/extraludic/image/upload/v1524175357/escape-room/Glendale_Atentiam_Petersburg.jpg", 
-      aquarium: "http://res.cloudinary.com/extraludic/image/upload/v1524175360/escape-room/Leadership_Campaign_September.jpg", 
-      mit: "http://res.cloudinary.com/extraludic/image/upload/v1524175353/escape-room/Birth_Muses_Artwork.jpg.jpg"
+      bpl: "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/LIBRARY.jpg", 
+      aquarium: "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/AQUARIUM.jpg", 
+      mit: "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/MIT.jpg"
     }
 
     controller.storage.teams.get(team, function(err, res) {

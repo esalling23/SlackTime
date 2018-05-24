@@ -186,15 +186,13 @@ module.exports = function(controller) {
         });
       } else {
         var userUploaded;
-        var updated = _.map(team.uploadedImages, function(image) {
+        team.uploadedImages = _.map(team.uploadedImages, function(image) {
           if (image.url == params.url) {
             image.location = params.location;
             userUploaded = image.user_uploaded;
           }
           return image;
         });
-
-        team.uploadedImages = updated;
         
         var taggedImages = _.filter(team.uploadedImages, function(image) {
           return image.location !== undefined;
@@ -205,14 +203,8 @@ module.exports = function(controller) {
                 
         controller.storage.teams.save(team, function(err, saved) {
           // console.log("saved team: ", saved);
-
-          vars.count = _.where(saved.uploadedImages, { location: params.location }).length;
-          vars.max = 6;
-          
-          controller.deleteThisMsg(params.message, team.oauth_token, function() {
+          controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved).then(res => {
             
-            controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved);
-
             if(saved.imagesComplete) {
               var message = { user: userUploaded, channel: saved.gamelog_channel_id };
 
@@ -226,19 +218,17 @@ module.exports = function(controller) {
                 phase: "phase_1",
                 puzzle: 'image_counter'
               }]);
-              
-              setTimeout(function() {
-                
-                vars.code = process.env.safe_code.replace(/-/g, "").toString();
-                controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
-                  params.bot.replyInteractive(params.message, card);            
-                });
-              }, 2000);
-            } 
 
-          });
+              vars.code = process.env.safe_code.replace(/-/g, "").toString();
+              controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
+                params.bot.replyInteractive(params.message, card);            
+              });
+            }
+            
+          }).catch(err => console.log(err));
 
         });
+
       }
     });
   });
