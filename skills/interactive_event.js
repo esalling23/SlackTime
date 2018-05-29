@@ -19,7 +19,7 @@ module.exports = function(controller) {
   
   controller.on('interactive_message_callback', function(bot, event) {
     
-    // console.log(event, "is the interactive message callback event");
+    console.log(event, "is the interactive message callback event");
     
     controller.dataStore(event, "button").then((data) => {
 
@@ -366,7 +366,7 @@ module.exports = function(controller) {
           type: event.actions[0].value
         }
 
-        request.post({ url: 'https://tamagotchi-production.glitch.me/pickup', form: data }, function(err, req, body) {
+        request.post({ url: 'https://tamagotchi-' + process.env.environment + '.glitch.me/pickup', form: data }, function(err, req, body) {
 
         });
 
@@ -524,18 +524,83 @@ module.exports = function(controller) {
           var script = _.findWhere(list, { name: event.actions[0].value });
 
           controller.storage.teams.get(event.team.id).then((res) => {
+            
+            var opt = {
+              bot: bot, 
+              event: event, 
+              data: event.actions[0]
+            }
+              
+            if (event.actions[0].value == "prisoners_room") {
+              if (res.prisoners_started) 
+                opt.thread = "already_started";
+              else {
+                res.users = _.map(res.users, function(user) {
+                  if (user.userId == event.user)
+                    user.prisoner = true;
+
+                  return user;
+                });
+                if (_.where(res.users, { prisoner: true }).length >= process.env.prisoners_players)
+                  res.prisoners_started = true;
+                
+                var web = new WebClient(bot.config.bot.token);
+
+                web.conversations.list({types: "im"}).then(function(list) {
+                  _.each(_.where(res.users, { prisoner: true }), function(user) {
+                    if (user.userId != event.user) {
+                    console.log(user, " updating the prison for this player");
+
+                      var thisIM = _.findWhere(list.channels, { user: user.userId });
+                      var channel = thisIM.id;
+
+                      web.conversations.history(channel).then(function(ims) {
+
+                        var btn_message = ims.messages[0];
+
+                        if (!btn_message)
+                          return;
+
+                        btn_message.channel = channel;
+                        
+                        var vars = {
+                          prisoners: process.env.prisoners_players - _.where(res.users, { prisoner: true }).length
+                        };
+
+                        if (vars.prisoners > 0) vars.wait = "Looks like you have to wait..."
+
+                        controller.makeCard(bot, btn_message, "prisoners_room", "default", vars, function(card) {
+                          bot.api.chat.update({
+                            channel: btn_message.channel, 
+                            ts: btn_message.ts, 
+                            attachments: card.attachments
+                          }, function(err, updated) {
+                          });
+                        });
+
+                      }).catch(err => console.log('history convo error: ', err));
+                    }
+
+                  });
+
+                }).catch(err => console.log('history convo error: ', err));
+
+              }
+              
+              
+            }
 
             controller.studio.get(bot, script.name, event.user, event.channel).then((currentScript) => {
-              var opt = {
-                bot: bot, 
-                event: event, 
-                team: res, 
-                user: _.findWhere(res.users, { userId: event.user }), 
-                data: event.actions[0], 
-                script: currentScript
-              }
+              
+              controller.storage.teams.save(res).then(saved => {
+                
+                opt.team = saved;
+                opt.user = _.findWhere(res.users, { userId: event.user }), 
+                opt.script = currentScript;
 
-              controller.confirmMovement(opt);
+                controller.confirmMovement(opt);
+                
+              });
 
             });
 

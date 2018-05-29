@@ -44,6 +44,7 @@ module.exports = function(controller) {
       teamData.phasesUnlocked = ["phase_1"];
       
       teamData.prisoner_players = team.users;
+      teamData.prisoners_started = false;
       teamData.prisoners_dilemma = [];
       teamData.prisoners_messages = [];
 

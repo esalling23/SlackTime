@@ -45,6 +45,17 @@ module.exports = function(controller) {
           });
         }
         
+        if (vars.prisoners) {
+          if (vars.prisoners >= process.env.prisoners_players) {
+            template.attachments[0].actions.push({
+              "type": "button",
+              "name": "prisoners",
+              "value": "onboard",
+              "text": "Begin Dilemma"
+            });
+          }
+        }
+        
         if (vars.location)
           template.location = vars.location;
         

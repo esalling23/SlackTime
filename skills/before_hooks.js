@@ -1,4 +1,5 @@
 const _ = require("underscore");
+const { WebClient } = require("@slack/client");
 const request = require("request");
 
 var safe_codes = {
@@ -24,13 +25,19 @@ module.exports = function(controller) {
   controller.studio.before("three_buttons", function(convo, next) {
     var id = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
     controller.storage.teams.get(id, function(team, err) {
-      _.map(team.users, function(user) {
+      team.users = _.map(team.users, function(user) {
         if (!user.startBtns || user.startBtns.length <= 3)
           user.startBtns = ["primary","danger","default"];
         
         return user;
       });
+      controller.storaage.teams.save(team, function(saved) {
+         
+        next();
+
+      });
     });
+    
   });
   
   controller.studio.before("bookshelf", function(convo, next) {
@@ -94,7 +101,7 @@ module.exports = function(controller) {
 
     var btns = convo.threads.default[0].attachments[0].actions;
 
-    request.get('https://tamagotchi-production.glitch.me/check/' + team, function(err, res, body) {
+    request.get('https://tamagotchi-' + process.env.environment + '.glitch.me/check/' + team, function(err, res, body) {
       // console.log(body, btns);
       body = JSON.parse(body);
       
@@ -109,37 +116,6 @@ module.exports = function(controller) {
             userBtn.text = "~" + userBtn.text + "~";
             userBtn.name = "taken";
             userBtn.value = "";
-            userBtn.style = "danger";
-          }
-          // console.log(userBtn);        
-      });
-      
-      next();
-    });
-    
-  });
-  
-  controller.studio.before("egg_table_dev", function(convo, next) {
-    
-    var team = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id;
-
-    var btns = convo.threads.default[0].attachments[0].actions;
-
-    request.get('https://tamagotchi-dev.glitch.me/check/' + team, function(err, res, body) {
-      // console.log(body, btns);
-      body = JSON.parse(body);
-      
-      _.each(body.grabbed, function(user) {
-          var userBtn = _.filter(btns, function(btn) {
-            // console.log(btn.url, user.type);
-            return btn.url.includes(user.type);
-          })[0];
-        // console.log(userBtn);
-        
-          if (userBtn) {
-            userBtn.text = "~" + userBtn.text + "~";
-            userBtn.name = "taken";
-            userBtn.url = "";
             userBtn.style = "danger";
           }
           // console.log(userBtn);        
@@ -185,19 +161,6 @@ module.exports = function(controller) {
         next();
     });
     
-  });
-  
-  controller.studio.before("telegraph_key", function(convo, next) {
-    // _.each(convo.threads, function(thread, v) {
-    //   if (v.includes("correct")) {
-    //     var mp3 = v.split('_')[1];
-    //     thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Channel_" + mp3 + ".mp3";
-    //   } else if (v.includes("wrong")) {
-    //     thread.text = "http://res.cloudinary.com/extraludic/video/upload/telegraph/Wrong_Input.mp3";
-    //   }
-    // });
-    
-    next();
   });
   
   var generateString = function() {

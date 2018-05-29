@@ -143,6 +143,17 @@ module.exports = function(controller) {
       
   });
   
+  controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
+    console.log(message.user);
+    
+    controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
+      
+      convo.changeTopic("correct");
+      convo.activate();
+  });
+    
+  });
+  
   
   controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
     console.log(message.user);
