@@ -80,7 +80,6 @@ module.exports = function(controller) {
                   attachments: card.attachments
                 }, function(err, updated) {
                 });
-                // bot.replyInteractive(btn_message, card);
               });
               
             }).catch(err => console.log("conversation history error: ", err));

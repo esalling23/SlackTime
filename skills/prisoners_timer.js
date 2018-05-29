@@ -48,28 +48,6 @@ module.exports = function(controller) {
     
   }
   
-  setInterval(function() {
-    controller.storage.teams.all().then(list => {
-      _.each(list, function(team) {
-        
-        if (team.prisoners_dilemma) {
-          
-          _.each(team.prisoners_dilemma, function(obj) {
-            
-            var current = new Date();
-            var end = new Date(obj.end.getFullYear(), obj.end.getMonth(), obj.end.getDate(), obj.end.getHours(), obj.end.getMinutes());
-            var now = new Date(current.getFullYear(), current.getMonth(), current.getDate(), current.getHours(), current.getMinutes());
-            if (end == now && !obj.complete) {
-              // trigger event for this team
-              var bot = controller.spawn(team.bot);
-              controller.trigger('prisoners_check', [bot, team.id, obj]);
-            }
-            
-          }); 
-        }
-      });
-    });
-  }, 60000);
   
   var getMonth = function(obj, date) {
     if ((date >= 30 && obj.getMonth() == 1) || 

@@ -5,7 +5,7 @@ module.exports = function(controller) {
   
   controller.confirmMovement = function(params) {
     
-    var thread = controller.determineThread(params.script, params.user);
+    var thread = params.thread ? params.thread : controller.determineThread(params.script, params.user);
     var vars = {};
 
     if (!thread)
@@ -26,6 +26,15 @@ module.exports = function(controller) {
       }
     }
     
+    if (params.data.value == "prisoners_room") {
+      var prisoners = _.where(params.team.users, { prisoner: true }).length;
+      console.log(prisoners, " are the number of prisoners in the movement logic");
+            
+      vars.prisoners = process.env.prisoners_players - prisoners;
+      if (vars.prisoners > 0)
+        vars.wait = "Looks like you have to wait...";
+              
+    }
     
     if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) 
       vars.download = true;

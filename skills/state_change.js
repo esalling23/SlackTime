@@ -83,14 +83,10 @@ module.exports = function(controller) {
           var vars = {};
           
           var thisScript = _.findWhere(scripts, { name: options.codeType });
-          console.log(thisScript);
+
           var thisPhase = _.filter(thisScript.tags, function(tag) {
             return tag.includes('phase');
           })[0];
-
-          console.log(thisPhase);
-          console.log(thread + " is the thread we are going to in the " + options.codeType + " script");
-          
           
           controller.makeCard(options.bot, options.event, options.codeType, thread, vars, function(card) {
             // console.log(card, "is the card from the state change");
@@ -105,7 +101,7 @@ module.exports = function(controller) {
           
           if (options.codeType != "bookshelf") {
             thisUser.codesEntered.push(code);
-            team.codesEntered.push(code);
+            updated.codesEntered.push(code);
           }
           
           controller.storage.teams.save(updated).then((saved) => {
