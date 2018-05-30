@@ -58,7 +58,7 @@ module.exports = function(controller) {
               console.log('Error sending onboarding message:', err);
             } else {
               // console.log(user.id);
-              controller.studio.get(bot, 'welcome', user.userId, direct_message.channel.id).then(convo => {
+              controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
                 
                 var template = convo.threads.default[0];
                 template.username = process.env.username;
