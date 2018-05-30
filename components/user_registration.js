@@ -76,6 +76,7 @@ module.exports = function(controller) {
 
         // Trigger an event that will establish an RTM connection for this bot
         controller.trigger('rtm:start', [bot.config, team, payload]);
+        // controller.trigger('rtm_events', [bot]);
 
         // Trigger an event that will cause this team to receive onboarding messages
         controller.trigger('onboard', [bot, team, payload]);
@@ -88,6 +89,8 @@ module.exports = function(controller) {
         debug('Team updated:', team);
         // Trigger an event that will establish an RTM connection for this bot
         controller.trigger('rtm:start', [bot]);
+        // controller.trigger('rtm_events', [bot]);
+
       
         controller.trigger('onboard', [bot, team, payload]);
 

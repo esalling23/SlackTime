@@ -1,4 +1,5 @@
 var debug = require('debug')('botkit:rtm_manager');
+const { RTMClient } = require("@slack/client");
 
 module.exports = function(controller) {
 
@@ -7,6 +8,8 @@ module.exports = function(controller) {
     // Capture the rtm:start event and actually start the RTM...
     controller.on('rtm:start', function(config) {
         var bot = controller.spawn(config);
+      debug('starting rtm');
+
         manager.start(bot, config);
     });
 
