@@ -61,7 +61,7 @@ module.exports = function(controller) {
               
               var user = _.findWhere(team.prisoner_players, { userId: message.user });
               
-              controller.store_prisoners_msg(message, user, team);
+              // controller.store_prisoners_msg(message, user, team);
 
             });
           }

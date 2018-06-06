@@ -39,21 +39,17 @@ module.exports = function(controller) {
       teamData.uploadedImages = [];
       teamData.albumImages = undefined;
       teamData.imagesComplete = false;
+      
       teamData.image_channel_id = "";
       teamData.image_feedback = "";
       teamData.phasesUnlocked = ["phase_1"];
       
-      teamData.prisoner_players = team.users;
+      teamData.prisoner_players = [];
       teamData.prisoners_started = false;
-      teamData.prisoners_dilemma = [];
+      teamData.prisoners_time = [];
       teamData.prisoners_messages = [];
-
-      teamData.prisonerSuccess = 0;
-      teamData.prisonerDecisions = 0;
-      
-      teamData.sharingUsers = [];
-      teamData.stealingUsers = [];
-      teamData.blockingUsers = [];
+      teamData.prisoner_decisions = [];
+      teamData.prisoner_success = 0;
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       
@@ -77,7 +73,6 @@ module.exports = function(controller) {
           if (err) {
             console.log("There was an error: ", err);
           }
-
 
           setTimeout(function() {
             // Check the team to make sure it was updated

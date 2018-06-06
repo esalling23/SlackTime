@@ -26,6 +26,13 @@ module.exports = function(controller) {
                 debug('Start RTM: already online');
                
             } else {
+              
+                bot.api.rtm.start({
+                  batch_presence_aware: true
+                }, function(err, bot) {
+                  managed_bots[bot.config.token] = bot.rtm;
+                });
+              
                 bot.startRTM(function(err, bot) {
                     if (err) {
                         debug('Error starting RTM:', err);

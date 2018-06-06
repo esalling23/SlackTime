@@ -48,4 +48,23 @@ module.exports = function(controller) {
 
     
   }
+  
+  controller.deleteHistoryRecent = function(channel, token, cb) {
+    
+    var count = 0;
+    var num = 0;
+    var web = new WebClient(token);
+    
+    web.conversations.history(channel).then(res => {
+      var msg = res.messages[0];
+      msg.channel = channel;
+      controller.deleteThisMsg(msg, token, function() {
+        if (cb) 
+          cb();
+      });
+          
+    }).catch(err => console.log("history error: ", err));
+
+    
+  }
 }

@@ -49,6 +49,12 @@ module.exports = function(controller) {
          team.phasesUnlocked = ["phase_1"];
          team.movements = [0];
          
+         team.prisoner_players = [];
+         team.prisoners_started = false;
+         team.prisoners_time = [];
+         team.prisonerDecisions = [];
+         team.prisonerSuccess = 0;
+         
          team.noChatChannels = [];
          
          team.gamelog = {};
@@ -102,6 +108,8 @@ module.exports = function(controller) {
                 controller.storage.teams.save(team, function(err, saved) {
                   console.log("saved in the onboarding: ", saved);
                   controller.gamelogMessage(bot, saved);
+                  // controller.trigger('rtm_events', [bot]);
+
                 });
               }, 1000 * data.length);
             }).catch(err => console.log(err));

@@ -6,10 +6,9 @@ module.exports = function(controller) {
     
     controller.storage.teams.get(id, function(err, team) {
       
-      if (!team.prisoners_dilemma) team.prisoners_dilemma = [];
+      if (!team.prisoners_time) team.prisoners_time = [];
       
-      team.decisionCount = 0;
-      team.prisonerSuccess = 0;
+      team.prisoner_decisions = [];
 
       var start = new Date();
 
@@ -27,10 +26,10 @@ module.exports = function(controller) {
         month = start.getMonth();
       }
 
-      var end = new Date(start.getFullYear(), month, date, hours, start.getMinutes() + parseInt(process.env.prisoners_time_limit));
+      var end = new Date(start.getFullYear(), month, date, hours, start.getMinutes());
       
-      team.prisoners_dilemma.push({
-        num: 0,
+      team.prisoners_time.push({
+        num: team.prisoners_time.length,
         start: start,
         end: end, 
         complete: false
@@ -38,10 +37,10 @@ module.exports = function(controller) {
       
       controller.storage.teams.save(team, function(err, saved) {
         
-        console.log("time is started!", saved.prisoners_dilemma);
+        console.log("time is started for team " + saved.id, saved.prisoners_time);
                 
-        controller.prisoners_message(bot, saved.id, "default");
-
+        if (saved.prisoners_started)
+          controller.prisoners_message(bot, saved.id, "default");
 
       });
     });
