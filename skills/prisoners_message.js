@@ -36,35 +36,47 @@ module.exports = function(controller) {
       
     controller.storage.teams.get(id, function(err, team) {
          
-      var web = new WebClient(bot.config.bot.token);    
+      var web = new WebClient(bot.config.bot.token);
+      var players = thread == "kicked" ? team.just_kicked : "times_up" ? team.times_up : team.prisoner_players;
 
-      _.each(team.prisoner_players, function(user) {
+      team.prisoner_decisions = [];
+      if (team.prisoner_players.length == 1) thread = 'success_alone';
 
-        web.conversations.history(user.bot_chat).then(function(ims) {
-          console.log(ims);
-          console.log(ims.messages);
-          var message = ims.messages[0];
+      controller.storage.teams.save(team, function(err, saved) {
 
-          if (!message)
-            return;
+        _.each(players, function(user) {
 
-          message.channel = user.bot_chat;
+          web.conversations.history(user.bot_chat).then(function(ims) {
+            console.log(ims);
+            console.log(ims.messages);
+            var message = ims.messages[0];
 
-          controller.makeCard(bot, message, "prisoners_dilemma", thread, {}, function(card) {
+            if (!message)
+              return;
 
-            bot.api.chat.update({
-              channel: message.channel, 
-              ts: message.ts, 
-              attachments: card.attachments
-            }, function(err, updated) {
+            message.channel = user.bot_chat;
 
-              controller.store_prisoners_msg(updated, user, team);
+            controller.makeCard(bot, message, "prisoners_dilemma", thread, {}, function(card) {
+
+              console.log(message, card);
+              
+              bot.api.chat.update({
+                channel: message.channel, 
+                ts: message.ts, 
+                attachments: card.attachments
+              }, function(err, updated) {
+                
+                console.log(err, updated);
+
+                // controller.store_prisoners_msg(updated, user, team);
+
+              });
 
             });
 
-          });
+          }).catch(err => console.log("conversation history error: ", err));
 
-        }).catch(err => console.log("conversation history error: ", err));
+        });
 
       });
 

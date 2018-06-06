@@ -1,23 +1,41 @@
-const { RTMClient } = require("@slack/client");
-
+const { RTMClient } = require('@slack/client');
+const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
   
+  console.log('rtm presence');
   
-//   const rtm = new RTMClient(bot.config.token);
-//   rtm.start();
-  controller.on('rtm_events', function(bot) {
-    console.log('rtm eventing');
-    
-    var rtm = new RTMClient(bot.config.token);
-    rtm.start();
-    
-    rtm.on('channel_marked', (event) => {
-      console.log(event);
-    });
+  controller.on("channel_marked", function(bot, message) {
+    console.log(message);
   });
+    
+//    var RtmClient = require('@slack/client').RtmClient;
+//   var RTM_EVENTS = require('@slack/client').RTM_EVENTS;
+
+//   var token = process.env.botToken;
+
+//   var rtm = new RtmClient(token);
+//   //var rtm = new RtmClient(token, {logLevel: 'debug'});
+
+//   rtm.on(RTM_EVENTS.PRESENCE_CHANGE, function (event) {
+
+//       //presence changed either by the user or by the client when the user becomes idle
+//       console.log(event.user + ': ' + event.presence);
+//   });
+
+//   rtm.on(RTM_EVENTS.MANUAL_PRESENCE_CHANGE, function (event) {
+
+//     // presence manually changed by the user
+//       console.log('manual presence change: ' + JSON.stringify(event) + ': ' + event.presence);
+//   });
+
+
+//   rtm.on(RTM_EVENTS.CHANNEL_MARKED, function(event) {
+//     console.log(event);
+//   });
+
+//   rtm.start({
+//     batch_presence_aware: true
+//   });
   
-  // controller.on('channel_marked', (err, res) => {
-  //   console.log(err, res);
-  // });
 }

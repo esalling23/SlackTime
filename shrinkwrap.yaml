@@ -335,12 +335,12 @@ packages:
       eventemitter3: 1.2.0
       https-proxy-agent: 1.0.0
       inherits: 2.0.3
-      lodash: 4.17.5
+      lodash: 4.17.10
       pkginfo: 0.4.1
       request: 2.76.0
       retry: 0.9.0
       url-join: 0.0.1
-      winston: 2.4.1
+      winston: 2.4.2
       ws: 1.1.5
     dev: false
     engines:
@@ -593,6 +593,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-g+9cqGCysy5KDe7e6MdxudtXRx4=
+  /aws4/1.7.0:
+    dev: false
+    resolution:
+      integrity: sha512-32NDda82rhwD9/JBCCkB+MRYDp0oSvlo2IL6rQWA10PQi7tDUM3eqMSltXmY+Oyl/7N3P3qNtAlv7X0d9bI28w==
   /babel-polyfill/6.26.0:
     dependencies:
       babel-runtime: 6.26.0
@@ -1929,6 +1933,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-msQ4RMWV4o0wEIt7pYNwM5WSLfw=
+  /lodash/4.17.10:
+    dev: false
+    resolution:
+      integrity: sha512-UejweD1pDoXu+AD825lWwp4ZGtSwgnpZxb3JDViD7StjQz+Nb/6l093lx4OQ0foGWNRoc19mWy7BzL+UAK2iVg==
   /lodash/4.17.5:
     dev: false
     resolution:
@@ -2533,7 +2541,7 @@ packages:
   /request/2.76.0:
     dependencies:
       aws-sign2: 0.6.0
-      aws4: 1.6.0
+      aws4: 1.7.0
       caseless: 0.11.0
       combined-stream: 1.0.6
       extend: 3.0.1
@@ -2549,7 +2557,7 @@ packages:
       node-uuid: 1.4.8
       oauth-sign: 0.8.2
       qs: 6.3.2
-      stringstream: 0.0.5
+      stringstream: 0.0.6
       tough-cookie: 2.3.4
       tunnel-agent: 0.4.3
     dev: false
@@ -2729,6 +2737,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg==
+  /safe-buffer/5.1.2:
+    dev: false
+    resolution:
+      integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
   /scmp/0.0.3:
     dev: false
     resolution:
@@ -2930,6 +2942,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-TkhM1N5aC7vuGORjB3EKioFiGHg=
+  /stringstream/0.0.6:
+    dev: false
+    resolution:
+      integrity: sha512-87GEBAkegbBcweToUrdzf3eLhWNg06FJTebl4BVJz/JgWy8CvEr9dRtX5qWphiynMSQlxxi+QqN0z5T32SLlhA==
   /strip-ansi/3.0.1:
     dependencies:
       ansi-regex: 2.1.1
@@ -3183,7 +3199,7 @@ packages:
       node: '>= 0.10.0'
     resolution:
       integrity: sha1-+OGqHuWlPsW/FR/6CXQqatdpeHY=
-  /winston/2.4.1:
+  /winston/2.4.2:
     dependencies:
       async: 1.0.0
       colors: 1.0.3
@@ -3195,7 +3211,7 @@ packages:
     engines:
       node: '>= 0.10.0'
     resolution:
-      integrity: sha512-k/+Dkzd39ZdyJHYkuaYmf4ff+7j+sCIy73UCOWHYA67/WXU+FF/Y6PF28j+Vy7qNRPHWO+dR+/+zkoQWPimPqg==
+      integrity: sha512-4S/Ad4ZfSNl8OccCLxnJmNISWcm2joa6Q0YGDxlxMzH0fgSwWsjMt+SmlNwCqdpaPg3ev1HKkMBsIiXeSUwpbA==
   /wordfilter/0.2.6:
     dev: false
     engines:
@@ -3252,7 +3268,7 @@ packages:
   /ws/4.1.0:
     dependencies:
       async-limiter: 1.0.0
-      safe-buffer: 5.1.1
+      safe-buffer: 5.1.2
     dev: false
     resolution:
       integrity: sha512-ZGh/8kF9rrRNffkLFV4AzhvooEclrOH0xaugmqGsIfFgOE/pIz4fMc4Ef+5HSQqTEug2S9JZIWDR47duDSLfaA==

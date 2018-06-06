@@ -17,7 +17,8 @@ var dataChannel;
 var fs = require('fs');
 
 
-const { WebClient } = require('@slack/client');
+
+const { WebClient, RTMClient } = require('@slack/client');
 
 // An access token (from your Slack app or custom integration - xoxp, xoxb, or xoxa)
 const token = process.env.slackToken;
@@ -82,6 +83,8 @@ module.exports = function(controller) {
       
        controller.storage.teams.save(team, function(err, saved) {
          console.log(saved);
+         
+           
        });
     });
     
