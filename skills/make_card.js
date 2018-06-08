@@ -45,7 +45,7 @@ module.exports = function(controller) {
           });
         }
         
-        if (vars.prisoners <= 0) {
+        if (vars.prisoners <= 0 && !vars.started) {
           template.attachments[0].actions.push({
             "type": "button",
             "name": "prisoners",

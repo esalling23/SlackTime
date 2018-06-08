@@ -538,7 +538,7 @@ module.exports = function(controller) {
             }
               
             if (event.actions[0].value == "prisoners_room") {
-              if (res.prisoners_started) 
+              if (res.prisoner_started) 
                 opt.thread = "already_started";
               else {
                 res.users = _.map(res.users, function(user) {
@@ -575,7 +575,8 @@ module.exports = function(controller) {
                           btn_message.channel = channel;
 
                           var vars = {
-                            prisoners: process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length
+                            prisoners: process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length, 
+                            started: saved.prisoner_started
                           };
 
                           if (vars.prisoners > 0) vars.wait = "Looks like you have to wait...";

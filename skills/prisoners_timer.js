@@ -1,35 +1,28 @@
 const _ = require("underscore");
 
+const milPerMin = 60000;
+
 module.exports = function(controller) {
   
   controller.addTime = function(bot, id) {
     
     controller.storage.teams.get(id, function(err, team) {
       
-      if (!team.prisoners_time) team.prisoners_time = [];
+      if (!team.prisoner_time) team.prisoner_time = [];
       
       team.prisoner_decisions = [];
 
       var start = new Date();
-
-      var hours;
-      var date;
-      var month;
       
-      if (start.getHours() + process.env.prisoners_time_limit > 24) {
-        hours = (start.getHours() + parseInt(process.env.prisoners_time_limit)) - 24;
-        date = start.getDate() + 1;
-        month = getMonth(start, date);
-      } else {
-        hours = start.getHours();
-        date = start.getDate();
-        month = start.getMonth();
-      }
-
-      var end = new Date(start.getFullYear(), month, date, hours, start.getMinutes());
+      var end = new Date(start.getTime() + milPerMin * process.env.prisoners_time_limit);
       
-      team.prisoners_time.push({
-        num: team.prisoners_time.length,
+      team.prisoner_time = _.map(team.prisoner_time, function(time) {
+        time.complete = true;
+        return time;
+      });
+      
+      team.prisoner_time.push({
+        num: team.prisoner_time.length,
         start: start,
         end: end, 
         complete: false
@@ -37,9 +30,9 @@ module.exports = function(controller) {
       
       controller.storage.teams.save(team, function(err, saved) {
         
-        console.log("time is started for team " + saved.id, saved.prisoners_time);
+        console.log("time is started for team " + saved.id, saved.prisoner_time);
                 
-        if (saved.prisoners_started)
+        if (saved.prisoner_started)
           controller.prisoners_message(bot, saved.id, "default");
 
       });

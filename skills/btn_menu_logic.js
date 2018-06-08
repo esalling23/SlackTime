@@ -31,6 +31,7 @@ module.exports = function(controller) {
       console.log(prisoners, " are the number of prisoners in the movement logic");
             
       vars.prisoners = process.env.prisoners_players - prisoners;
+      vars.started = params.team.prisoner_started;
       if (vars.prisoners > 0)
         vars.wait = "Looks like you have to wait...";
               

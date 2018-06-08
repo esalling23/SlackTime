@@ -15,15 +15,12 @@ module.exports = function(controller) {
   
   controller.on("code_entered", function(params) {
     
-    console.log(params.codeType, "is the code type in the code_entered");
     var bot = params.bot;
     controller.storage.teams.get(params.team).then(res => {
       
       var correctCodes;
-      var code;
-      
-      // console.log(params.codeType, params.code);
-      
+      var codeObj;
+            
       if (['safe', 'bookshelf', 'aris_door'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = controller.safeCode;
@@ -36,8 +33,8 @@ module.exports = function(controller) {
           params.phaseUnlocked = "phase_4";
         }
         
-        code = checkCodeObject(params.code, correctCodes);
-        code.code = params.codeType;
+        codeObj = checkCodeObject(params.code, correctCodes);
+        codeObj.code = params.codeType;
         
       } else {
         
@@ -52,27 +49,26 @@ module.exports = function(controller) {
           correctCodes = controller.keypadCode;
         }
         
-        code = checkCodeArray(params.code, correctCodes);
+        codeObj = checkCodeArray(params.code, correctCodes);
 
       }
       
-      controller.dataStore(params.event, "code", { code: code, codeType: params.codeType })
+      // Store data of entered code
+      controller.dataStore(params.event, "code", { codeObj: codeObj, codeType: params.codeType })
         .then(data => console.log("logged: ", data))
         .catch(err => console.log("code loggin error: ", err));
-      
-      // console.log(code, "is the code");
-      
-      if (code.correct == true) {
+            
+      if (codeObj.correct == true) {
         
         if (params.codeType == "telegraph_key")
-          code.puzzle = parseInt(code.puzzle) + 1;
+          codeObj.puzzle = parseInt(codeObj.puzzle) + 1;
         
-        params.key = code;
+        params.key = codeObj;
         params.team = res;
         
         controller.trigger("state_change", [params]);
 
-        if (code.puzzle == 'safari')
+        if (codeObj.puzzle == 'safari')
           controller.trigger("image_counter_onboard", [bot, params.event]);
 
       } else {
@@ -114,45 +110,42 @@ module.exports = function(controller) {
     
   }); // End on event
   
-  
+  // Function checks if the entered code matches any of an Array of correct codes
+  // Will return 'correct' based on match (true for match)
+  // Will return 'puzzle' as the correct code name if there is a match
+  // Will return 'code' as the entered code
   var checkCodeArray = function(code, correctCodes) {
-    // check if correct
+    // Loop through Array
     for (var key in correctCodes) {
-      console.log(correctCodes[key], code);
-      console.log(JSON.stringify(correctCodes[key]), JSON.stringify(code));
-
+      // Compare correct and entered code
+      // If match, return
       if (JSON.stringify(correctCodes[key]) == JSON.stringify(code)) {
-
-          console.log("correct");
-          console.log(correctCodes[key], key);
-
           return { correct: true, puzzle: key, code: code };
       } 
 
     }
 
+    // If no match, return
     return { correct: false, code: code };
 
   }
   
-  
+  // Checks entered code against a single correct code Object
+  // Will return 'correct' based on match (true for match)
+  // WIll return 'code' as the entered code
   var checkCodeObject = function(code, correctCode) {
     
     var count = 0;
-    
     code = sort(code);
     correctCode = sort(correctCode);
     
-    // check if correct
+    // Loop through object keys
     for (var key in correctCode) {
-      console.log("Correct key: " + key + ", value: " + correctCode[key]);
-      console.log("Entered key: " + key + ", value: " + code[key]);
-
+      // Compare correct value with entered value
       if (correctCode[key] == code[key]) {
 
         count ++;
-        console.log("correct");
-        
+        // If all keys match, return 
         if ( count == Object.keys(correctCode).length ) {
            return { correct: true, code: code };
         }
@@ -160,7 +153,7 @@ module.exports = function(controller) {
       }
 
     }
-    
+    // If not all keys match, return 
     return { correct: false, code: code };
     
   }

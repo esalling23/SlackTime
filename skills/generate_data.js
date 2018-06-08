@@ -45,11 +45,11 @@ module.exports = function(controller) {
       teamData.phasesUnlocked = ["phase_1"];
       
       teamData.prisoner_players = [];
-      teamData.prisoners_started = false;
-      teamData.prisoners_time = [];
-      teamData.prisoners_messages = [];
+      teamData.prisoner_started = false;
+      teamData.prisoner_time = [];
       teamData.prisoner_decisions = [];
       teamData.prisoner_success = 0;
+      teamData.prisoner_complete = false;
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       

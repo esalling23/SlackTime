@@ -9,6 +9,8 @@ module.exports = function(controller) {
     controller.storage.teams.get(event.team.id, function(err, team) {
       if (!team.prisoner_success) team.prisoner_success = 0;
       if (!team.prisoner_players) team.prisoner_players = _.where(team.users, { prisoner: true });
+      
+      if (_.pluck(team.prisoner_decisions, "user").includes(event.user)) return;
 
       team.prisoner_decisions.push({ user: event.user, choice: choice });
       
@@ -79,7 +81,7 @@ module.exports = function(controller) {
         team.prisoner_success = 0;
       }
 
-      team.prisoners_dilemma = _.map(team.prisoners_dilemma, function(time) {
+      team.prisoner_time = _.map(team.prisoner_time, function(time) {
         if (time.num == timeObj.num)
           time.complete = true;
 
@@ -90,8 +92,10 @@ module.exports = function(controller) {
       controller.storage.teams.save(team, function(err, saved) {
 
         _.each(saved.prisoner_players, function(user) {
+          
+          var token = bot.config.token ? bot.config.token : bot.config.bot.token;
 
-          controller.deleteHistoryRecent(user.bot_chat, bot.config.bot.token, function() {
+          controller.deleteHistoryRecent(user.bot_chat, token, function() {
 
             controller.studio.get(bot, "prisoners_dilemma", user.userId, user.bot_chat).then(convo => {
 
