@@ -35,9 +35,9 @@ module.exports = function(controller) {
   controller.prisoners_message = function(bot, id, thread) {
       
     controller.storage.teams.get(id, function(err, team) {
-         
-      var web = new WebClient(bot.config.bot.token);
-      var players = thread == "kicked" ? team.just_kicked : "times_up" ? team.times_up : team.prisoner_players;
+      var token = bot.config.token ? bot.config.token : bot.config.bot.token;
+      var web = new WebClient(token);
+      var players = thread == "kicked" ? team.just_kicked : thread == "times_up" ? team.times_up : team.prisoner_players;
 
       team.prisoner_decisions = [];
       if (team.prisoner_players.length == 1) thread = 'success_alone';

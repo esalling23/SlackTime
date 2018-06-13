@@ -13,17 +13,25 @@ module.exports = function(controller) {
     
     console.log(params.user.codesEntered, params.data.value);
 
+    // If this user has already entered this code
     if (params.user.codesEntered) {
       if (params.user.codesEntered.includes(params.data.value)) {
-        var repeat = false;
-        _.each(params.script.threads, function(t,v) {
-          console.log(t,v);
-          if (v == "repeat") repeat = true;
-        });
-
-        if (repeat)
+        // If there's a repeat thread, use that
+        if (_.contains(params.script.threads, "repeat"))
           thread = "repeat";
+        
+        // If this is a channel, send them to the channel thread
+        if (params.data.value.includes('channel'))
+          thread = params.data.value;
       }
+    }
+    
+    if (params.data.value.includes('channel') && params.data.value != "animal_channel") {
+      var channel = parseInt(params.data.value.split('_')[1]);
+      vars.funnyDigits = controller.remoteCombos[channel - 1].join(" ");
+      vars.channel = "Channel " + channel;
+      params.data.value = 'remote';
+      
     }
     
     if (params.data.value == "prisoners_room") {
@@ -31,15 +39,16 @@ module.exports = function(controller) {
       console.log(prisoners, " are the number of prisoners in the movement logic");
             
       vars.prisoners = process.env.prisoners_players - prisoners;
+      vars.started = params.team.prisoner_started;
       if (vars.prisoners > 0)
         vars.wait = "Looks like you have to wait...";
               
     }
     
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) 
-      vars.download = true;
+    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel"].includes(params.data.value)) 
+      vars.link = true;
 
-    if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.download) {
+    if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.link) {
       vars.user = params.user.userId;
       vars.team = params.team.id;
     }

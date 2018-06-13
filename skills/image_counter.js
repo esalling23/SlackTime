@@ -32,41 +32,43 @@ module.exports = function(controller) {
 
       var web = new WebClient(token); 
       
-      // console.log(_.pluck(team.users, 'userId'), message.user);
-      
+      // Create the image counter channel with the name in the .env file
       web.groups.create(process.env.image_counter_channel).then((response) => {
-        console.log(response);
+
         var channel = response.group;
         var channelId = channel.id;
         
+        // Save the channel Id and add it to the list of no-chat channels
         team.image_channel_id = channelId;
         team.noChatChannels.push(channelId);
         
         controller.storage.teams.save(team, function(err, savedTeam) {
-          // console.log(err, savedTeam);
-          console.log("WE SAVED THE TEAM AFTER MAKING THE CHANNEL");
           
+          // invite all team users
           var data = _.map(team.users, function(user) {
             return [ web, user.userId, channelId, savedTeam.users.indexOf(user) ]
           });
 
+          // invite the bot
           data.push([ web, savedTeam.bot.user_id, channelId, 1 ])
 
           var mapPromises = data.map(channelJoin);
-          console.log("completed channel joins");
 
           var results = Promise.all(mapPromises);
 
           results.then(members => {
-            console.log("completed promises");
-            
+   
+            // Set the channel topic and purpose
             web.groups.setTopic(channelId, "Upload images from Critical Safari here. Only upload images one at a time.").then(res => console.log(res)).catch(err => console.log(err));
             web.groups.setPurpose(channelId, "Please upload images one at a time. Uploading multiple files at once will confuse the system.").then(res => console.log(res)).catch(err => console.log(err));
             
             setTimeout(function() {
+              // initial feedback message
               controller.imageFeedback(bot, message, channelId, savedTeam);
+              // image-less image album
               controller.imageAlbum(bot, message, channelId, savedTeam);
               
+              // send out the rules message
               controller.studio.get(bot, "image_tag_rules", message.user, channelId).then(convo => {
                 convo.activate();
               });
@@ -89,6 +91,8 @@ module.exports = function(controller) {
     controller.storage.teams.get(params.message.team, function(err, team) {
       var token = team.bot.app_token;
 
+      // if the team has uploaded all images, delete the image uploaded
+      // and send them to the all_complete thread
       if (team.imagesComplete) {
 
         controller.deleteThisMsg(params.message, token, function() { 
@@ -103,39 +107,13 @@ module.exports = function(controller) {
 
       }
 
-      var destination_path = 'tmp/uploaded/';
-
-      // the url to the file is in url_private. there are other fields containing image thumbnails as appropriate
-      var url = params.message.file.url_private;
-
-      var opts = {
-          method: 'GET',
-          url: url,
-          headers: {
-            Authorization: 'Bearer ' + params.bot.config.bot.token, // Authorization header with bot's access token
-          }
-      };
-
-      var filePath = destination_path + params.message.file.title;
-
-      var stream = request(opts, function(err, res, body) {
-          console.log('FILE RETRIEVE STATUS',res.statusCode);          
-      }).pipe(fs.createWriteStream(filePath));
-
-      stream.on("finish", function() {
-        cloudinary.v2.uploader.unsigned_upload(destination_path + params.message.file.title, "image_counter_bot", 
-            { resource_type: "image", tags: [ 'user_' + params.message.user, 'team_' + params.message.team ] },
-           function(err, result) {
-          console.log(err, result);
-          fs.unlinkSync(filePath);
-          // SAVE TO TEAM //
-          // ************ //
-
+      controller.fileUpload(params.bot, params.message, function(result) {
+          // Delete the image uploaded
           controller.deleteThisMsg(params.message, token, function() { 
 
-            console.log("deleted") 
             if (!team.uploadedImages) team.uploadedImages = [];
 
+            // Add this image data to the team's uploadedImages object
             team.uploadedImages.push({
               user_uploaded: params.message.user, 
               url: result.url, 
@@ -144,6 +122,7 @@ module.exports = function(controller) {
 
             controller.storage.teams.save(team, function(err, saved) {
               
+              // set the image url and the user
               var vars = {
                 image_url: result.url, 
                 user: params.message.user
@@ -162,8 +141,6 @@ module.exports = function(controller) {
 
           });
 
-        });
-
       });
       
     });
@@ -171,8 +148,7 @@ module.exports = function(controller) {
   });
   
   controller.on("image_tag_submit", function(params) {
-    // SAVE TO TEAM //
-    // ************ //
+    
     controller.storage.teams.get(params.message.team.id, function(err, team) {
       
       var thread;
@@ -180,11 +156,14 @@ module.exports = function(controller) {
         location: params.location
       };
       
+      // If the location is full, tell the player it's full
       if(_.where(team.uploadedImages, { location: params.location }).length >= 6) {
         controller.makeCard(params.bot, params.message, 'image_tag', "already_complete", vars, function(card) {
           params.bot.replyInteractive(params.message, card);
         });
       } else {
+        
+        // Update the uploadedImages object to add the tagged location
         var userUploaded;
         team.uploadedImages = _.map(team.uploadedImages, function(image) {
           if (image.url == params.url) {
@@ -194,11 +173,14 @@ module.exports = function(controller) {
           return image;
         });
         
+        // grab the tagged images
         var taggedImages = _.filter(team.uploadedImages, function(image) {
           return image.location !== undefined;
         });
         
-        if (taggedImages.length == 18) 
+        // if the number of tagged images is at the limit
+        // set imagesComplete to true
+        if (taggedImages.length >= process.env.images_limit * process.env.images_locations.split("-")) 
           team.imagesComplete = true;          
                 
         controller.storage.teams.save(team, function(err, saved) {

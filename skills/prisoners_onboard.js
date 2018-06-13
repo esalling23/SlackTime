@@ -14,10 +14,13 @@ module.exports = function(controller) {
     // add everyone to a picture-counting channel 
     controller.storage.teams.get(id, function(err, team) {
       
+      if (team.prisoner_started) return;
+      
       var web = new WebClient(team.oauth_token); 
 
       team.prisoner_players = _.where(team.users, { prisoner: true });
-      team.prisoners_started = true;
+      team.prisoner_started = true;
+      team.prisoner_complete = false;
 
       team.prisoner_success = 0;
       team.prisoner_decisions = [];
@@ -31,6 +34,7 @@ module.exports = function(controller) {
       });
         
     });
+    
   });
   
   

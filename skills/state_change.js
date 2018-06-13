@@ -27,10 +27,10 @@ module.exports = function(controller) {
     if (!thisUser.currentState) {
       thisUser.currentState = "default";
     }
-    
+        
     var thread = 'correct';
     
-    if (options.codeType == 'buttons' || options.codeType == "telegraph_key")
+    if (["telegraph_key", "buttons", "remote"].includes(options.codeType))
       thread += '_' + code;
     
     console.log(thread, "is the thread");
@@ -39,7 +39,7 @@ module.exports = function(controller) {
     if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType)) {
       var vars = {};
       
-      if (options.codeType == 'buttons') vars.recap = thread;
+      if (options.codeType == 'buttons' || options.codeType == 'remote') vars.recap = thread;
       
       controller.makeCard(options.bot, options.event, options.codeType, 'repeat', vars, function(card) {
         // replace the original button message with a new one

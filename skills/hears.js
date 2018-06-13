@@ -37,6 +37,10 @@ module.exports = function(controller) {
         controller.deleteThisMsg(message, team.bot.app_token);
       else {
         controller.dataStore(message, "chat");
+        
+        if (team.chat_channels.includes(message.channel)) {
+           // if we are in a chat channel and the message includes a file, upload that file to cloudinary 
+        }
       }
 
     });

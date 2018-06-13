@@ -50,10 +50,11 @@ module.exports = function(controller) {
          team.movements = [0];
          
          team.prisoner_players = [];
-         team.prisoners_started = false;
-         team.prisoners_time = [];
-         team.prisonerDecisions = [];
-         team.prisonerSuccess = 0;
+         team.prisoner_started = false;
+         team.prisoner_complete = false;
+         team.prisoner_time = [];
+         team.prisoner_decisions = [];
+         team.prisoner_success = 0;
          
          team.noChatChannels = [];
          
@@ -100,6 +101,7 @@ module.exports = function(controller) {
               return web.channels.list();
             }).then(res => {
               channel = _.findWhere(res.channels, { name: "general" }).id;
+              team.general_channel = channel;
               return web.channels.invite(channel, team.bot.user_id);
             }).then(res => {
               console.log("completed promises", res);

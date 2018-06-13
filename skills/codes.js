@@ -51,4 +51,32 @@ module.exports = function(controller) {
     shrimp: process.env.line + " Line", 
     turtle: process.env.page + " Page"
   }
+  
+  controller.remoteCodes = {
+    '!!!': 'PROCESSOR', 
+    '@@@': 'WATSON', 
+    '###': 'DEEPBLUE', 
+    '$$$': 'COMPRESSION', 
+    '%%%': 'BIAS', 
+    '^^^': 'INTERMEDIATENODE', 
+    '&&&': 'GETBATCH', 
+    '***': 'BITCOIN', 
+    '~~~': 'ESCAPE'
+  }
+  
+  controller.remoteCombos = {
+    0: ['!!!', '@@@', '###'], 
+    1: ['@@@', '###', '$$$'], 
+    2: ['###', '$$$', '%%%'], 
+    3: ['$$$', '%%%', '^^^'], 
+    4: ['%%%', '^^^', '&&&'], 
+    5: ['^^^', '&&&', '***'], 
+    6: ['&&&', '***', '~~~'], 
+    7: ['***', '~~~', '!!!']
+  }
+  
+  controller.remoteWords = [
+    "WORD", 
+    "ANOTHERWORD"
+  ]
 }

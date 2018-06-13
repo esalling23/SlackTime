@@ -1,22 +1,34 @@
+const _ = require('underscore');
+
 module.exports = function(webserver, controller) {
   
   webserver.get('/download/:file/:team/:user', function(req, res){
+    
+    controller.storage.teams.get(req.params.team, function(err, team) {
+      var user = _.findWhere(team.users, { "userId" : req.params.user });
+      
+      var file = req.params.file;
+      
+      var opt = {
+        file: file, 
+        team: team.id, 
+        user: user.userId, 
+        channel: user.bot_chat
+      }
 
-    var file = req.params.file;
+      var filePath = "http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/" + file;
 
-    var opt = {
-      file: req.params.file, 
-      team: req.params.team, 
-      user: req.params.user
-    }
+      opt.url = filePath;
 
-    controller.trigger("download", [opt]);
+      controller.dataStore(opt, "download").then((result) => {
 
-    var filePath = "http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/" + file;
+        res.redirect(filePath);
 
-    console.log(filePath, "is the filepath");
+      }).catch(err => console.log('error with download storage: ' + err));
+      
+    });
 
-    res.redirect(filePath);
+    
 
   });
 

@@ -20,6 +20,12 @@ var aris_codes = {
   2: []
 };
 
+var remote_codes = {
+  0: [], 
+  1: [], 
+  2: []
+}
+
 module.exports = function(controller) {
   
   controller.studio.before("three_buttons", function(convo, next) {
@@ -89,6 +95,19 @@ module.exports = function(controller) {
     _.each(menus, function(menu) {
       
       menu.options = generateCodes(menu, menus, aris_codes, aris_code);
+      
+    });
+    
+    next();
+  });
+  
+  controller.studio.before("remote", function(convo, next) {
+    var menus = _.where(convo.threads.channel_code[0].attachments[0].actions, { type: "select" });
+    var remote_words = process.env.remoteCodes;
+    
+    _.each(menus, function(menu) {
+      
+      menu.options = generateCodes(menu, menus, remote_codes, remote_words, true);
       
     });
     
@@ -173,12 +192,18 @@ module.exports = function(controller) {
     return text;
   }
   
-  var generateCodes = function(menu, menus, codes, answer) {
+  var generateCodes = function(menu, menus, codes, answer, word) {
     menu.options = [];
+    var length = word ? controller.remoteWords.length : 99;
 
-    for (var x = 0; x < 99; x++) {
-      var string = generateString();
-
+    for (var x = 0; x < length; x++) {
+      var string;
+      
+      if (word)
+        string = controller.remoteWords[x];
+      else
+        string = generateString();
+      
       if (!codes[menus.indexOf(menu)][x]) 
         codes[menus.indexOf(menu)][x] = { text: string, value: string };
 
@@ -186,8 +211,14 @@ module.exports = function(controller) {
 
     }
 
-    menu.options[100] = { text: answer[menus.indexOf(menu)], value: answer[menus.indexOf(menu)] };
-
+    if (word) {
+      _.each(controller.remoteCodes, function(code, ind) {
+        menu.options.push({ text: code, value: code });
+      });
+    } else {
+      menu.options[100] = { text: answer[menus.indexOf(menu)], value: answer[menus.indexOf(menu)] };
+    }
+      
     return _.shuffle(menu.options);
   }
   
