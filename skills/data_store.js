@@ -48,16 +48,16 @@ module.exports = function(controller) {
           dataEvent.fileName = event.file.title;
           dataEvent.fileUrl = event.file.permalink;
         }
-      } 
-
-      if (type == "code") {
-        dataEvent.code = opt.code.code;
-        dataEvent.correct = opt.code.correct;
-        if (dataEvent.correct && opt.code.puzzle) dataEvent.puzzle = opt.code.puzzle;
+      } else if (type == "code") {
+        dataEvent.code = opt.codeObj.code;
+        dataEvent.correct = opt.codeObj.correct;
         dataEvent.type = opt.codeType;
-      }
 
-      // console.log(dataEvent);
+        if (dataEvent.correct && opt.codeObj.puzzle) dataEvent.puzzle = opt.codeObj.puzzle;
+      } else if (type == "download" || type == "link") {
+        dataEvent.type = type;
+        dataEvent.url = event.url;
+      }
 
       controller.storage.events.save(dataEvent, function(err, saved) {
         console.log(err, saved, "SAVED!!");

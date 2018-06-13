@@ -19,11 +19,12 @@ module.exports = function(controller) {
   
   controller.on('interactive_message_callback', function(bot, event) {
     
-    console.log(event, "is the interactive message callback event");
+    // console.log(event, "is the interactive message callback event");
     
+    // Store all interactive message events to the database
     controller.dataStore(event, "button").then((data) => {
 
-      // Choose a menu option
+      // A user selected a menu option
       if (event.actions[0].name.match(/^choose(.*)$/)) {
         // console.log(event.attachment_id);
           var reply = event.original_message;
@@ -143,20 +144,28 @@ module.exports = function(controller) {
           var script;
 
           controller.storage.teams.get(event.team.id).then((res) => {
+            
+            var opt = {
+              bot: bot, 
+              event: event,
+              team: res, 
+              data: confirmedChoice
+            }
+            
+            var scriptName = confirmedChoice.value;
+            
+            if (confirmedChoice.value.includes('channel')) {
+              opt.thread = 'channel_code';
+              scriptName = 'remote'
+            }
 
             // Set the puzzle, answer, and if the answer is correct
             // This data will be sent to the puzzle_attempt event for saving to storage
 
-            controller.studio.get(bot, confirmedChoice.value, event.user, event.channel).then((script) => {
+            controller.studio.get(bot, scriptName, event.user, event.channel).then((script) => {
 
-              var opt = {
-                bot: bot, 
-                event: event, 
-                team: res, 
-                user: _.findWhere(res.users, { userId: event.user }), 
-                data: confirmedChoice, 
-                script: script
-              }
+              opt.user = _.findWhere(res.users, { userId: event.user });
+              opt.script = script;
 
               controller.confirmMovement(opt);
 
@@ -166,6 +175,7 @@ module.exports = function(controller) {
 
        }
 
+      // Tag an image in the image-counter
       if (event.actions[0].name.match(/^tag/)) {
         var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
 
@@ -189,12 +199,18 @@ module.exports = function(controller) {
 
         var type = event.actions[0].name;
 
-        if (type.includes('safe') || type.includes('aris') || type.includes('bookshelf') || type.includes('telegraph_key')) {
+        if (type.includes('safe') || type.includes('aris') || type.includes('bookshelf') || type.includes('telegraph_key') || type.includes('remote')) {
           // console.log("confirming safe/door enter code");
 
           var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
           var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
-          // console.log(confirmedChoice, "is the codeType");
+          
+          // If this is a remote code, use the callback id as a special channel parameter
+          // Also set the codeType to "remote" via callback_id
+          if (type.includes('remote')) {
+            options.channel = callback_id.split("_")[2];
+            callback_id = "remote";
+          }
 
           options.code = confirmedChoice.choice;
 
@@ -265,7 +281,8 @@ module.exports = function(controller) {
         console.log(event);
         var callback_id = event.callback_id;
         var reply = event.original_message;
-        // we need to change this button's color homie
+        
+        // cycle through attachments
         _.each(reply.attachments, function(attachment) {
           attachment = _.map(attachment.actions, function(action) {
             // console.log(action);
@@ -358,6 +375,7 @@ module.exports = function(controller) {
 
       }
       
+      // Pick up a certain tamagotchi
       if (event.actions[0].name.match(/^tamagotchi/)) {
         
         var data = {
@@ -372,6 +390,7 @@ module.exports = function(controller) {
 
       }
 
+      
       if (event.actions[0].name.match(/^start/)) {
 
         var options = {
@@ -390,6 +409,7 @@ module.exports = function(controller) {
 
       }
 
+      // Move through pictures in a given photo album
       if (event.actions[0].name.match(/^picture(.*)/)) {
         // console.log(event);
         var reply = event.original_message;
@@ -438,6 +458,7 @@ module.exports = function(controller) {
 
       }
 
+      // Cycle through the TV Guide images
       if (event.actions[0].name.match(/^guide/)) {
 
         var reply = event.original_message;
@@ -470,6 +491,7 @@ module.exports = function(controller) {
 
       }
 
+      // Any download button
       if (event.actions[0].name.match(/^download/)) {
 
         controller.trigger("download", [bot, event]);
@@ -509,33 +531,45 @@ module.exports = function(controller) {
 
       }
 
+      // A selection within the prisoners dilemma
       if (event.actions[0].name.match(/^dilemma/)) {
 
         controller.trigger("prisoners_selection", [bot, event]);
 
       }
-
-
+      
+      // Start the prisoners dilemma
       if (event.actions[0].name.match(/^prisoners/)) {
 
         controller.trigger("prisoners_onboard", [bot, event]);
 
       }
+
+
+      // A channel has been selected on the remote
+      if (event.actions[0].name.match(/^channel/)) {
+
+        
+
+      }
       
-      // user says something
+      // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
+        
+        var opt = {
+          bot: bot, 
+          event: event, 
+          data: event.actions[0]
+        }
 
         controller.studio.getScripts().then((list) => {
+          
+          var name = event.actions[0].value.includes('channel') ? 'remote' : event.actions[0].value;
+          
 
-          var script = _.findWhere(list, { name: event.actions[0].value });
+          var script = _.findWhere(list, { name: name });
 
           controller.storage.teams.get(event.team.id).then((res) => {
-            
-            var opt = {
-              bot: bot, 
-              event: event, 
-              data: event.actions[0]
-            }
               
             if (event.actions[0].value == "prisoners_room") {
               if (res.prisoner_started) 

@@ -21,7 +21,7 @@ module.exports = function(controller) {
       var correctCodes;
       var codeObj;
             
-      if (['safe', 'bookshelf', 'aris_door'].includes(params.codeType)) {
+      if (['safe', 'bookshelf', 'aris_door', 'remote'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = controller.safeCode;
           params.phaseUnlocked = "phase_2";
@@ -31,6 +31,12 @@ module.exports = function(controller) {
         } else if (params.codeType == 'aris_door') {
           correctCodes = controller.arisCode;
           params.phaseUnlocked = "phase_4";
+        } else if (params.codeType == 'remote') {
+          correctCodes = {};
+          _.each(controller.remoteCombos[parseInt(params.channel) - 1], function(item, ind) {
+            correctCodes[ind] = controller.remoteCodes[item];
+          });
+          
         }
         
         codeObj = checkCodeObject(params.code, correctCodes);
@@ -62,6 +68,8 @@ module.exports = function(controller) {
         
         if (params.codeType == "telegraph_key")
           codeObj.puzzle = parseInt(codeObj.puzzle) + 1;
+        else if (params.codeType == 'remote') 
+          codeObj.puzzle = parseInt(params.channel);
         
         params.key = codeObj;
         params.team = res;

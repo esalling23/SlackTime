@@ -2,9 +2,10 @@ const _ = require('underscore');
 
 module.exports = function(webserver, controller) {
   
-  webserver.get('/download/:file/:team/:user', function(req, res){
+  webserver.get('/link/:link/:team/:user', function(req, res){
     
     controller.storage.teams.get(req.params.team, function(err, team) {
+      
       var user = _.findWhere(team.users, { "userId" : req.params.user });
       
       var file = req.params.file;
@@ -13,23 +14,18 @@ module.exports = function(webserver, controller) {
         file: file, 
         team: team.id, 
         user: user.userId, 
-        channel: user.bot_chat
+        channel: user.bot_chat, 
+        url: req.params.link
       }
-
-      var filePath = "http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/" + file;
-
-      opt.url = filePath;
 
       controller.dataStore(opt, "download", function() {
 
-        res.redirect(filePath);
+        res.redirect(req.params.url);
 
       });
       
     });
-
     
-
   });
 
 

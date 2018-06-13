@@ -30,7 +30,7 @@ module.exports = function(controller) {
   controller.storage.teams.get("T8MJ05ZPY", function(err, team) {
     var usersToSub = _.pluck(team.users, "userId");
     console.log(usersToSub);
-    var bot = controller.spawn(team.bot);
+    // var bot = controller.spawn(team.bot);
     // bot.say({
     //   type: "presence_sub",
     //   ids: usersToSub

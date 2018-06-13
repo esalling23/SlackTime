@@ -22,6 +22,11 @@ module.exports = function(controller) {
       callback();
     }).catch(err => console.log(err));
   }
+  
+  controller.middleware.format.use(function(bot, message, platform_message, next) {
+    console.log(message);
+    next();
+  });
 
     controller.middleware.receive.use(function(bot, message, next) {
     
@@ -30,6 +35,8 @@ module.exports = function(controller) {
       
         if (message.file && message.file.created) {
           
+          controller.trigger("file_upload", [{ bot: bot, message: message }]);
+          
           controller.dataStore(message, "chat").catch(err => console.log(err));
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {
             var messId = message.team.id ? message.team.id : message.team;
@@ -37,7 +44,7 @@ module.exports = function(controller) {
               // console.log(messId, "is the team id");
               // console.log(team, "is the team");
               if(team.image_channel_id == message.channel) {
-                controller.trigger("image_counter_upload", [{ bot:bot, message:message }]);
+                controller.trigger("image_counter_upload", [{ bot: bot, message: message }]);
               }
             });
           }

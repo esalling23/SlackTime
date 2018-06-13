@@ -67,7 +67,7 @@ var bot_options = {
     clientSecret: process.env.clientSecret,
     debug: false,
     scopes: ['bot'],
-    send_via_rtm: true,
+    // send_via_rtm: true,
     studio_token: process.env.studio_token,
     studio_command_uri: process.env.studio_command_uri
 };

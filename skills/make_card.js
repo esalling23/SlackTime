@@ -45,6 +45,10 @@ module.exports = function(controller) {
           });
         }
         
+        if (vars.channel) {
+           template.attachments[1].callback_id += "_" + vars.channel.replace(" ", "_").toLowerCase(); 
+        }
+        
         if (vars.prisoners <= 0 && !vars.started) {
           template.attachments[0].actions.push({
             "type": "button",
