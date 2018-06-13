@@ -20,11 +20,11 @@ module.exports = function(webserver, controller) {
 
       opt.url = filePath;
 
-      controller.dataStore(opt, "download", function() {
+      controller.dataStore(opt, "download").then((result) => {
 
         res.redirect(filePath);
 
-      });
+      }).catch(err => console.log('error with download storage: ' + err));
       
     });
 

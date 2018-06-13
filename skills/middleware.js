@@ -35,7 +35,7 @@ module.exports = function(controller) {
       
         if (message.file && message.file.created) {
           
-          controller.trigger("file_upload", [{ bot: bot, message: message }]);
+          controller.fileUpload(bot, message);
           
           controller.dataStore(message, "chat").catch(err => console.log(err));
           if (acceptedTypes.indexOf(message.file.filetype) > -1) {

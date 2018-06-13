@@ -8,21 +8,21 @@ module.exports = function(webserver, controller) {
       
       var user = _.findWhere(team.users, { "userId" : req.params.user });
       
-      var file = req.params.file;
-      
+      var url = controller.linkUrls[req.params.link];
+            
       var opt = {
-        file: file, 
         team: team.id, 
         user: user.userId, 
         channel: user.bot_chat, 
-        url: req.params.link
+        url: url, 
+        linkName: req.params.link
       }
 
-      controller.dataStore(opt, "download", function() {
+      controller.dataStore(opt, "link").then((result) => {
 
-        res.redirect(req.params.url);
+        res.redirect(url);
 
-      });
+      }).catch(err => console.log('error with link storage: ' + err));;
       
     });
     

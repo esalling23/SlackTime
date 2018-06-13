@@ -26,7 +26,7 @@ module.exports = function(controller) {
       }
     }
     
-    if (params.data.value.includes('channel')) {
+    if (params.data.value.includes('channel') && params.data.value != "animal_channel") {
       var channel = parseInt(params.data.value.split('_')[1]);
       vars.funnyDigits = controller.remoteCombos[channel - 1].join(" ");
       vars.channel = "Channel " + channel;
@@ -45,10 +45,10 @@ module.exports = function(controller) {
               
     }
     
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots"].includes(params.data.value)) 
-      vars.download = true;
+    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel"].includes(params.data.value)) 
+      vars.link = true;
 
-    if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.download) {
+    if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.link) {
       vars.user = params.user.userId;
       vars.team = params.team.id;
     }
