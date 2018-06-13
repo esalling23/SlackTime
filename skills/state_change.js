@@ -33,6 +33,8 @@ module.exports = function(controller) {
     if (["telegraph_key", "buttons", "remote"].includes(options.codeType))
       thread += '_' + code;
     
+    if (options.codeType == 'remote') code = "channel_" + code;
+    
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
@@ -100,6 +102,7 @@ module.exports = function(controller) {
           if (thisUser.codesEntered.includes(code)) return;
           
           if (options.codeType != "bookshelf") {
+            
             thisUser.codesEntered.push(code);
             updated.codesEntered.push(code);
           }

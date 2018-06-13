@@ -22,7 +22,7 @@ module.exports = function(controller) {
       web.groups.history(res.gamelog_channel_id).then(group => {
         
         if (group.messages.length > 1) {
-          controller.deleteHistory(res.gamelog_channel_id, res.oauth_token);
+          controller.deleteHistory(res.gamelog_channel_id, res.bot.app_token);
         }
         var gamelogMsg = group.messages[0];
                 

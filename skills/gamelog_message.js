@@ -42,6 +42,7 @@ module.exports = function(controller) {
           return att;
         } else if (id == 1) {
           console.log("video channel");
+          // Safari video link
           if (team.codesEntered.includes('safari')) {
             att.actions.push({
                               "type": "button",
@@ -49,7 +50,11 @@ module.exports = function(controller) {
                               "name": "link_button",
                               "text": "Safari Video"
                             });
-          } else if (team.codesEntered.includes('aris')) {
+          } 
+          
+          console.log("team movements: ", team.movements);
+          // Aris video and download links
+          if (team.movements.includes(5)) {
             att.actions.push({
                               "type": "button",
                               "url": "https://escape-room-production.glitch.me/link/aris/{{vars.team}}/{{vars.user}}",

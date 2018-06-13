@@ -21,17 +21,21 @@ module.exports = function(controller) {
           thread = "repeat";
         
         // If this is a channel, send them to the channel thread
-        if (params.data.value.includes('channel'))
-          thread = params.data.value;
+        if (params.data.value.includes('channel')) {
+          thread = "correct_" + parseInt(params.data.value.split('_')[1]);
+          params.data.value = 'remote';
+          vars.link = true;
+        }
+        
       }
     }
     
-    if (params.data.value.includes('channel') && params.data.value != "animal_channel") {
+    if (params.data.value.includes('channel') && params.data.value != "animal_channel" && !params.user.codesEntered.includes(params.data.value)) {
       var channel = parseInt(params.data.value.split('_')[1]);
       vars.funnyDigits = controller.remoteCombos[channel - 1].join(" ");
       vars.channel = "Channel " + channel;
       params.data.value = 'remote';
-      
+      vars.link = true;
     }
     
     if (params.data.value == "prisoners_room") {

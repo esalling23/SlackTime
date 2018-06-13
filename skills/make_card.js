@@ -45,7 +45,8 @@ module.exports = function(controller) {
           });
         }
         
-        if (vars.channel) {
+        // if this is a locked channel, add the channel's # to the callbackId
+        if (vars.funnyDigits) {
            template.attachments[1].callback_id += "_" + vars.channel.replace(" ", "_").toLowerCase(); 
         }
         
