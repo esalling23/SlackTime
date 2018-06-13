@@ -27,7 +27,7 @@ module.exports = function(controller) {
     if (!thisUser.currentState) {
       thisUser.currentState = "default";
     }
-    
+        
     var thread = 'correct';
     
     if (["telegraph_key", "buttons", "remote"].includes(options.codeType))

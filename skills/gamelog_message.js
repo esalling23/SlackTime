@@ -45,9 +45,22 @@ module.exports = function(controller) {
           if (team.codesEntered.includes('safari')) {
             att.actions.push({
                               "type": "button",
-                              "url": "https://vimeo.com/267825256/2692ac4f0a",
+                              "url": "https://escape-room-production.glitch.me/link/safari_video/{{vars.team}}/{{vars.user}}",
                               "name": "link_button",
                               "text": "Safari Video"
+                            });
+          } else if (team.codesEntered.includes('aris')) {
+            att.actions.push({
+                              "type": "button",
+                              "url": "https://escape-room-production.glitch.me/link/aris/{{vars.team}}/{{vars.user}}",
+                              "name": "link_button",
+                              "text": "Aris Video"
+                            });
+            att.actions.push({
+                              "type": "button",
+                              "url": "https://escape-room-production.glitch.me/link/aris_download/{{vars.team}}/{{vars.user}}",
+                              "name": "link_button",
+                              "text": "Aris Download"
                             });
           }
             
