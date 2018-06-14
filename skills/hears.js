@@ -52,7 +52,7 @@ module.exports = function(controller) {
     
     controller.storage.teams.get(message.team, function(err, team) {
       
-       team.users = _.map(team.users, function(user) {
+       _.each(team.users, function(user) {
 
           bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
             console.log(err, direct_message);
@@ -71,6 +71,22 @@ module.exports = function(controller) {
                 
                 convo.activate();
                 
+                return;
+                
+              }).then(function() {
+                
+                team.gameStarted = true;
+                
+                team.users = _.map(team.users, function(u) {
+                  if (u.userId == user.userId)
+                    return user;
+                  else
+                    return u;
+                });
+
+                 controller.storage.teams.save(team, function(err, saved) {
+                   console.log(saved);
+                 });
               }).catch(function(err) {
                 console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
               });
@@ -79,16 +95,6 @@ module.exports = function(controller) {
 
           });
 
-         return user;
-
-       });
-      
-      team.gameStarted = true;
-      
-       controller.storage.teams.save(team, function(err, saved) {
-         console.log(saved);
-         
-           
        });
     });
     
@@ -99,6 +105,67 @@ module.exports = function(controller) {
     
     controller.trigger("grab_text", [bot, message]);
       
+
+  });
+  
+  
+  
+  controller.hears('chat', 'direct_message', function(bot,message) {
+    
+    controller.storage.teams.get(message.team, function(err, team) {
+      var web = new WebClient(team.bot.token);
+      
+      web.conversations.list({types: "im"}).then(res => {
+        team.users = _.map(res.channels, function(im) {
+          console.log(im);
+          var user = _.findWhere(team.users, { userId: im.user });
+          if (im.is_im && user) {
+            user.bot_chat = im.id;
+            return user;
+          }
+        });
+        
+        team.users = _.filter(team.users, function(user) { return user != null });
+        
+        controller.storage.teams.save(team, function(err, saved) {
+          console.log(saved, "saved team");
+        });
+        
+      }).catch(err => console.log('im list error: ' + err));
+      
+                                                      
+    });
+        
+
+  });
+  
+  
+  
+  controller.hears('end_dilemma', 'direct_message', function(bot,message) {
+    
+    controller.storage.teams.get(message.team, function(err, team) {
+      var web = new WebClient(bot.config.bot.token);
+      
+      team.prisoner_players = [];
+      team.prisoner_started = false;
+      team.prisoner_complete = false;
+
+      team.prisoner_success = 0;
+      team.prisoner_decisions = [];
+      team.prisoner_time = [];
+      
+      team.users = _.map(team.users, function(user) {
+        user.prisoner = false;
+        return user;
+        
+      });
+      
+      controller.storage.teams.save(team, function(err, saved) {
+        console.log(saved, "saved team");
+      });
+                                                      
+    });
+        
 
   });
   

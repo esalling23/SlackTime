@@ -500,34 +500,12 @@ module.exports = function(controller) {
 
       if (event.actions[0].name.match(/^prisoner/)) {
 
-        if (process.env.glitch_domain == "escape-room-dev") {
-          controller.storage.teams.get(event.team.id, function(err, team) {
+        controller.storage.teams.get(event.team.id, function(err, team) {
 
-            if (!team.prisoners_dilemma || team.prisoners_dilemma.length <= 0)
-              controller.trigger("prisoners_onboard", [bot, event]);
+          if (!team.prisoner_time || team.prisoner_time.length <= 0)
+            controller.trigger("prisoners_onboard", [bot, event]);
 
-          });
-        } else {
-
-           controller.storage.teams.get(event.team.id).then((res) => {
-
-            controller.studio.get(bot, "exit", event.user, event.channel).then((currentScript) => {
-              var opt = {
-                bot: bot, 
-                event: event, 
-                team: res, 
-                user: _.findWhere(res.users, { userId: event.user }), 
-                data: { value: "exit" }, 
-                script: currentScript
-              }
-
-              controller.confirmMovement(opt);
-
-            });
-
-           });
-
-        }
+        });
 
       }
 
@@ -538,20 +516,6 @@ module.exports = function(controller) {
 
       }
       
-      // Start the prisoners dilemma
-      if (event.actions[0].name.match(/^prisoners/)) {
-
-        controller.trigger("prisoners_onboard", [bot, event]);
-
-      }
-
-
-      // A channel has been selected on the remote
-      if (event.actions[0].name.match(/^channel/)) {
-
-        
-
-      }
       
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {

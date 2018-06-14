@@ -40,7 +40,7 @@ module.exports = function(controller) {
       var players = thread == "kicked" ? team.just_kicked : thread == "times_up" ? team.times_up : team.prisoner_players;
 
       team.prisoner_decisions = [];
-      if (team.prisoner_players.length == 1) thread = 'success_alone';
+      if (team.prisoner_players.length == 1 && thread == "default") thread = 'success_alone';
 
       controller.storage.teams.save(team, function(err, saved) {
 

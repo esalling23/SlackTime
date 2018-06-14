@@ -14,8 +14,8 @@ module.exports = function(controller) {
                 debug('Error: could not load team from storage system:', payload.identity.team_id, err);
             }
 
-            var new_team = false;
-            if (!team) {
+            // var new_team = false;
+            // if (!team) {
                 team = {
                     id: payload.identity.team_id,
                     createdBy: payload.identity.user_id,
@@ -23,7 +23,7 @@ module.exports = function(controller) {
                     name: payload.identity.team,
                 };
                 var new_team= true;
-            }
+            // }
           
             team.bot = {
                 token: payload.bot.bot_access_token,
