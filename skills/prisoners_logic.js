@@ -129,7 +129,7 @@ module.exports = function(controller) {
             if (updated.just_kicked.length > 0)
               controller.prisoners_message(bot, updated.id, "kicked");
 
-            if (updated.prisoner_players.length > 1)
+            if (updated.prisoner_players.length >= 1)
               controller.prisoners_message(bot, updated.id, "default");
             
             controller.addTime(bot, updated.id);
