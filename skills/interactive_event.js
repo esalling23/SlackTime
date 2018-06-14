@@ -502,7 +502,7 @@ module.exports = function(controller) {
 
         controller.storage.teams.get(event.team.id, function(err, team) {
 
-          if (!team.prisoners_time || team.prisoners_time.length <= 0)
+          if (!team.prisoner_time || team.prisoner_time.length <= 0)
             controller.trigger("prisoners_onboard", [bot, event]);
 
         });
