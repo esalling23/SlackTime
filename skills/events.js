@@ -45,33 +45,22 @@ module.exports = function(controller) {
 
         web.conversations.list({types: "im"}).then(function(list) {
           _.each(team.users, function(user) {
-            console.log(list.channels, user);
+            // console.log(list.channels, user);
 
             var thisIM = _.findWhere(list.channels, { user: user.userId });
             var channel = thisIM.id;
             
             web.conversations.history(channel).then(function(ims) {
-              console.log(ims);
-              console.log(ims.messages);
-              var btn_message;
-              _.map(ims.messages, function(msg) {
-                if (msg.attachments){
-                  if (msg.attachments.length > 0) {
-                    if (msg.attachments[0].callback_id == "three_color_buttons") {
-                      btn_message = msg;
-                    }
-                  }
-                }
-              });
+              // console.log(ims);
+              // console.log(ims.messages);
               
-              if (!btn_message) {
-                btn_message = ims.messages[0];
-              }
+              var btn_message = ims.messages[0];
               
               if (!btn_message)
                 return;
               
               btn_message.channel = channel;
+              btn_message.user = user.userId;
               
               controller.makeCard(bot, btn_message, "input_nodes_1", "default", {}, function(card) {
                 bot.api.chat.update({
