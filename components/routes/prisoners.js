@@ -27,8 +27,10 @@ module.exports = function(webserver, controller) {
           // Send times-up message to any late players
           controller.prisoners_message(bot, saved.id, "times_up");
           // check other responses if game is started
-          var obj = _.findWhere(saved.prisoner_time, { complete: false });
-          controller.trigger("prisoners_check", [bot, saved.id, obj]);
+          setTimeout(function() {
+            var obj = _.findWhere(saved.prisoner_time, { complete: false });
+            controller.trigger("prisoners_check", [bot, saved.id, obj]);
+          }, 5000);
         } else {
           // if game is not started, start it
           controller.prisoners_message(bot, saved.id, "default");  
