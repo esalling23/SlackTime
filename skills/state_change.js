@@ -102,7 +102,6 @@ module.exports = function(controller) {
           if (thisUser.codesEntered.includes(code)) return;
           
           if (options.codeType != "bookshelf") {
-            
             thisUser.codesEntered.push(code);
             updated.codesEntered.push(code);
           }
@@ -119,7 +118,7 @@ module.exports = function(controller) {
               code: options.key.code
             }
 
-            if (log.codeType == "buttons" || log.codeType == "telegraph_key")
+            if (['buttons', 'telegraph_key', 'remote'].includes(log.codeType))
               log.puzzle = code;
             else if (["bookshelf", "safe", "aris_door", "keypad"].includes(log.codeType))
               log.puzzle = log.codeType;

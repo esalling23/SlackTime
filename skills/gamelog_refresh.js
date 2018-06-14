@@ -92,6 +92,10 @@ module.exports = function(controller) {
         message += " heard a phonograph message about Channel " + event.puzzle + " by putting in   *" + controller.telegraphKeys[event.puzzle - 1].toString().replace(/,/g, "  ") + "*   ";
         break;
       
+      case 'remote': 
+        message += " unlocked Channel " + parseInt(event.puzzle.split("_")[1]) + " with _" + controller.channelCodes[event.puzzle] + "_";
+        break;
+        
       case 'aris_door':
         message += " unlocked the door with the code _"  + process.env.aris_code + "_ out of node 5 and found node 6";
         break;

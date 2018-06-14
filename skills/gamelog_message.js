@@ -43,31 +43,34 @@ module.exports = function(controller) {
         } else if (id == 1) {
           console.log("video channel");
           // Safari video link
-          if (team.codesEntered.includes('safari')) {
-            att.actions.push({
-                              "type": "button",
-                              "url": "https://escape-room-production.glitch.me/link/safari_video/{{vars.team}}/{{vars.user}}",
-                              "name": "link_button",
-                              "text": "Safari Video"
-                            });
-          } 
+          // ****
+          // NO LONGER SHOWING SAFARI AND ARIS VIDEO LINKS
+          // ****
+//           if (team.codesEntered.includes('safari')) {
+//             att.actions.push({
+//                               "type": "button",
+//                               "url": "https://escape-room-production.glitch.me/link/safari_video/" + team.id,
+//                               "name": "link_button",
+//                               "text": "Safari Video"
+//                             });
+//           } 
           
-          console.log("team movements: ", team.movements);
-          // Aris video and download links
-          if (team.movements.includes(5)) {
-            att.actions.push({
-                              "type": "button",
-                              "url": "https://escape-room-production.glitch.me/link/aris/{{vars.team}}/{{vars.user}}",
-                              "name": "link_button",
-                              "text": "Aris Video"
-                            });
-            att.actions.push({
-                              "type": "button",
-                              "url": "https://escape-room-production.glitch.me/link/aris_download/{{vars.team}}/{{vars.user}}",
-                              "name": "link_button",
-                              "text": "Aris Download"
-                            });
-          }
+//           console.log("team movements: ", team.movements);
+//           // Aris video and download links
+//           if (team.movements.includes(5)) {
+//             att.actions.push({
+//                               "type": "button",
+//                               "url": "https://escape-room-production.glitch.me/link/aris/" + team.id,
+//                               "name": "link_button",
+//                               "text": "Aris Video"
+//                             });
+//             att.actions.push({
+//                               "type": "button",
+//                               "url": "https://escape-room-production.glitch.me/link/aris_download/" + team.id,
+//                               "name": "link_button",
+//                               "text": "Aris Download"
+//                             });
+//           }
             
           return att;
         } else if (unlockedStages.includes(id - 1)) {

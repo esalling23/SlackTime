@@ -107,39 +107,37 @@ module.exports = function(controller) {
 
       }
 
-      controller.fileUpload(params.bot, params.message, function(result) {
-          // Delete the image uploaded
-          controller.deleteThisMsg(params.message, token, function() { 
+      // Delete the image uploaded
+      controller.deleteThisMsg(params.message, token, function() { 
 
-            if (!team.uploadedImages) team.uploadedImages = [];
+        if (!team.uploadedImages) team.uploadedImages = [];
 
-            // Add this image data to the team's uploadedImages object
-            team.uploadedImages.push({
-              user_uploaded: params.message.user, 
-              url: result.url, 
-              date_uploaded: Date.now()
-            });
+        // Add this image data to the team's uploadedImages object
+        team.uploadedImages.push({
+          user_uploaded: params.message.user, 
+          url: params.result.url, 
+          date_uploaded: Date.now()
+        });
 
-            controller.storage.teams.save(team, function(err, saved) {
-              
-              // set the image url and the user
-              var vars = {
-                image_url: result.url, 
-                user: params.message.user
-              };
+        controller.storage.teams.save(team, function(err, saved) {
 
-              // upon image upload, show menu asking for player to tag the image location
-              controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
+          // set the image url and the user
+          var vars = {
+            image_url: params.result.url, 
+            user: params.message.user
+          };
 
-                convo.threads.default[0].attachments[0].image_url = vars.image_url;
+          // upon image upload, show menu asking for player to tag the image location
+          controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
 
-                convo.activate();
-                
-              });
+            convo.threads.default[0].attachments[0].image_url = vars.image_url;
 
-            });
+            convo.activate();
 
           });
+
+        });
+
 
       });
       
