@@ -2,11 +2,13 @@ const _ = require('underscore');
 
 module.exports = function(webserver, controller) {
   
-  webserver.get('/link/:link/:team/:user', function(req, res){
+  webserver.get('/link/:link/:team/:user?', function(req, res){
     
     controller.storage.teams.get(req.params.team, function(err, team) {
       
       var user = _.findWhere(team.users, { "userId" : req.params.user });
+      
+      if (!user) user = { userId: "untrackable", bot_chat: 'gamelog' };
       
       var url = controller.linkUrls[req.params.link];
             
