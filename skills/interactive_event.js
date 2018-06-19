@@ -22,7 +22,7 @@ module.exports = function(controller) {
     // console.log(event, "is the interactive message callback event");
     
     // Store all interactive message events to the database
-    controller.dataStore(event, "button").then((data) => {
+    controller.dataStore(event, "interactive").then((data) => {
 
       // A user selected a menu option
       if (event.actions[0].name.match(/^choose(.*)$/)) {

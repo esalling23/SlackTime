@@ -13,11 +13,13 @@ module.exports = function(controller) {
         channel: event.channel,
         time: new Date()
       }
+      
+      var dataType = "event";
 
       // console.log(event, event.raw_message);
       // console.log(event.original_message);
 
-      if (type == "button" || type == "code") {
+      if (type == "interactive" || type == "code") {
         var value = event.actions[0].value ? event.actions[0].value : event.actions[0].selected_options[0].value;
         var action = event.actions[0].name ? event.actions[0].name : event.actions[0].selected_options[0].name;
         
@@ -38,8 +40,9 @@ module.exports = function(controller) {
           var oldColor = button.style;
           dataEvent.oldColor = oldColor == "" ? "grey" : oldColor == "primary" ? "green" : "red";
           dataEvent.newColor = oldColor == "" ? "red" : oldColor == "primary" ? "grey" : "green";
+        } else if (dataEvent.action == "letter") {
+          
         }
-          // dataEvent.colorWas = 
       } else if (type == "chat") {
         dataEvent.message = event.text;
         dataEvent.type = event.type;
@@ -48,6 +51,8 @@ module.exports = function(controller) {
           dataEvent.fileName = event.file.title;
           dataEvent.fileUrl = event.file.permalink;
         }
+        
+        dataType = "chat";
       } else if (type == "code") {
         dataEvent.code = opt.codeObj.code;
         dataEvent.correct = opt.codeObj.correct;
@@ -59,7 +64,7 @@ module.exports = function(controller) {
         dataEvent.url = event.url;
       }
 
-      controller.storage.events.save(dataEvent, function(err, saved) {
+      controller.storage[dataType].save(dataEvent, function(err, saved) {
         console.log(err, saved, "SAVED!!");
         if (err)
           reject(err);
