@@ -89,13 +89,11 @@ module.exports = function(controller) {
     console.log(params.message.file.title);
 
     controller.storage.teams.get(params.message.team, function(err, team) {
-      var token = team.bot.app_token;
-
       // if the team has uploaded all images, delete the image uploaded
       // and send them to the all_complete thread
       if (team.imagesComplete) {
 
-        controller.deleteThisMsg(params.message, token, function() { 
+        controller.deleteThisMsg(params.message, team.bot.app_token, function() { 
           controller.studio.get(params.bot, "image_tag", params.message.user, params.message.channel).then(convo => {
             convo.changeTopic("all_complete");
 
@@ -108,7 +106,7 @@ module.exports = function(controller) {
       }
 
       // Delete the image uploaded
-      controller.deleteThisMsg(params.message, token, function() { 
+      controller.deleteThisMsg(params.message, team.bot.app_token, function() { 
 
         if (!team.uploadedImages) team.uploadedImages = [];
 

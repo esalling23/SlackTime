@@ -14,7 +14,7 @@ module.exports = function(controller) {
   
     controller.on("count_colors", function (bot, event, team) {
 
-      var length = (team.users.length * 3)/2;
+      var length = (team.users.length * 3) * (2/3);
       var ready = false;
 
       var redCount = 0;
@@ -33,9 +33,8 @@ module.exports = function(controller) {
             greyCount++;
           }
              console.log("RedCount:" + redCount);
-             console.log(greenCount);
-             console.log(greyCount);
         });
+        
       });
       
       if(redCount >= length || greenCount >= length || greyCount >= length) {

@@ -58,6 +58,7 @@ module.exports = function(controller) {
             console.log(err, direct_message);
             console.log(direct_message, "opened the onboarding message");
             user.bot_chat = direct_message.channel.id;
+            user.startBtns = ["default", "primary", "danger"];
 
             if (err) {
               console.log('Error sending onboarding message:', err);
