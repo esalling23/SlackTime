@@ -71,7 +71,12 @@ module.exports = function(controller) {
          _.each(res.members, function(user) {
             var thisUser = _.findWhere(team.users, { userId: user.id });
             if (isUser(user) && !thisUser) 
-              team.users.push({ userId: user.id, name: user.name });
+              team.users.push({ 
+                userId: user.id, 
+                name: user.name, 
+                email: user.email, 
+                startBtns: ["default", "primary", "danger"]
+              });
                                       
          });
          
