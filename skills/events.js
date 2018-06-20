@@ -140,6 +140,7 @@ module.exports = function(controller) {
             web.groups.setPurpose(channelId, "Only use this channel for chat about the ARIS Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
             
             team.garden_channel.id = channelId;
+            team.chat_channels.push(channelId);
             controller.storage.teams.save(team, function(err, saved) {
               console.log("saved the garden channel, ", channelId);
             });

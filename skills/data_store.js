@@ -41,7 +41,22 @@ module.exports = function(controller) {
           dataEvent.oldColor = oldColor == "" ? "grey" : oldColor == "primary" ? "green" : "red";
           dataEvent.newColor = oldColor == "" ? "red" : oldColor == "primary" ? "grey" : "green";
         } else if (dataEvent.action == "letter") {
-          
+          var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+          var reply = event.original_message;
+        
+          // cycle through attachments
+          _.each(reply.attachments, function(attachment) {
+            _.each(attachment.actions, function(action) {
+              // console.log(action);
+              if (action.value == event.actions[0].value) {
+                var spot = letters.indexOf(action.text);
+                var nextSpot = !letters[spot+1] ? letters[0] : letters[spot+1];
+                dataEvent.oldLetter = spot;
+                dataEvent.newLetter = nextSpot;
+              }
+              
+            });
+          });
         }
       } else if (type == "chat") {
         dataEvent.message = event.text;
@@ -49,7 +64,7 @@ module.exports = function(controller) {
         
         if (event.file) {
           dataEvent.fileName = event.file.title;
-          dataEvent.fileUrl = event.file.permalink;
+          dataEvent.fileUrl = event.url;
         }
         
         dataType = "chat";
@@ -62,6 +77,8 @@ module.exports = function(controller) {
       } else if (type == "download" || type == "link") {
         dataEvent.type = type;
         dataEvent.url = event.url;
+        dataEvent.btnText = button.text;
+        dataEvent.from = event.callback_id;
       }
 
       controller.storage[dataType].save(dataEvent, function(err, saved) {

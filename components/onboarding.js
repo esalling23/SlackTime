@@ -57,6 +57,7 @@ module.exports = function(controller) {
          team.prisoner_success = 0;
          
          team.noChatChannels = [];
+         team.chat_channels = [];
          
          team.gamelog = {};
          
@@ -107,6 +108,7 @@ module.exports = function(controller) {
             }).then(res => {
               channel = _.findWhere(res.channels, { name: "general" }).id;
               team.general_channel = channel;
+              team.chat_channels.push(team.general_channel);
               return web.channels.invite(channel, team.bot.user_id);
             }).then(res => {
               console.log("completed promises", res);

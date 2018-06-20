@@ -36,6 +36,7 @@ module.exports = function(controller) {
         if (message.file && message.file.created) {
           
           controller.fileUpload(bot, message, function(result) {
+            message.url = result.url;
             controller.dataStore(message, "chat").catch(err => console.log(err));
             if (acceptedTypes.indexOf(message.file.filetype) > -1) {
               var messId = message.team.id ? message.team.id : message.team;
