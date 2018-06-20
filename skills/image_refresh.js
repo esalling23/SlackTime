@@ -16,7 +16,7 @@ module.exports = function(controller, cb) {
  
   controller.imageRemove = function(bot, message, channel, team, cb) {
     
-    var web = new WebClient(team.oauth_token);
+    var web = new WebClient(team.bot.app_token);
     var count = 0;
     
     web.groups.history(channel).then(res => {
@@ -35,7 +35,7 @@ module.exports = function(controller, cb) {
   
   controller.imageRefresh = function(bot, message, channel, team) {
     
-    var web = new WebClient(team.oauth_token);
+    var web = new WebClient(team.bot.app_token);
     
     return new Promise((resolve, reject) => {
       

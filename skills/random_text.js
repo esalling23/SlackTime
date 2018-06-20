@@ -8,8 +8,10 @@ module.exports = function(controller) {
     // find text etc.
     var stream = request.get('https://cdn.glitch.com/487e8c1f-40ed-47f8-9ca1-dfd7fceb6332%2FNeuralNetworks.txt?1519746866563')
     .on('response', function(response) {
-      console.log(response.statusCode) // 200
-      console.log(response.headers['content-type']) // 'image/png'
+      
+      console.log(response.statusCode);
+      console.log(response.headers['content-type']);
+      
     }).pipe(fs.createWriteStream("randomText.txt"));
 
     stream.on("finish", function(data) {

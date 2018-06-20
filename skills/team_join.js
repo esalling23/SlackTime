@@ -24,7 +24,7 @@ module.exports = function(controller) {
             console.log(saved, "someone joined so we added them to the users list");
             
             
-            var web = new WebClient(team.oauth_token);
+            var web = new WebClient(team.bot.app_token);
 
             web.groups.list().then(list => {
               var channel = _.findWhere(list.groups, { name: process.env.progress_channel }).id;

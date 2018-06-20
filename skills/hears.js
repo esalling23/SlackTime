@@ -176,7 +176,7 @@ module.exports = function(controller) {
       
       web.conversations.history(message.channel).then(res => {
         _.each(res.messages, function(ms) {
-          var web = new WebClient(team.oauth_token);
+          var web = new WebClient(team.bot.app_token);
           setTimeout(function() {
             web.chat.delete(ms.ts, message.channel).then(res => {
               console.log(res);

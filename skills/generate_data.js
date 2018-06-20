@@ -61,7 +61,7 @@ module.exports = function(controller) {
       }
       
       // add users array
-      var web = new WebClient(teamData.oauth_token);
+      var web = new WebClient(teamData.bot.app_token);
       
         web.users.list().then(res => {
           _.each(res.members, function(user) {

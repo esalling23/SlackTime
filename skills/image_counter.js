@@ -28,7 +28,7 @@ module.exports = function(controller) {
     // add everyone to a picture-counting channel 
     controller.storage.teams.get(id, function(err, team) {
       
-      var token = team.oauth_token;
+      var token = team.bot.app_token;
 
       var web = new WebClient(token); 
       
@@ -89,7 +89,7 @@ module.exports = function(controller) {
     console.log(params.message.file.title);
 
     controller.storage.teams.get(params.message.team, function(err, team) {
-      var token = team.oauth_token;
+      var token = team.bot.app_token;
 
       // if the team has uploaded all images, delete the image uploaded
       // and send them to the all_complete thread

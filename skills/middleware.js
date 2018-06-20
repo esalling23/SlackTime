@@ -77,12 +77,12 @@ module.exports = function(controller) {
       
         if (message.type == "feedback") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
-            var token = team.oauth_token;
+            var token = team.bot.app_token;
 
             var web = new WebClient(token);
             
             if (team.image_feedback) 
-              deleteThisMsg(team.image_feedback, team.oauth_token, function() {});
+              deleteThisMsg(team.image_feedback, team.bot.app_token, function() {});
 
             setTimeout(function() {
               web.groups.history(message.channel).then(res => {
@@ -109,7 +109,7 @@ module.exports = function(controller) {
       
       if (message.album) {
         controller.storage.teams.get(bot.config.id, function(err, team) {
-          var token = team.oauth_token;
+          var token = team.bot.app_token;
 
           var web = new WebClient(token);
           
@@ -136,7 +136,7 @@ module.exports = function(controller) {
       
       if (message.pin) {
         controller.storage.teams.get(bot.config.id, function(err, team) {
-          var token = team.oauth_token;
+          var token = team.bot.app_token;
 
           var web = new WebClient(token);
           
@@ -164,7 +164,7 @@ module.exports = function(controller) {
       
       if (message.type == "already_complete") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
-            var token = team.oauth_token;
+            var token = team.bot.app_token;
 
             var web = new WebClient(token);
             console.log(message);
