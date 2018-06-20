@@ -1,3 +1,4 @@
+
 const { WebClient } = require('@slack/client');
 const _ = require("underscore");
 
@@ -10,8 +11,6 @@ module.exports = function(webserver, controller) {
       var bot = controller.spawn(team.bot);
       var message;
       
-      var token = team.oauth_token;
-
       var web = new WebClient(team.bot.token);
       
       // console.log(web, token);

@@ -17,7 +17,7 @@ module.exports = function(controller) {
       if (!bot)
         bot = controller.spawn(res.bot);
       
-      var web = new WebClient(res.oauth_token);
+      var web = new WebClient(res.bot.app_token);
             
       web.groups.history(res.gamelog_channel_id).then(group => {
         

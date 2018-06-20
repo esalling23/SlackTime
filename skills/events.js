@@ -116,7 +116,7 @@ module.exports = function(controller) {
   
     controller.on('garden_channel', function(bot, id) {
       controller.storage.teams.get(id, function(err, team) {
-        var web = new WebClient(team.oauth_token);
+        var web = new WebClient(team.bot.app_token);
         web.groups.create(process.env.garden_channel).then(res => {
 
           var channelId = res.group.id;

@@ -6,8 +6,8 @@
 
 module.exports = function(controller) {
   controller.linkUrls = {
-    "intro_video": "https://vimeo.com/267825256/2692ac4f0a", 
-    "safari_video": "https://vimeo.com/267825256/2692ac4f0a",
+    "intro_video": "https://vimeo.com/276042721/05a58f2195", 
+    "safari_video": "https://vimeo.com/276042755/df1e47b928",
     "animal_channel": "https://vimeo.com/264486697/36cf124da8", 
     "channel_1": "https://vimeo.com/264470344/ae1b908ca2", 
     "channel_2": "https://vimeo.com/264470453/51a29f36b4", 
@@ -30,6 +30,6 @@ module.exports = function(controller) {
     "telegraph_7": "https://vimeo.com/265778848/12e96652d6",
     "telegraph_8": "https://vimeo.com/265778808/be4518756e",
     "telegraph_9": "https://vimeo.com/265778833/3a9e474031",
-    
+    "tamagotchi": "https://vimeo.com/276042849/eadeb8b59b"
   }
 }

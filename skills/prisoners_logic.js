@@ -41,7 +41,7 @@ module.exports = function(controller) {
   controller.on('prisoners_check', function(bot, id, timeObj) {
       
     controller.storage.teams.get(id, function(err, team) {
-      var web = new WebClient(team.oauth_token);
+      var web = new WebClient(team.bot.app_token);
       var usersToKick = [];
       var thread = "default";
       var blockers = _.where(team.prisoner_decisions, { choice: "block" });

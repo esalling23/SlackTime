@@ -16,7 +16,7 @@ module.exports = function(controller) {
       
       if (team.prisoner_started) return;
       
-      var web = new WebClient(team.oauth_token); 
+      var web = new WebClient(team.bot.app_token); 
 
       team.prisoner_players = _.where(team.users, { prisoner: true });
       team.prisoner_started = true;

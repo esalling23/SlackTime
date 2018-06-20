@@ -14,7 +14,7 @@ module.exports = function(controller) {
         time: new Date()
       }
       
-      var dataType = "event";
+      var dataType = "events";
 
       // console.log(event, event.raw_message);
       // console.log(event.original_message);
