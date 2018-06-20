@@ -69,7 +69,7 @@ module.exports = function(controller) {
               teamData.users.push({ 
                 userId: user.id, 
                 name: user.name, 
-                email: user.email,
+                email: user.profile.email,
                 startBtns: ["default", "primary", "danger"]
               });
           });
