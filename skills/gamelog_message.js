@@ -20,6 +20,8 @@ module.exports = function(controller) {
 
       var template = convo.threads.default[0];
       
+      convo.setVar("team", team.id);
+      
       template.username = process.env.username;
       template.icon_url = process.env.icon_url;
       

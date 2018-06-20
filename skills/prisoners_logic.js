@@ -62,7 +62,7 @@ module.exports = function(controller) {
         });
       }
 
-      if(blockers.length <= 0 && stealers.length > 0) {
+      if(blockers.length <= 0 && stealers.length >= 1) {
         thread = "share_kick";
         _.each(sharers, b => {
           usersToKick.push(b.user);
