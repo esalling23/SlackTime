@@ -4,6 +4,8 @@
 // https://escape-room-production.glitch.me/link/LINK_NAME/{{vars.team}}/{{vars.user}}
 // where LINK_NAME matches a key in the linkUrls object
 
+https://escape-room-production.glitch.me/link/prisoners_intro/{{vars.team}}/{{vars.user}}
+
 module.exports = function(controller) {
   controller.linkUrls = {
     "intro_video": "https://vimeo.com/276042721/05a58f2195", 
@@ -30,6 +32,9 @@ module.exports = function(controller) {
     "telegraph_7": "https://vimeo.com/265778848/12e96652d6",
     "telegraph_8": "https://vimeo.com/265778808/be4518756e",
     "telegraph_9": "https://vimeo.com/265778833/3a9e474031",
-    "tamagotchi": "https://vimeo.com/276042849/eadeb8b59b"
+    "tamagotchi": "https://vimeo.com/276042849/eadeb8b59b", 
+    "prisoners_intro": "https://vimeo.com/276045434/809da266b6", 
+    "prisoners_share": "https://vimeo.com/276045432/22ce4e535f", 
+    "prisoners_steal": "https://vimeo.com/276045361/3660b5fee7"
   }
 }
