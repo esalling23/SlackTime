@@ -13,15 +13,21 @@ const web = new WebClient(token);
 module.exports = function(controller) {
   
     controller.on("count_colors", function (bot, event, team) {
+      
+      var users = _.filter(team.users, function(user) {
+        return !controller.ignoreEmails.includes(user.email)
+      });
 
-      var length = (team.users.length * 3)/2;
+      var length = (users.length * 6) / 3;
       var ready = false;
 
       var redCount = 0;
       var greyCount = 0;
       var greenCount = 0;
       
-      _.each(team.users, function(user) {
+      _.each(users, function(user) {
+        
+        if (!user.startBtns || user.startBtns.length < 3) return;
         
         _.each(user.startBtns, function(btn) {
           
@@ -33,9 +39,8 @@ module.exports = function(controller) {
             greyCount++;
           }
              console.log("RedCount:" + redCount);
-             console.log(greenCount);
-             console.log(greyCount);
         });
+        
       });
       
       if(redCount >= length || greenCount >= length || greyCount >= length) {

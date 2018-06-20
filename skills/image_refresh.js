@@ -21,9 +21,10 @@ module.exports = function(controller, cb) {
     
     web.groups.history(channel).then(res => {
       _.each(res.messages, function(msg) {
-        if (!msg.pinned_to && !msg.subtype) {
+        console.log(res.messages);
+        if (!msg.pinned_to && msg.subtype != "pinned_item" && !msg.inviter) {
           msg.channel = team.image_channel_id;
-          controller.deleteThisMsg(msg, team.oauth_token, function() {});
+          controller.deleteThisMsg(msg, team.bot.app_token, function() {});
         }
         count++;
         

@@ -66,7 +66,12 @@ module.exports = function(controller) {
         web.users.list().then(res => {
           _.each(res.members, function(user) {
             if (controller.isUser(user, false)) 
-              teamData.users.push({ userId: user.id, name: user.name });
+              teamData.users.push({ 
+                userId: user.id, 
+                name: user.name, 
+                email: user.email,
+                startBtns: ["default", "primary", "danger"]
+              });
           });
 
           // Set the team puzzles to the generated puzzles array

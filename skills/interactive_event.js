@@ -350,10 +350,12 @@ module.exports = function(controller) {
             controller.storage.teams.get(event.team.id, function (error, team) {
               // console.log(error, team);
               var thisUser = _.findWhere(team.users, { userId: event.user });
-              if (!thisUser.startBtns) thisUser.startBtns = [];
+              var startBtns = [];
               _.each(updated.message.attachments[0].actions, function(btn) {
-                thisUser.startBtns.push(btn.style == "" ? "default" : btn.style);
+                startBtns.push(btn.style == "" ? "default" : btn.style);
               });
+              
+              thisUser.startBtns = startBtns;
 
               team.users = _.map(team.users, function(user) {
                 if (user.userId == thisUser.userId) 
