@@ -21,7 +21,7 @@ module.exports = function(controller) {
     "channel_7": "https://vimeo.com/264471034/8d4da555b2", 
     "channel_8": "https://vimeo.com/264471150/69a3fb3dee", 
     "channel_9": "https://vimeo.com/264471288/f3c7f6552b", 
-    "aris": "https://vimeo.com/267827014/0828e266d2", 
+    "aris": "https://vimeo.com/271473314/d09ad733eb", 
     "aris_android": "http://res.cloudinary.com/extraludic/raw/upload/v1528919104/ARIS.apk.zip",
     "aris_ios": "https://itunes.apple.com/us/app/aris/id371788434?mt=8",
     "telegraph_1": "https://vimeo.com/265778846/d478c7e3fe", 
