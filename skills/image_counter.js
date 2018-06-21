@@ -184,23 +184,23 @@ module.exports = function(controller) {
           controller.imageRefresh(params.bot, params.message, saved.image_channel_id, saved).then(res => {
             
             if(saved.imagesComplete) {
-              var message = { user: userUploaded, channel: saved.gamelog_channel_id };
+              setTimeout(function() {
+                var message = { user: userUploaded, channel: saved.gamelog_channel_id };
 
-              console.log(message);
+                controller.trigger('gamelog_update', [{
+                  bot: params.bot, 
+                  event: message, 
+                  team: saved, 
+                  codeType: 'image_complete', 
+                  phase: "phase_1",
+                  puzzle: 'image_counter'
+                }]);
 
-              controller.trigger('gamelog_update', [{
-                bot: params.bot, 
-                event: message, 
-                team: saved, 
-                codeType: 'image_complete', 
-                phase: "phase_1",
-                puzzle: 'image_counter'
-              }]);
-
-              vars.code = process.env.safe_code.replace(/-/g, "").toString();
-              controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
-                params.bot.replyInteractive(params.message, card);            
-              });
+                vars.code = process.env.safe_code.replace(/-/g, "").toString();
+                controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
+                  params.bot.replyInteractive(params.message, card);            
+                });
+              }, 5000);
             }
             
           }).catch(err => console.log(err));

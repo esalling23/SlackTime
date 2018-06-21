@@ -45,14 +45,13 @@ module.exports = function(controller) {
               repeat = log;
           });
           
-          if (!repeat) {
-            res.gamelog[params.phase].push({
-              event: event,
-              unlockedBy: thisUser,
-              date: new Date()
-            });
-          } else return;
-        
+          if (repeat) return;
+          
+          res.gamelog[params.phase].push({
+            event: event,
+            unlockedBy: thisUser,
+            date: new Date()
+          });
           
         }
         

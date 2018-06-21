@@ -551,6 +551,10 @@ module.exports = function(controller) {
                 
                 controller.storage.teams.save(res, function(err, saved) {
                   
+                  var vars = {
+                    prisoners_time: controller.prisoners_initial().toDateString()
+                  };
+                  
                   if (_.where(saved.users, { prisoner: true }).length == 1 || !saved.prisoner_time || saved.prisoner_time.length <= 0) {
                     setTimeout(function() {
                       controller.addTime(bot, saved.id, true);
@@ -575,10 +579,8 @@ module.exports = function(controller) {
 
                           btn_message.channel = channel;
 
-                          var vars = {
-                            prisoners: process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length, 
-                            prisoners_started: saved.prisoner_started
-                          };
+                          vars.prisoners = process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length; 
+                          vars.prisoners_started = saved.prisoner_started;
 
                           if (vars.prisoners < 0) vars.prisoners = 0;
 
