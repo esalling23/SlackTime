@@ -60,23 +60,34 @@ module.exports = function(controller) {
 
               bot.api.im.open({ user: message.user.id }, function(err, direct_message) { 
 
-                if (err) {
-                  console.log('Error sending onboarding message:', err);
-                } else {
-                  // console.log(user.id);
-                  controller.studio.get(bot, 'onboarding', message.user.id, direct_message.channel.id).then(convo => {
+                saved.users = _.map(saved.users, function(u) {
+                  if (u.userId == message.user.id) 
+                    u.bot_chat == direct_message.channel.id;
+                  
+                  return u;
+                });
+                
+                controller.storage.teams.save(saved, function(err, updated) {
+                  
+                  if (err) {
+                    console.log('Error sending onboarding message:', err);
+                  } else {
+                    // console.log(user.id);
+                    controller.studio.get(bot, 'onboarding', message.user.id, direct_message.channel.id).then(convo => {
 
-                    var template = convo.threads.default[0];
-                    template.username = process.env.username;
-                    template.icon_url = process.env.icon_url;
+                      var template = convo.threads.default[0];
+                      template.username = process.env.username;
+                      template.icon_url = process.env.icon_url;
 
-                    convo.setVar("team", team.id);
-                    convo.setVar("user", message.user.id);
+                      convo.setVar("team", team.id);
+                      convo.setVar("user", message.user.id);
 
-                    convo.activate();
+                      convo.activate();
 
-                  });
-                }
+                    });
+                  }
+                  
+                });
 
               });
             });
