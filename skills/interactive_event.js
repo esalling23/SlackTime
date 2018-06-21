@@ -467,8 +467,8 @@ module.exports = function(controller) {
         var type = event.actions[0].value;
         var url = reply.attachments[0].image_url;
 
-        var pos = parseInt(reply.attachments[0].image_url.split("TV-Guide")[1].replace(".png", ""));
-        var url = "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/TV-Guide";
+        var pos = parseInt(reply.attachments[0].image_url.split("TV-Guide-")[1].replace(".png", ""));
+        var url = "http://res.cloudinary.com/extraludic/image/upload/v1/escape-room/TV-Guide-";
 
         if (type == "next") {
           pos++;
@@ -493,19 +493,16 @@ module.exports = function(controller) {
 
       }
 
-      // Any download button
-      if (event.actions[0].name.match(/^download/)) {
-
-        controller.trigger("download", [bot, event]);
-
-      }
-
-      if (event.actions[0].name.match(/^prisoner/)) {
+      if (event.actions[0].name.match(/^prisoners/)) {
 
         controller.storage.teams.get(event.team.id, function(err, team) {
 
-          if (!team.prisoner_time || team.prisoner_time.length <= 0)
-            controller.trigger("prisoners_onboard", [bot, event]);
+          if (event.actions[0].value == "onboard") {
+            if (team.prisoner_time.length == 1)
+              controller.trigger("prisoners_onboard", [bot, event]);
+          } else if (event.actions[0].value == "next") {
+            controller.prisoners_next(bot, event, team);
+          }
 
         });
 

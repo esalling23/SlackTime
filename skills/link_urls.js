@@ -7,6 +7,7 @@
 https://escape-room-production.glitch.me/link/prisoners_intro/{{vars.team}}/{{vars.user}}
 
 module.exports = function(controller) {
+  
   controller.linkUrls = {
     "intro_video": "https://vimeo.com/276042721/05a58f2195", 
     "safari_video": "https://vimeo.com/276042755/df1e47b928",
@@ -37,4 +38,5 @@ module.exports = function(controller) {
     "prisoners_share": "https://vimeo.com/276045432/22ce4e535f", 
     "prisoners_steal": "https://vimeo.com/276045361/3660b5fee7"
   }
+  
 }

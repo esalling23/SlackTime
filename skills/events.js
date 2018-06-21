@@ -194,32 +194,6 @@ module.exports = function(controller) {
 
     });
   
-  // Player clicks a download button
-  controller.on('download', function(params) {
-    
-    controller.storage.teams.get(params.team, function(err, team) {
-
-      var bot = controller.spawn(team.bot);
-
-      var log = {
-        bot: bot, 
-        team: params.team,
-        phase: downloadPhase(params.file), 
-        codeType: "download",
-        puzzle: params.file,
-        player: params.user
-      }
-
-      console.log(log.codeType, log.puzzle);
-
-      // controller.trigger('gamelog_update', [log]);
-
-      // request.get(process.env.domain + '/download/' + event.actions[0].value);
-      
-    });
-    
-  });
-  
   
   // Map event for sending team the map link
   controller.on("map_event", function(options) {

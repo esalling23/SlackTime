@@ -29,17 +29,21 @@ module.exports = function(controller) {
     }
         
     var thread = 'correct';
+    var vars = {};
     
     if (["telegraph_key", "buttons", "remote"].includes(options.codeType))
       thread += '_' + code;
     
-    if (options.codeType == 'remote') code = "channel_" + code;
+    if (options.codeType == 'remote') {
+      code = "channel_" + code;
+      vars.team = res.id;
+      vars.user = thisUser.userId;
+    }
     
     console.log(thread, "is the thread");
     
     // Has the player already entered this code?
     if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType)) {
-      var vars = {};
       
       if (options.codeType == 'buttons' || options.codeType == 'remote') vars.recap = thread;
       
@@ -81,9 +85,7 @@ module.exports = function(controller) {
       controller.storage.teams.save(res).then((updated) => {
 
         controller.studio.getScripts().then(scripts => {
-          // console.log("We saved this new team state", updated);
-          var vars = {};
-          
+          // console.log("We saved this new team state", updated);          
           var thisScript = _.findWhere(scripts, { name: options.codeType });
 
           var thisPhase = _.filter(thisScript.tags, function(tag) {

@@ -17,6 +17,9 @@ module.exports = function(webserver, controller) {
       }
 
       var filePath = "http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/" + file;
+      
+      if (file == "TangramsFolder.zip") 
+        filePath = "https://res.cloudinary.com/extraludic/raw/upload/v1/escape-room/TangramsFolder.zip";
 
       opt.url = filePath;
 
