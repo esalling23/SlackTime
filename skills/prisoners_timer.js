@@ -18,8 +18,7 @@ module.exports = function(controller) {
       var end;
       
       if (initial) {
-        var nextDate = new Date(start.getTime + milPerMin * minPerDay);
-        end = new Date(nextDate.getFullYear, nextDate.getMonth(), nextDate.getDate(), process.env.prisoner_initial);
+        end = controller.prisoners_initial();
       } else { 
         end = new Date(start.getTime() + milPerMin * process.env.prisoners_time_limit);
       }
@@ -48,6 +47,14 @@ module.exports = function(controller) {
     
   }
   
+  controller.prisoners_initial = function() {
+    var start = new Date();
+    var nextDate = new Date(start.getTime() + milPerMin * minPerDay);
+    var end = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate(), process.env.prisoners_initial);
+    
+    return end;
+  }
+  
   
   var getMonth = function(obj, date) {
     if ((date >= 30 && obj.getMonth() == 1) || 
@@ -57,5 +64,7 @@ module.exports = function(controller) {
     } else 
       return obj.getMonth();
   }
+  
+  
   
 }

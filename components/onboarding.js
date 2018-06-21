@@ -55,6 +55,7 @@ module.exports = function(controller) {
          team.prisoner_time = [];
          team.prisoner_decisions = [];
          team.prisoner_success = 0;
+         team.prisoner_thread = "default";
          
          team.noChatChannels = [];
          team.chat_channels = [];

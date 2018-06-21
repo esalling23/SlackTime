@@ -50,6 +50,7 @@ module.exports = function(controller) {
       teamData.prisoner_decisions = [];
       teamData.prisoner_success = 0;
       teamData.prisoner_complete = false;
+      teamData.prisoner_thread = "default";
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       

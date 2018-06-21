@@ -44,12 +44,13 @@ module.exports = function(controller) {
             
       vars.prisoners = process.env.prisoners_players - prisoners;
       vars.started = params.team.prisoner_started;
+      vars.prisoners_time = controller.prisoners_initial().toDateString();
       if (vars.prisoners > 0)
         vars.wait = "Looks like you have to wait...";
               
     }
     
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel", "aris_projector", "desk"].includes(params.data.value)) 
+    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel", "aris_projector", "desk", "prisoners_room"].includes(params.data.value)) 
       vars.link = true;
 
     if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.link) {
