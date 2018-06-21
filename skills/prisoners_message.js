@@ -76,11 +76,6 @@ module.exports = function(controller) {
                 
                 console.log(err, updated);
                 
-                if (!saved.just_kicked) return;
-                
-                if (saved.just_kicked.length > 0)
-                  controller.prisoners_message(bot, saved.id, "kicked");
-
               });
 
             });

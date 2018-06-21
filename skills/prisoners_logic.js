@@ -209,6 +209,7 @@ module.exports = function(controller) {
           controller.addTime(bot, team.id);
         }
         
+        
       }, 5000);
       
       
