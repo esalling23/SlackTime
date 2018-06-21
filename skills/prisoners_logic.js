@@ -112,10 +112,12 @@ module.exports = function(controller) {
 
         });
 
+        // Determine and define players to kick out
         saved.just_kicked = _.filter(saved.prisoner_players, function(player) {
           return usersToKick.includes(player.userId);
         });
         
+        // Reset prisoner players based on players that have been kicked out
         saved.prisoner_players = _.filter(saved.prisoner_players, function(player) {
           return !usersToKick.includes(player.userId);
         });
@@ -123,16 +125,12 @@ module.exports = function(controller) {
         controller.storage.teams.save(saved, function(err, updated) {
           
           if (updated.prisoner_complete) return;
-
+          // Only if prisoners dilemma is not complete
+                    
+          // Send feedback message with player responses
           setTimeout(function() {
-
-            if (updated.just_kicked.length > 0)
-              controller.prisoners_message(bot, updated.id, "kicked");
-
-            if (updated.prisoner_players.length >= 1)
-              controller.prisoners_message(bot, updated.id, "default");
             
-            controller.addTime(bot, updated.id);
+            controller.prisoners_message(bot, updated.id, "decisions");
 
           }, 4000);
           
@@ -143,6 +141,8 @@ module.exports = function(controller) {
     });
     
   });
+  
+  // controller.prisoners
   
  
 }

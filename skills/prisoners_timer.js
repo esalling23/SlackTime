@@ -1,10 +1,11 @@
 const _ = require("underscore");
 
 const milPerMin = 60000;
+const minPerDay = 1440;
 
 module.exports = function(controller) {
   
-  controller.addTime = function(bot, id) {
+  controller.addTime = function(bot, id, initial) {
     
     controller.storage.teams.get(id, function(err, team) {
       
@@ -14,7 +15,14 @@ module.exports = function(controller) {
 
       var start = new Date();
       
-      var end = new Date(start.getTime() + milPerMin * process.env.prisoners_time_limit);
+      var end;
+      
+      if (initial) {
+        var nextDate = new Date(start.getTime + milPerMin * minPerDay);
+        end = new Date(nextDate.getFullYear, nextDate.getMonth(), nextDate.getDate(), process.env.prisoner_initial);
+      } else { 
+        end = new Date(start.getTime() + milPerMin * process.env.prisoners_time_limit);
+      }
       
       team.prisoner_time = _.map(team.prisoner_time, function(time) {
         time.complete = true;
@@ -48,7 +56,6 @@ module.exports = function(controller) {
       return obj.getMonth() + 1;
     } else 
       return obj.getMonth();
-
   }
   
 }

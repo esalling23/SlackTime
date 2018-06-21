@@ -38,6 +38,10 @@ module.exports = function(controller) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
       var players = thread == "kicked" ? team.just_kicked : thread == "times_up" ? team.times_up : team.prisoner_players;
+      
+      var vars = {};
+        
+      if (thread == "decisions") vars.decisions = team.prisoner_decisions;
 
       team.prisoner_decisions = [];
       if (team.prisoner_players.length == 1 && thread == "default"){
@@ -50,16 +54,15 @@ module.exports = function(controller) {
         _.each(players, function(user) {
 
           web.conversations.history(user.bot_chat).then(function(ims) {
-            console.log(ims);
-            console.log(ims.messages);
+            
             var message = ims.messages[0];
 
             if (!message)
               return;
 
             message.channel = user.bot_chat;
-
-            controller.makeCard(bot, message, "prisoners_dilemma", thread, {}, function(card) {
+            
+            controller.makeCard(bot, message, "prisoners_dilemma", thread, vars, function(card) {
 
               console.log(message, card);
               
@@ -70,8 +73,9 @@ module.exports = function(controller) {
               }, function(err, updated) {
                 
                 console.log(err, updated);
-
-                // controller.store_prisoners_msg(updated, user, team);
+                
+                if (saved.just_kicked.length > 0)
+                  controller.prisoners_message(bot, saved.id, "kicked");
 
               });
 
@@ -84,5 +88,15 @@ module.exports = function(controller) {
       });
 
     });
+  }
+  
+  controller.playerDecisions = function(decisions) {
+    var vars = {};
+    
+    _.each(decisions, function(d) {
+      
+    });
+    
+    return vars;
   }
 }
