@@ -70,6 +70,7 @@ module.exports = function(controller) {
         dataType = "chat";
       } else if (type == "code") {
         dataEvent.code = opt.codeObj.code;
+        dataEvent.overallAnswer = opt.codeObj.overall;
         dataEvent.correct = opt.codeObj.correct;
         dataEvent.type = opt.codeType;
 
@@ -77,8 +78,6 @@ module.exports = function(controller) {
       } else if (type == "download" || type == "link") {
         dataEvent.type = type;
         dataEvent.url = event.url;
-        dataEvent.btnText = button.text;
-        dataEvent.from = event.callback_id;
       }
 
       controller.storage[dataType].save(dataEvent, function(err, saved) {

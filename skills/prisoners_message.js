@@ -41,9 +41,11 @@ module.exports = function(controller) {
       
       var vars = {};
         
-      if (thread == "decisions") vars.decisions = team.prisoner_decisions;
+      if (thread == "decisions") {
+        vars.decisions = team.prisoner_decisions;
+        team.prisoner_decisions = [];
+      }
 
-      team.prisoner_decisions = [];
       if (team.prisoner_players.length == 1 && thread == "default"){
         thread = 'success_alone';
         team.prisoner_complete = true;
@@ -74,6 +76,8 @@ module.exports = function(controller) {
                 
                 console.log(err, updated);
                 
+                if (!saved.just_kicked) return;
+                
                 if (saved.just_kicked.length > 0)
                   controller.prisoners_message(bot, saved.id, "kicked");
 
@@ -90,13 +94,16 @@ module.exports = function(controller) {
     });
   }
   
-  controller.playerDecisions = function(decisions) {
-    var vars = {};
+  controller.prisoner_decisions = function(decisions) {
+    var fields = [];
     
-    _.each(decisions, function(d) {
-      
+    _.each(decisions, function(d, i) {
+      fields[i] = {
+        title: d.name, 
+        value: d.choice
+      };
     });
     
-    return vars;
+    return fields;
   }
 }

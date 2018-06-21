@@ -49,7 +49,7 @@ module.exports = function(controller) {
               
     }
     
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel"].includes(params.data.value)) 
+    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel", "aris_projector", "desk"].includes(params.data.value)) 
       vars.link = true;
 
     if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.link) {

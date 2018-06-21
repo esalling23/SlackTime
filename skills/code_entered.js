@@ -60,8 +60,10 @@ module.exports = function(controller) {
       }
       
       // Store data of entered code
-      controller.dataStore(params.event, "code", { codeObj: codeObj, codeType: params.codeType })
-        .then(data => console.log("logged: ", data))
+      controller.dataStore(params.event, "code", { 
+        codeObj: codeObj, 
+        codeType: params.codeType
+      }).then(data => console.log("logged: ", data))
         .catch(err => console.log("code loggin error: ", err));
             
       if (codeObj.correct == true) {
@@ -123,8 +125,13 @@ module.exports = function(controller) {
   // Will return 'puzzle' as the correct code name if there is a match
   // Will return 'code' as the entered code
   var checkCodeArray = function(code, correctCodes) {
+    var overall = {};
+    
     // Loop through Array
     for (var key in correctCodes) {
+      
+      overall[key] = [];
+      
       // Compare correct and entered code
       // If match, return
       if (JSON.stringify(correctCodes[key]) == JSON.stringify(code)) {
@@ -140,29 +147,36 @@ module.exports = function(controller) {
   
   // Checks entered code against a single correct code Object
   // Will return 'correct' based on match (true for match)
-  // WIll return 'code' as the entered code
+  // Will return 'code' as the entered code
+  // Will return 'overall' as an object of true/false matches for each entry
   var checkCodeObject = function(code, correctCode) {
     
     var count = 0;
+    var overall = {};
     code = sort(code);
     correctCode = sort(correctCode);
     
     // Loop through object keys
     for (var key in correctCode) {
-      // Compare correct value with entered value
-      if (correctCode[key] == code[key]) {
+      
+      // Set the overall key to be true or false based on match
+      // Will make up an object of true/false results for each button or menu
+      overall[key] = correctCode[key] == code[key];
+      
+      // If this is a match, count up
+      if (overall[key]) {
 
         count ++;
         // If all keys match, return 
         if ( count == Object.keys(correctCode).length ) {
-           return { correct: true, code: code };
+           return { correct: true, code: code, overall: overall };
         }
 
       }
 
     }
     // If not all keys match, return 
-    return { correct: false, code: code };
+    return { correct: false, code: code, overall: overall };
     
   }
   
