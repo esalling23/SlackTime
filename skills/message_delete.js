@@ -24,6 +24,7 @@ module.exports = function(controller) {
     });
   }
   
+  // Delete all message history of a given channel
   controller.deleteHistory = function(channel, token, cb) {
     
     var count = 0;
@@ -49,6 +50,7 @@ module.exports = function(controller) {
     
   }
   
+  // Delete the most recent message of a 
   controller.deleteHistoryRecent = function(channel, token, cb) {
     
     var count = 0;

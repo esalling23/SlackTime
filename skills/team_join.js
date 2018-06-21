@@ -23,7 +23,6 @@ module.exports = function(controller) {
           controller.storage.teams.save(team, function(err, saved) {
             console.log(saved, "someone joined so we added them to the users list");
             
-            
             var web = new WebClient(team.bot.app_token);
 
             web.groups.list().then(list => {
@@ -60,8 +59,17 @@ module.exports = function(controller) {
                 console.log('Error sending onboarding message:', err);
               } else {
                 // console.log(user.id);
-                controller.studio.runTrigger(bot, 'welcome', message.user.id, direct_message.channel.id, direct_message).catch(function(err) {
-                  console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
+                controller.studio.get(bot, 'onboarding', message.user.id, direct_message.channel.id).then(convo => {
+                
+                  var template = convo.threads.default[0];
+                  template.username = process.env.username;
+                  template.icon_url = process.env.icon_url;
+
+                  convo.setVar("team", team.id);
+                  convo.setVar("user", message.user.id);
+
+                  convo.activate();
+
                 });
               }
 

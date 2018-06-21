@@ -37,10 +37,15 @@ module.exports = function(controller) {
         controller.deleteThisMsg(message, team.bot.app_token);
       else {
         controller.dataStore(message, "chat");
-        
-        if (team.chat_channels.includes(message.channel)) {
-           // if we are in a chat channel and the message includes a file, upload that file to cloudinary 
-        }
+        // if (team.chat_channels.includes(message.channel) && message.file) {
+        //    // if we are in a chat channel and the message includes a file, upload that file to cloudinary 
+        //   controller.fileUpload(bot, message, function(result) {
+        //     event.url = result.url;
+        //     controller.dataStore(event, "chat");
+        //   });
+        // } else 
+        //   controller.dataStore(message, "chat");
+
       }
 
     });
@@ -55,15 +60,14 @@ module.exports = function(controller) {
        _.each(team.users, function(user) {
 
           bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
-            console.log(err, direct_message);
-            console.log(direct_message, "opened the onboarding message");
+            
             user.bot_chat = direct_message.channel.id;
             user.startBtns = ["default", "primary", "danger"];
 
             if (err) {
               console.log('Error sending onboarding message:', err);
             } else {
-              // console.log(user.id);
+
               controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
                 
                 var template = convo.threads.default[0];

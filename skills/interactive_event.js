@@ -547,14 +547,16 @@ module.exports = function(controller) {
 
                   return user;
                 });
-                
-                if (_.where(res.users, { prisoner: true }).length >= process.env.prisoners_players) {
-                  controller.addTime(bot, res.id);
-                }
-                
+                                
                 var web = new WebClient(bot.config.bot.token);
                 
                 controller.storage.teams.save(res, function(err, saved) {
+                  
+                  if (_.where(saved.users, { prisoner: true }).length == 1 || !saved.prisoner_time || saved.prisoner_time.length <= 0) {
+                    setTimeout(function() {
+                      controller.addTime(bot, saved.id, true);
+                    }, 2000);
+                  }
                   
                   web.conversations.list({types: "im"}).then(function(list) {
                     
@@ -576,10 +578,8 @@ module.exports = function(controller) {
 
                           var vars = {
                             prisoners: process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length, 
-                            started: saved.prisoner_started
+                            prisoners_started: saved.prisoner_started
                           };
-
-                          if (vars.prisoners > 0) vars.wait = "Looks like you have to wait...";
 
                           if (vars.prisoners < 0) vars.prisoners = 0;
 
@@ -589,6 +589,8 @@ module.exports = function(controller) {
                               ts: btn_message.ts, 
                               attachments: card.attachments
                             }, function(err, updated) {
+                              
+                              
                             });
                           });
 

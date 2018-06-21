@@ -43,30 +43,29 @@ module.exports = function(controller) {
         
       });
       
-      if(redCount >= length || greenCount >= length || greyCount >= length) {
-        console.log("we did it!");
-        // var user = team.users[0];
+      if(redCount < length && greenCount < length && greyCount < length) return;
+      
+      // If any of the button counts are >= to the given length
+      // Set the game to be started
+      controller.storage.teams.save(team, function(err, saved) {
         var web = new WebClient(bot.config.bot.token);
 
-        web.conversations.list({types: "im"}).then(function(list) {
+        web.conversations.list({ types: "im" }).then(function(list) {
           _.each(team.users, function(user) {
-            // console.log(list.channels, user);
 
             var thisIM = _.findWhere(list.channels, { user: user.userId });
             var channel = thisIM.id;
-            
+
             web.conversations.history(channel).then(function(ims) {
-              // console.log(ims);
-              // console.log(ims.messages);
               
               var btn_message = ims.messages[0];
-              
+
               if (!btn_message)
                 return;
-              
+
               btn_message.channel = channel;
               btn_message.user = user.userId;
-              
+
               controller.makeCard(bot, btn_message, "input_nodes_1", "default", {}, function(card) {
                 bot.api.chat.update({
                   channel: btn_message.channel, 
@@ -75,14 +74,14 @@ module.exports = function(controller) {
                 }, function(err, updated) {
                 });
               });
-              
+
             }).catch(err => console.log("conversation history error: ", err));
-            
+
           });
 
         }).catch(err => console.log("im list error: ", err));
-      }      
-
+      });
+      
     });
   
   
@@ -140,6 +139,7 @@ module.exports = function(controller) {
             web.groups.setPurpose(channelId, "Only use this channel for chat about the ARIS Cyber Garden puzzle.").then(res => console.log(res)).catch(err => console.log(err));
             
             team.garden_channel.id = channelId;
+            team.chat_channels.push(channelId);
             controller.storage.teams.save(team, function(err, saved) {
               console.log("saved the garden channel, ", channelId);
             });
