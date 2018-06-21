@@ -34,9 +34,9 @@ module.exports = function(controller) {
     "telegraph_8": "https://vimeo.com/265778808/be4518756e",
     "telegraph_9": "https://vimeo.com/265778833/3a9e474031",
     "tamagotchi": "https://vimeo.com/276042849/eadeb8b59b", 
-    "prisoners_intro": "https://vimeo.com/276045434/809da266b6", 
+    "prisoners_intro": "https://vimeo.com/276045361/3660b5fee7", 
     "prisoners_share": "https://vimeo.com/276045432/22ce4e535f", 
-    "prisoners_steal": "https://vimeo.com/276045361/3660b5fee7"
+    "prisoners_steal": "https://vimeo.com/276045434/809da266b6"
   }
   
 }
