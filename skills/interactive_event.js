@@ -178,6 +178,8 @@ module.exports = function(controller) {
       // Tag an image in the image-counter
       if (event.actions[0].name.match(/^tag/)) {
         var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
+        
+        if (!confirmedChoice) return;
 
         // console.log(event);
         // console.log(confirmedChoice);

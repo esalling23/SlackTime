@@ -176,7 +176,7 @@ module.exports = function(controller) {
         
         // if the number of tagged images is at the limit
         // set imagesComplete to true
-        if (taggedImages.length >= process.env.images_limit * process.env.images_locations.split("-")) 
+        if (taggedImages.length >= process.env.images_limit * process.env.images_locations.split("-").length) 
           team.imagesComplete = true;          
                 
         controller.storage.teams.save(team, function(err, saved) {
