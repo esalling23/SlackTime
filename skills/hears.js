@@ -70,19 +70,6 @@ module.exports = function(controller) {
 
               controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
                 
-                var template = convo.threads.default[0];
-                template.username = process.env.username;
-                template.icon_url = process.env.icon_url;
-                
-                convo.setVar("team", team.id);
-                convo.setVar("user", user.userId);
-                
-                convo.activate();
-                
-                return;
-                
-              }).then(function() {
-                
                 team.gameStarted = true;
                 
                 team.users = _.map(team.users, function(u) {
@@ -94,7 +81,20 @@ module.exports = function(controller) {
 
                  controller.storage.teams.save(team, function(err, saved) {
                    console.log(saved);
+                   return convo;
                  });
+                
+              }).then(convo => {
+                
+                var template = convo.threads.default[0];
+                template.username = process.env.username;
+                template.icon_url = process.env.icon_url;
+                
+                convo.setVar("team", team.id);
+                convo.setVar("user", user.userId);
+                
+                convo.activate();
+                                
               }).catch(function(err) {
                 console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
               });
