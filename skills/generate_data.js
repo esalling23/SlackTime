@@ -30,6 +30,8 @@ module.exports = function(controller) {
       console.log(teamData, "is the gotten team" );
 
       if (teamData.puzzles) delete teamData.puzzles;
+      
+      teamData.gameStarted = true;
 
       teamData.currentState = 'default';
       teamData.events = [];      
@@ -90,12 +92,14 @@ module.exports = function(controller) {
                 });
               }
             
+            var bot_channels = {};
+            
              _.each(teamData.users, function(user) {
 
                 options.bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
                   console.log(err, direct_message);
                   console.log(direct_message, "opened the onboarding message");
-                  user.bot_chat = direct_message.channel.id;
+                  bot_channels[user.userId] = direct_message.channel.id;
                                     
                   if (err) {
                     console.log('Error sending onboarding message:', err);
@@ -111,16 +115,25 @@ module.exports = function(controller) {
                       convo.setVar("user", user.userId);
 
                       convo.activate();
-                      
+                                            
                     });
-
+                    
                   }
 
                 });
 
               });
             
+            
               setTimeout(function() {
+                
+              // Store bot channel 
+              teamData.users = _.map(teamData.users, function(user) {
+                
+                user.bot_chat = bot_channels[user.userId];
+                
+                return user;
+              });
 
                 controller.storage.teams.save(teamData, function(err, saved) {
 
@@ -131,8 +144,6 @@ module.exports = function(controller) {
                 });
               }, 2000 * teamData.users.length + 1);
               
-
-
           }, 1000);
 
       });

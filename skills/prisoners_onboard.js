@@ -23,14 +23,20 @@ module.exports = function(controller) {
       team.prisoner_complete = false;
 
       team.prisoner_success = 0;
-      team.prisoner_decisions = [];
+      team.prisoner_decisions = {};
+      
+      _.each(team.prisoner_players, function(p) {
+        team.prisoner_decisions[p.userId] = {
+          name: p.name, 
+          choice: undefined
+        };
+      });
       
       controller.storage.teams.save(team, function(err, saved) {
         
         console.log(err, saved);
+        controller.prisoners_message(bot, saved.id, "default");
         
-        controller.addTime(bot, saved.id);
-
       });
         
     });

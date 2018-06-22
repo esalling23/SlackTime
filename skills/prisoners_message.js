@@ -41,9 +41,12 @@ module.exports = function(controller) {
       
       var vars = {};
         
-      if (thread == "decisions") {
+      if (thread == "decisions" || thread == "follow_up") {
         vars.decisions = team.prisoner_decisions;
-        team.prisoner_decisions = [];
+        team.prisoner_decisions = _.map(team.prisoner_decisions, function(d) {
+          d.choice = undefined;
+          return d;
+        });
       }
 
       if (team.prisoner_players.length == 1 && thread == "default"){
@@ -92,19 +95,85 @@ module.exports = function(controller) {
   controller.prisoner_decisions = function(decisions, type) {
     var fields = [];
     
-    _.each(decisions, function(d, i) {
+    _.each(decisions, function(d) {
       var choice = d.choice;
       
       if (type == "follow_up") {
         choice = d.choice ? "Submitted" : "Not Submitted";
       } 
       
-      fields[i] = {
+      fields.push({
         title: d.name, 
         value: choice
-      };
+      });
     });
     
     return fields;
+  }
+  
+  
+  controller.prisoners_update = function(bot, team, event, type) {
+    
+    var web = new WebClient(bot.config.bot.token);
+
+    web.conversations.list({ types: "im" }).then(function(list) {
+                    
+      _.each(_.where(team.users, { prisoner: true }), function(user) {
+        if (user.userId != event.user) {
+        console.log(user, " updating the prison for this player");
+
+          var thisIM = _.findWhere(list.channels, { user: user.userId });
+          var channel = thisIM.id;
+          var thread = type == "prison" ? "default" : "follow_up";
+
+          web.conversations.history(channel).then(function(ims) {
+
+            var btn_message = ims.messages[0];
+            var vars = {};
+            
+            if (!btn_message)
+              return;
+
+            btn_message.channel = channel;
+
+            if (type == "prison") {
+              vars.prisoners_time = controller.prisoners_initial().toDateString();
+
+              if (_.where(team.users, { prisoner: true }).length == 1 || !team.prisoner_time || team.prisoner_time.length <= 0) {
+                setTimeout(function() {
+                  controller.addTime(bot, team.id, true);
+                }, 2000);
+              }
+              
+              vars.prisoners = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length; 
+              vars.prisoners_started = team.prisoner_started;
+                         
+              if (vars.prisoners < 0) vars.prisoners = 0;
+
+            } else if (type == "feedback") {
+              vars.decisions = team.prisoner_decisions;
+            }
+            
+            vars.link = true;
+            vars.user = user.userId;
+            vars.team = team.id;
+
+            controller.makeCard(bot, btn_message, "prisoners_room", thread, vars, function(card) {
+              bot.api.chat.update({
+                channel: btn_message.channel, 
+                ts: btn_message.ts, 
+                attachments: card.attachments
+              }, function(err, updated) {
+
+
+              });
+            });
+
+          }).catch(err => console.log('history convo error: ', err));
+        }
+
+      });
+
+    }).catch(err => console.log('convo list error: ', err));
   }
 }

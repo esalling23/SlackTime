@@ -20,6 +20,8 @@ module.exports = function(webserver, controller) {
       
       if (file == "TangramsFolder.zip") 
         filePath = "https://res.cloudinary.com/extraludic/raw/upload/v1/escape-room/TangramsFolder.zip";
+      else if (file == "TV-Guide-Symbols.pdf") 
+        filePath = filePath.replace("/fl_attachment", "");
 
       opt.url = filePath;
 
