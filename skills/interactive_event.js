@@ -531,7 +531,6 @@ module.exports = function(controller) {
           
           var name = event.actions[0].value.includes('channel') ? 'remote' : event.actions[0].value;
           
-
           var script = _.findWhere(list, { name: name });
 
           controller.storage.teams.get(event.team.id).then((res) => {
@@ -547,63 +546,10 @@ module.exports = function(controller) {
                   return user;
                 });
                                 
-                var web = new WebClient(bot.config.bot.token);
                 
                 controller.storage.teams.save(res, function(err, saved) {
-                  
-                  var vars = {
-                    prisoners_time: controller.prisoners_initial().toDateString()
-                  };
-                  
-                  if (_.where(saved.users, { prisoner: true }).length == 1 || !saved.prisoner_time || saved.prisoner_time.length <= 0) {
-                    setTimeout(function() {
-                      controller.addTime(bot, saved.id, true);
-                    }, 2000);
-                  }
-                  
-                  web.conversations.list({types: "im"}).then(function(list) {
-                    
-                    _.each(_.where(saved.users, { prisoner: true }), function(user) {
-                      if (user.userId != event.user) {
-                      console.log(user, " updating the prison for this player");
-
-                        var thisIM = _.findWhere(list.channels, { user: user.userId });
-                        var channel = thisIM.id;
-
-                        web.conversations.history(channel).then(function(ims) {
-
-                          var btn_message = ims.messages[0];
-
-                          if (!btn_message)
-                            return;
-
-                          btn_message.channel = channel;
-
-                          vars.prisoners = process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length; 
-                          vars.prisoners_started = saved.prisoner_started;
-                          vars.link = true;
-                          vars.user = user.userId;
-                          vars.team = saved.id;
-
-                          if (vars.prisoners < 0) vars.prisoners = 0;
-
-                          controller.makeCard(bot, btn_message, "prisoners_room", "default", vars, function(card) {
-                            bot.api.chat.update({
-                              channel: btn_message.channel, 
-                              ts: btn_message.ts, 
-                              attachments: card.attachments
-                            }, function(err, updated) {
-                              
-                              
-                            });
-                          });
-
-                        }).catch(err => console.log('history convo error: ', err));
-                      }
-
-                    });
-
-                  }).catch(err => console.log('history convo error: ', err));
+                                    
+                  controller.prisoners_update(bot, saved, event, "prison");
 
                 });
 

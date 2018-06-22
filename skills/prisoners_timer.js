@@ -5,28 +5,15 @@ const minPerDay = 1440;
 
 module.exports = function(controller) {
   
-  controller.addTime = function(bot, id, initial) {
+  controller.addTime = function(bot, id) {
     
     controller.storage.teams.get(id, function(err, team) {
       
       if (!team.prisoner_time) team.prisoner_time = [];
       
-      team.prisoner_decisions = [];
-
       var start = new Date();
       
-      var end;
-      
-      if (initial) {
-        end = controller.prisoners_initial();
-      } else { 
-        end = new Date(start.getTime() + milPerMin * process.env.prisoners_time_limit);
-      }
-      
-      team.prisoner_time = _.map(team.prisoner_time, function(time) {
-        time.complete = true;
-        return time;
-      });
+      var end = controller.prisoners_initial();
       
       team.prisoner_time.push({
         num: team.prisoner_time.length,

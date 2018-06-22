@@ -4,7 +4,7 @@
 // https://escape-room-production.glitch.me/link/LINK_NAME/{{vars.team}}/{{vars.user}}
 // where LINK_NAME matches a key in the linkUrls object
 
-https://escape-room-production.glitch.me/link/prisoners_intro/{{vars.team}}/{{vars.user}}
+https://escape-room-production.glitch.me/link/prisoners_steal/{{vars.team}}/{{vars.user}}
 
 module.exports = function(controller) {
   

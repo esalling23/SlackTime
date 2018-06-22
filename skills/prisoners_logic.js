@@ -9,21 +9,17 @@ module.exports = function(controller) {
     controller.storage.teams.get(event.team.id, function(err, team) {
       if (!team.prisoner_success) team.prisoner_success = 0;
       if (!team.prisoner_players) team.prisoner_players = _.where(team.users, { prisoner: true });
-      
-      if (_.pluck(team.prisoner_decisions, "user").includes(event.user)) return;
-      
+            
       var thisUser = _.findWhere(team.users, { userId: event.user });
 
-      team.prisoner_decisions.push({ 
-        user: thisUser.userId, 
-        name: thisUser.name,
-        choice: choice 
-      });
+      if (team.prisoner_decisions[thisUser.userId].choice) return;
+
+      team.prisoner_decisions[thisUser.userId].choice = choice;
       
       controller.storage.teams.save(team, function(err, saved) {
+        
         var vars = {
-          decisions: saved.prisoner_decisions, 
-          players: saved.prisoner_players
+          decisions: saved.prisoner_decisions
         }
         
         controller.makeCard(bot, event, "prisoners_dilemma", "follow_up", vars, function(card) {
@@ -34,10 +30,15 @@ module.exports = function(controller) {
             attachments: card.attachments
           }, function(err, updated) {
             
-            if (saved.prisoner_decisions.length == saved.prisoner_players.length) {
-              var obj = _.findWhere(saved.prisoner_time, { complete: false });
+            controller.prisoners_update(bot, saved, event, "feedback");
+            
+            var decisions = _.filter(saved.prisoner_decisions, function(d) {
+              return d.choice;
+            });
+            
+            if (decisions.length == saved.prisoner_players.length) {
               setTimeout(function() {
-                controller.trigger("prisoners_check", [bot, saved.id, obj]);
+                controller.trigger("prisoners_check", [bot, saved.id]);
               }, 1000);
             }
             
@@ -49,7 +50,7 @@ module.exports = function(controller) {
     });
   });
     
-  controller.on('prisoners_check', function(bot, id, timeObj) {
+  controller.on('prisoners_check', function(bot, id) {
       
     controller.storage.teams.get(id, function(err, team) {
       var web = new WebClient(team.bot.app_token);
@@ -202,7 +203,6 @@ module.exports = function(controller) {
         // Send remaining players to next round 
         if (team.prisoner_players.length >= 1) {
           controller.prisoners_message(bot, team.id, "default");
-          // controller.addTime(bot, team.id);
         }
         
         
