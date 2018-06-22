@@ -34,7 +34,7 @@ module.exports = function(controller) {
     if (["telegraph_key", "buttons", "remote"].includes(options.codeType))
       thread += '_' + code;
     
-    if (options.codeType == 'remote') {
+    if (["remote", "telegraph_key"].includes(options.codeType)) {
       code = "channel_" + code;
       vars.team = res.id;
       vars.user = thisUser.userId;

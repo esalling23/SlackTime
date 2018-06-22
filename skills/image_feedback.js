@@ -29,6 +29,14 @@ module.exports = function(controller) {
             a.color = "00f900";
         }
       });
+      
+      if (team.imagesComplete) {
+        template.attachments.push({
+          title: "Nice work, you've uploaded 6 images for every location!", 
+          text: "Here's a code for a safe: *" + process.env.safe_code.replace(/-/g, "").toString() + "*", 
+          image_url: "http://res.cloudinary.com/extraludic/image/upload/v1529679536/escape-room/safe.jpg"
+        });
+      }
 
       convo.activate();
       
