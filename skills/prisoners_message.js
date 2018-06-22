@@ -122,7 +122,6 @@ module.exports = function(controller) {
         if (user.userId != event.user) {
         console.log(user, " updating the prison for this player");
 
-          var vars = {};
           var thisIM = _.findWhere(list.channels, { user: user.userId });
           var channel = thisIM.id;
           var thread = type == "prison" ? "default" : "follow_up";
@@ -130,16 +129,15 @@ module.exports = function(controller) {
           web.conversations.history(channel).then(function(ims) {
 
             var btn_message = ims.messages[0];
-
+            var vars = {};
+            
             if (!btn_message)
               return;
 
             btn_message.channel = channel;
-            
+
             if (type == "prison") {
-              var vars = {
-                prisoners_time: controller.prisoners_initial().toDateString()
-              };
+              vars.prisoners_time = controller.prisoners_initial().toDateString();
 
               if (_.where(team.users, { prisoner: true }).length == 1 || !team.prisoner_time || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
