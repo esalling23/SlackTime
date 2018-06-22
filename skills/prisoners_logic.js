@@ -21,7 +21,12 @@ module.exports = function(controller) {
       });
       
       controller.storage.teams.save(team, function(err, saved) {
-        controller.makeCard(bot, event, "prisoners_dilemma", "follow_up", {}, function(card) {
+        var vars = {
+          decisions: saved.prisoner_decisions, 
+          players: saved.prisoner_players
+        }
+        
+        controller.makeCard(bot, event, "prisoners_dilemma", "follow_up", vars, function(card) {
           
           bot.api.chat.update({
             channel: event.channel, 
@@ -90,15 +95,6 @@ module.exports = function(controller) {
         // Reset prisoner success if not everyone shared
         team.prisoner_success = 0;
       }
-
-      // Set this time object to be complete
-      team.prisoner_time = _.map(team.prisoner_time, function(time) {
-        if (time.num == timeObj.num)
-          time.complete = true;
-
-        return time;
-
-      });
       
       // Save the determined thread for after players review responses
       team.prisoner_thread = thread;
@@ -206,7 +202,7 @@ module.exports = function(controller) {
         // Send remaining players to next round 
         if (team.prisoner_players.length >= 1) {
           controller.prisoners_message(bot, team.id, "default");
-          controller.addTime(bot, team.id);
+          // controller.addTime(bot, team.id);
         }
         
         

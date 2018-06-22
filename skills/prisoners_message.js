@@ -89,13 +89,19 @@ module.exports = function(controller) {
     });
   }
   
-  controller.prisoner_decisions = function(decisions) {
+  controller.prisoner_decisions = function(decisions, type) {
     var fields = [];
     
     _.each(decisions, function(d, i) {
+      var choice = d.choice;
+      
+      if (type == "follow_up") {
+        choice = d.choice ? "Submitted" : "Not Submitted";
+      } 
+      
       fields[i] = {
         title: d.name, 
-        value: d.choice
+        value: choice
       };
     });
     
