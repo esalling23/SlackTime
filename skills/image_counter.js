@@ -196,10 +196,7 @@ module.exports = function(controller) {
                   puzzle: 'image_counter'
                 }]);
 
-                vars.code = process.env.safe_code.replace(/-/g, "").toString();
-                controller.makeCard(params.bot, params.message, 'image_tag', "complete", vars, function(card) {
-                  params.bot.replyInteractive(params.message, card);            
-                });
+                
               }, 5000);
             }
             

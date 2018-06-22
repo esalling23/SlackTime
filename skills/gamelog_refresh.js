@@ -89,7 +89,8 @@ module.exports = function(controller) {
         break;
         
       case 'telegraph_key': 
-        message += " heard a phonograph message about Channel " + event.puzzle + " by putting in   *" + controller.telegraphKeys[event.puzzle - 1].toString().replace(/,/g, "  ") + "*   ";
+        var puzzle = parseInt(event.puzzle.replace("channel_", ""))
+        message += " heard a phonograph message about Channel " + puzzle + " by putting in   *" + controller.telegraphKeys[puzzle - 1].toString().replace(/,/g, "  ") + "*   ";
         break;
       
       case 'remote': 
