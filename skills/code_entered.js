@@ -58,6 +58,11 @@ module.exports = function(controller) {
         codeObj = checkCodeArray(params.code, correctCodes);
 
       }
+        
+      if (params.codeType == "telegraph_key")
+        codeObj.puzzle = parseInt(codeObj.puzzle) + 1;
+      else if (params.codeType == 'remote') 
+        codeObj.puzzle = parseInt(params.channel);
       
       // Store data of entered code
       controller.dataStore(params.event, "code", { 
@@ -67,11 +72,6 @@ module.exports = function(controller) {
         .catch(err => console.log("code loggin error: ", err));
             
       if (codeObj.correct == true) {
-        
-        if (params.codeType == "telegraph_key")
-          codeObj.puzzle = parseInt(codeObj.puzzle) + 1;
-        else if (params.codeType == 'remote') 
-          codeObj.puzzle = parseInt(params.channel);
         
         params.key = codeObj;
         params.team = res;
@@ -132,6 +132,10 @@ module.exports = function(controller) {
       
       overall[key] = [];
       
+      _.each(correctCodes[key], function(c, i) {
+        overall[key].push(c == code[i]);
+      });
+      
       // Compare correct and entered code
       // If match, return
       if (JSON.stringify(correctCodes[key]) == JSON.stringify(code)) {
@@ -141,7 +145,7 @@ module.exports = function(controller) {
     }
 
     // If no match, return
-    return { correct: false, code: code };
+    return { correct: false, code: code, overall: overall };
 
   }
   

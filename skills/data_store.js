@@ -68,16 +68,22 @@ module.exports = function(controller) {
         }
         
         dataType = "chat";
-      } else if (type == "code") {
+      } else if (type == "download" || type == "link") {
+        dataEvent.type = type;
+        dataEvent.url = event.url;
+      }
+      
+      if (type == "code") {
         dataEvent.code = opt.codeObj.code;
         dataEvent.overallAnswer = opt.codeObj.overall;
         dataEvent.correct = opt.codeObj.correct;
         dataEvent.type = opt.codeType;
+        
+        dataEvent.place = controller.codeStages[opt.codeType];
 
-        if (dataEvent.correct && opt.codeObj.puzzle) dataEvent.puzzle = opt.codeObj.puzzle;
-      } else if (type == "download" || type == "link") {
-        dataEvent.type = type;
-        dataEvent.url = event.url;
+        if (opt.codeObj.puzzle) 
+          dataEvent.puzzle = opt.codeObj.puzzle;
+        
       }
 
       controller.storage[dataType].save(dataEvent, function(err, saved) {

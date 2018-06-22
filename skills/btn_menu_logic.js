@@ -45,6 +45,7 @@ module.exports = function(controller) {
       vars.prisoners = process.env.prisoners_players - prisoners;
       vars.started = params.team.prisoner_started;
       vars.prisoners_time = controller.prisoners_initial().toDateString();
+      
       if (vars.prisoners > 0)
         vars.wait = "Looks like you have to wait...";
               

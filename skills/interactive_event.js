@@ -581,6 +581,9 @@ module.exports = function(controller) {
 
                           vars.prisoners = process.env.prisoners_players - _.where(saved.users, { prisoner: true }).length; 
                           vars.prisoners_started = saved.prisoner_started;
+                          vars.link = true;
+                          vars.user = user.userId;
+                          vars.team = saved.id;
 
                           if (vars.prisoners < 0) vars.prisoners = 0;
 

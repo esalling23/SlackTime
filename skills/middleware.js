@@ -29,22 +29,27 @@ module.exports = function(controller) {
 
       // If this is a file object, upload it to our cloudinary account
       if (message.file && message.file.created) {
-        controller.fileUpload(bot, message, function(result) {
-          // Set the message url to the cloudinary url of the uploaded file 
-          message.url = result.url;
-          controller.dataStore(message, "chat").catch(err => console.log(err));
-          if (acceptedTypes.indexOf(message.file.filetype) > -1) {
-            var messId = message.team.id ? message.team.id : message.team;
-            controller.storage.teams.get(messId, function(err, team){
-              // console.log(messId, "is the team id");
-              // console.log(team, "is the team");
-              if(team.image_channel_id == message.channel) {
-                controller.trigger("image_counter_upload", [{ bot: bot, message: message, result: result }]);
-              }
-            });
-          }
-        });
+        
+        var messId = message.team.id ? message.team.id : message.team;
+        controller.storage.teams.get(messId, function(err, team){
+          // console.log(messId, "is the team id");
+          // console.log(team, "is the team");
+          
+          controller.fileUpload(bot, message, function(result) {
+            // Set the message url to the cloudinary url of the uploaded file 
+            message.url = result.url;
+            
+            if(team.image_channel_id == message.channel && acceptedTypes.indexOf(message.file.filetype) > -1) {
+              controller.trigger("image_counter_upload", [{ bot: bot, message: message, result: result }]);
+              message.image_counter_upload = true;
+            } else {
+              message.image_counter_upload = false; 
+            }
 
+            controller.dataStore(message, "chat").catch(err => console.log(err));
+
+          });
+        });
 
       }
 

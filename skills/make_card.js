@@ -71,7 +71,7 @@ module.exports = function(controller) {
       
       // Prisoner decision variables for response display
       if (vars.decisions) {
-        template.attachments[0].fields = controller.prisoner_decisions(vars.decisions);
+        template.attachments[0].fields = controller.prisoner_decisions(vars.decisions, thread_name);
       }
 
       template.username = process.env.username;
