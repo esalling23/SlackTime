@@ -116,7 +116,7 @@ module.exports = function(controller) {
                     
                     controller.prisoners_message(bot, saved.id, "end");
 
-                  }, 10000);
+                  }, 5000);
                 }
                 
               });
@@ -209,7 +209,7 @@ module.exports = function(controller) {
               if (vars.prisoners < 0) vars.prisoners = 0;
 
             } else if (type == "feedback") {
-              vars.decisions = team.prisoner_decisions;
+              vars.prisoner_decisions = team.prisoner_decisions;
             }
             
             vars.link = true;
