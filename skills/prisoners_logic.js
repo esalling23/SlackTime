@@ -63,23 +63,23 @@ module.exports = function(controller) {
 
       if((blockers.length > 0 && stealers.length > 0) || stealers.length == team.prisoner_players.length) {
         thread = "steal_kick";
-        _.each(stealers, b => {
-          usersToKick.push(b.user);
+        _.each(stealers, (b) => {
+          usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
         });
       }
 
       if(blockers.length > 0 && stealers.length <= 0) {
         thread = "block_kick";
-        _.each(blockers, b => {
-          usersToKick.push(b.user);
+        _.each(blockers, (b) => {
+          usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
         });
       }
 
       // Kick out sharers if anyone stole without being blocked
       if(blockers.length <= 0 && stealers.length >= 1) {
         thread = "share_kick";
-        _.each(sharers, b => {
-          usersToKick.push(b.user);
+        _.each(sharers, (b) => {
+          usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
         });
       }
       
