@@ -37,23 +37,58 @@ module.exports = function(controller) {
     controller.storage.teams.get(id, function(err, team) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
-      var players = thread == "kicked" ? team.just_kicked : thread == "times_up" ? team.times_up : team.prisoner_players;
+      
+      // Determine which players object to use based on thread
+      var players = ((thread) => { 
+        switch(thread) {
+          case 'kicked':
+            return team.just_kicked;
+          case 'times_up': 
+            return team.times_up;
+          case 'end': 
+            return _.where(team.users, { prisoner: true });
+          default:
+            return team.prisoner_players;
+        }})(thread);
       
       var vars = {};
         
+      // If this is the decisions or follow_up thread
+      // Set decisions object on card vars
       if (thread == "decisions" || thread == "follow_up") {
-        vars.decisions = team.prisoner_decisions;
+        vars.prisoner_decisions = team.prisoner_decisions;
       }
-
+      
+      // If this is supposed to be a new round but only one player remains
+      // Set thread to success_alone and prisoners_complete to true
       if (team.prisoner_players.length == 1 && thread == "default"){
         thread = 'success_alone';
         team.prisoner_complete = true;
+      }
+      
+      // If this is the end thread, set winner variables
+      if (thread == "end") {
+        vars.prisoner_winners = team.prisoner_players;
+        vars.prisoner_link = "https://escape-room-production.glitch.me/link/";
+        
+        if (team.prisoner_eliminate)
+          vars.prisoner_link += "prisoners_eliminate";
+        else 
+          vars.prisoner_link += "prisoners_share";
+        
+        vars.prisoner_link += "/{{vars.team}}/{{vars.user}}";
       }
 
       controller.storage.teams.save(team, function(err, saved) {
 
         _.each(players, function(user) {
+          
+          if (vars.prisoner_link) {
+            vars.user = user.userId;
+            vars.team = saved.id;
+          }
 
+          // Find user chat history with bot
           web.conversations.history(user.bot_chat).then(function(ims) {
             
             var message = ims.messages[0];
@@ -61,19 +96,28 @@ module.exports = function(controller) {
             if (!message)
               return;
 
+            // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
             
+            // Make the prisoners_dilemma card
             controller.makeCard(bot, message, "prisoners_dilemma", thread, vars, function(card) {
-
-              console.log(message, card);
               
               bot.api.chat.update({
                 channel: message.channel, 
                 ts: message.ts, 
                 attachments: card.attachments
               }, function(err, updated) {
-                
-                console.log(err, updated);
+                                
+                // If prisoners dilemma is complete
+                // Send all players "end" message
+                // This only happens in case of single winner as set above
+                if (saved.prisoners_complete && thread == "default") {
+                  setTimeout(function() {
+                    
+                    controller.prisoners_message(bot, saved.id, "end");
+
+                  }, 10000);
+                }
                 
               });
 
@@ -88,19 +132,27 @@ module.exports = function(controller) {
     });
   }
   
+  // Determine submissions to display for prisoners dilemma
+  // RETURNS fields Array
   controller.prisoner_decisions = function(decisions, type) {
     var fields = [];
     
     _.each(decisions, function(d) {
-      var choice = d.choice;
+      // Set the value to be the players choice
+      var value = d.choice;
       
+      // If this is the follow_up thread
+      // Set the value to be whether the player has made a choice
       if (type == "follow_up") {
-        choice = d.choice ? "Submitted" : "Not Submitted";
+        value = d.choice ? "Submitted" : "Not Submitted";
+        
+        if (d.is_kicked) value = "Kicked";
       } 
       
+      // Add the player name and defined value
       fields.push({
         title: d.name, 
-        value: choice
+        value: value
       });
     });
     

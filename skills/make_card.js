@@ -70,8 +70,31 @@ module.exports = function(controller) {
         }
       
       // Prisoner decision variables for response display
-      if (vars.decisions) {
+      if (vars.prisoner_decisions) {
         template.attachments[0].fields = controller.prisoner_decisions(vars.decisions, thread_name);
+      }
+      
+      // Prisoner's dilemma end message based on users;
+      if (vars.prisoner_winners) {
+        var message = "";
+        
+        if (vars.prisoner_winners.length > 2) {
+          _.each(_.pluck(vars.prisoner_winners, "name"), (n, i) => {
+            message += i == vars.prisoner_winners.length ? " and " + n : n + ",";
+          });
+          message += " split the pot!";
+        } else if (vars.prisoner_winners.length == 1) {
+          message += vars.prisoner_winners[0].name;
+          message += " won the pot!";
+        } else if (vars.prisoner_winners.length == 2) {
+          message += vars.prisoner_winners[0].name + " and " + vars.prisoner_winners[1].name;
+          message += " split the pot!";
+        } else if (vars.prisoner_winners.length == 0) {
+          message += "No one won anything!";
+        }
+        
+        convo.setVar("prisoners_end", message);
+        
       }
 
       template.username = process.env.username;
