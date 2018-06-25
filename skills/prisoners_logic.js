@@ -21,7 +21,7 @@ module.exports = function(controller) {
       controller.storage.teams.save(team, function(err, saved) {
         
         var vars = {
-          decisions: saved.prisoner_decisions
+          prisoner_decisions: saved.prisoner_decisions
         }
         
         // Follow up message
