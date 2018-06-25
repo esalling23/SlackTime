@@ -68,22 +68,20 @@ module.exports = function(controller) {
       
       // If this is the end thread, set winner variables
       if (thread == "end") {
-        vars.prisoner_winners = team.prisoner_players;
-        vars.prisoner_link = "https://escape-room-production.glitch.me/link/";
+        vars.prisoners_winners = team.prisoner_players;
+        vars.prisoners_link = "https://escape-room-production.glitch.me/link/";
         
         if (team.prisoner_eliminate)
-          vars.prisoner_link += "prisoners_eliminate";
+          vars.prisoners_link += "prisoners_eliminate";
         else 
-          vars.prisoner_link += "prisoners_share";
-        
-        vars.prisoner_link += "/{{vars.team}}/{{vars.user}}";
+          vars.prisoners_link += "prisoners_share";
       }
 
       controller.storage.teams.save(team, function(err, saved) {
 
         _.each(players, function(user) {
           
-          if (vars.prisoner_link) {
+          if (vars.prisoners_link) {
             vars.user = user.userId;
             vars.team = saved.id;
           }
@@ -106,20 +104,7 @@ module.exports = function(controller) {
                 channel: message.channel, 
                 ts: message.ts, 
                 attachments: card.attachments
-              }, function(err, updated) {
-                                
-                // If prisoners dilemma is complete
-                // Send all players "end" message
-                // This only happens in case of single winner as set above
-                if (saved.prisoners_complete && thread == "default") {
-                  setTimeout(function() {
-                    
-                    controller.prisoners_message(bot, saved.id, "end");
-
-                  }, 5000);
-                }
-                
-              });
+              }, function(err, updated) {});
 
             });
 
@@ -145,10 +130,11 @@ module.exports = function(controller) {
       // Set the value to be whether the player has made a choice
       if (type == "follow_up") {
         value = d.choice ? "Submitted" : "Not Submitted";
-        
-        if (d.is_kicked) value = "Kicked";
       } 
-      
+            
+      // If player was kicked, display that
+      if (d.kicked) value = "Kicked";
+
       // Add the player name and defined value
       fields.push({
         title: d.name, 

@@ -75,25 +75,27 @@ module.exports = function(controller) {
       }
       
       // Prisoner's dilemma end message based on users;
-      if (vars.prisoner_winners) {
+      if (vars.prisoners_winners) {
         var message = "";
         
-        if (vars.prisoner_winners.length > 2) {
-          _.each(_.pluck(vars.prisoner_winners, "name"), (n, i) => {
-            message += i == vars.prisoner_winners.length ? " and " + n : n + ",";
+        if (vars.prisoners_winners.length > 2) {
+          _.each(_.pluck(vars.prisoners_winners, "name"), (n, i) => {
+            message += i == vars.prisoners_winners.length ? " and " + n : n + ",";
           });
           message += " split the pot!";
-        } else if (vars.prisoner_winners.length == 1) {
-          message += vars.prisoner_winners[0].name;
+        } else if (vars.prisoners_winners.length == 1) {
+          message += vars.prisoners_winners[0].name;
           message += " won the pot!";
-        } else if (vars.prisoner_winners.length == 2) {
-          message += vars.prisoner_winners[0].name + " and " + vars.prisoner_winners[1].name;
+        } else if (vars.prisoners_winners.length == 2) {
+          message += vars.prisoners_winners[0].name + " and " + vars.prisoners_winners[1].name;
           message += " split the pot!";
-        } else if (vars.prisoner_winners.length == 0) {
+        } else if (vars.prisoners_winners.length == 0) {
           message += "No one won anything!";
         }
         
         convo.setVar("prisoners_end", message);
+        
+        template.attachments[0].actions[0].url = vars.prisoners_link + "/" + vars.team + "/" + vars.user;
         
       }
 

@@ -101,7 +101,7 @@ module.exports = function(controller) {
         
         // If players have shared 3 times in a row, send them to the finish 
         if (team.prisoner_success == 3) {
-          thread = "success";
+          thread = "end";
           team.prisoner_complete = true;
         }
       } else {
@@ -121,13 +121,6 @@ module.exports = function(controller) {
         // Determine and define players to kick out
         saved.just_kicked = _.filter(saved.prisoner_players, function(player) {
           return usersToKick.includes(player.userId);
-        });
-        
-        saved.prisoner_decisions = _.mapObject(saved.prisoner_decisions, function(player, key) {
-          if (usersToKick.includes(key))
-            player.kicked = true;
-          
-          return player;
         });
 
         controller.storage.teams.save(saved, function(err, updated) {
@@ -182,20 +175,6 @@ module.exports = function(controller) {
   // Send along the prisoners to the next stage
   controller.prisoners_continue = function(bot, team) {
     
-    // Reset prisoner players based on players that have been kicked out
-    team.prisoner_players = _.filter(team.prisoner_players, function(player) {
-      return !_.findWhere(team.just_kicked, { "userId": player.userId });
-    }).map(function(player) {
-      // reset player ready status for next round
-      player.prisoner_ready = false;
-      return player;
-    });
-    
-    team.prisoner_decisions = _.mapObject(team.prisoner_decisions, function(d) {
-      d.choice = undefined;
-      return d;
-    });
-    
     // Send the global response to all players based on saved thread
     _.each(team.prisoner_players, function(user) {
           
@@ -222,6 +201,29 @@ module.exports = function(controller) {
 
     });
     
+    
+    // Reset prisoner players based on players that have been kicked out
+    team.prisoner_players = _.filter(team.prisoner_players, function(player) {
+      return !_.findWhere(team.just_kicked, { "userId": player.userId });
+    }).map(function(player) {
+      // reset player ready status for next round
+      player.prisoner_ready = false;
+      return player;
+    });
+    
+    if (team.prisoner_players.length == 1) {
+       team.prisoner_complete = true; 
+    }
+    
+    // Reset choices and store kicked players
+    team.prisoner_decisions = _.mapObject(team.prisoner_decisions, function(d, k) {
+      d.choice = undefined;
+      
+      if (_.pluck(team.just_kicked, "userId").includes(k)) d.kicked = true;
+      
+      return d;
+    });
+    
     controller.storage.teams.save(team, function(err, saved) {
       
       setTimeout(function() {
@@ -229,20 +231,21 @@ module.exports = function(controller) {
         if (team.just_kicked.length > 0)
           controller.prisoners_message(bot, team.id, "kicked");
         
-        if (saved.prisoner_complete) {
-          // If prisoners dilemma is over, send final message
-          controller.prisoners_message(bot, team.id, "end");
-        } else {
-          // Only if prisoners dilemma is not complete
-
-          // Send remaining players to next round 
-          if (team.prisoner_players.length >= 1) {
-            controller.prisoners_message(bot, team.id, "default");
-          }
-          
-          
+        // Send remaining players to next round 
+        if (team.prisoner_players.length >= 1) {
+          controller.prisoners_message(bot, team.id, "default");
         }
         
+        if (saved.prisoner_complete) {
+          setTimeout(function() {
+            
+            // If prisoners dilemma is over, send final message
+            controller.prisoners_message(bot, team.id, "end");
+            
+          }, 15000);
+        } 
+          
+                  
         
       }, 5000);
       

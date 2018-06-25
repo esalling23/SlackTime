@@ -501,7 +501,7 @@ module.exports = function(controller) {
         controller.storage.teams.get(event.team.id, function(err, team) {
 
           if (event.actions[0].value == "onboard") {
-            if (team.prisoner_time.length == 1)
+            if (!team.prisoner_started)
               controller.trigger("prisoners_onboard", [bot, event]);
           } else if (event.actions[0].value == "next") {
             controller.prisoners_next(bot, event, team);
