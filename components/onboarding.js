@@ -31,6 +31,7 @@ module.exports = function(controller) {
              
          team.oauth_token = auth.access_token;
          team.gameStarted = false;
+         team.entered = false;
 
          // reset data
          team.users = [];

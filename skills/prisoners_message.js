@@ -43,10 +43,6 @@ module.exports = function(controller) {
         
       if (thread == "decisions" || thread == "follow_up") {
         vars.decisions = team.prisoner_decisions;
-        team.prisoner_decisions = _.map(team.prisoner_decisions, function(d) {
-          d.choice = undefined;
-          return d;
-        });
       }
 
       if (team.prisoner_players.length == 1 && thread == "default"){
@@ -117,14 +113,24 @@ module.exports = function(controller) {
     var web = new WebClient(bot.config.bot.token);
 
     web.conversations.list({ types: "im" }).then(function(list) {
+      
+      var players = team.prisoner_players;
+      
+      if (type == "feedback") {
+        players = _.filter(team.prisoner_players, function(p) {
+          return team.prisoner_decisions[p.userId].choice;
+        });
+      }
                     
-      _.each(_.where(team.users, { prisoner: true }), function(user) {
+      _.each(players, function(user) {
+        
         if (user.userId != event.user) {
-        console.log(user, " updating the prison for this player");
+          console.log(user, " updating the prison for this player");
 
           var thisIM = _.findWhere(list.channels, { user: user.userId });
           var channel = thisIM.id;
           var thread = type == "prison" ? "default" : "follow_up";
+          var script = type == "prison" ? "prisoners_room" : "prisoners_dilemma";
 
           web.conversations.history(channel).then(function(ims) {
 
@@ -158,14 +164,13 @@ module.exports = function(controller) {
             vars.user = user.userId;
             vars.team = team.id;
 
-            controller.makeCard(bot, btn_message, "prisoners_room", thread, vars, function(card) {
+            controller.makeCard(bot, btn_message, script, thread, vars, function(card) {
               bot.api.chat.update({
                 channel: btn_message.channel, 
                 ts: btn_message.ts, 
                 attachments: card.attachments
               }, function(err, updated) {
-
-
+                
               });
             });
 

@@ -11,6 +11,7 @@ module.exports = function(controller) {
       if (!team.prisoner_players) team.prisoner_players = _.where(team.users, { prisoner: true });
             
       var thisUser = _.findWhere(team.users, { userId: event.user });
+      
 
       if (team.prisoner_decisions[thisUser.userId].choice) return;
 
@@ -114,7 +115,7 @@ module.exports = function(controller) {
             
             controller.prisoners_message(bot, updated.id, "decisions");
 
-          }, 10000);
+          }, 5000);
           
         });
         
@@ -162,6 +163,15 @@ module.exports = function(controller) {
     // Reset prisoner players based on players that have been kicked out
     team.prisoner_players = _.filter(team.prisoner_players, function(player) {
       return !_.findWhere(team.just_kicked, { "userId": player.userId });
+    }).map(function(player) {
+      // reset player ready status for next round
+      player.prisoner_ready = false;
+      return player;
+    });
+    
+    team.prisoner_decisions = _.mapObject(team.prisoner_decisions, function(d) {
+      d.choice = undefined;
+      return d;
     });
     
     // Send the global response to all players based on saved thread

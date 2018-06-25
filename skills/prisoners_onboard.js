@@ -35,7 +35,7 @@ module.exports = function(controller) {
       controller.storage.teams.save(team, function(err, saved) {
         
         console.log(err, saved);
-        controller.prisoners_message(bot, saved.id, "default");
+        controller.prisoners_message(bot, saved.id, message, "default");
         
       });
         
