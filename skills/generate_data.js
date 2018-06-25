@@ -32,6 +32,7 @@ module.exports = function(controller) {
       if (teamData.puzzles) delete teamData.puzzles;
       
       teamData.gameStarted = true;
+      teamData.entered = false;
 
       teamData.currentState = 'default';
       teamData.events = [];      
@@ -97,13 +98,15 @@ module.exports = function(controller) {
              _.each(teamData.users, function(user) {
 
                 options.bot.api.im.open({ user: user.userId }, function(err, direct_message) { 
+                  
                   console.log(err, direct_message);
                   console.log(direct_message, "opened the onboarding message");
-                  bot_channels[user.userId] = direct_message.channel.id;
                                     
                   if (err) {
                     console.log('Error sending onboarding message:', err);
                   } else {
+                    bot_channels[user.userId] = direct_message.channel.id;
+
                     // console.log(user.id);
                     controller.studio.get(options.bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
                 

@@ -45,6 +45,7 @@ module.exports = function(controller) {
       
       if(redCount < length && greenCount < length && greyCount < length) return;
       
+      team.entered = true;
       // If any of the button counts are >= to the given length
       // Set the game to be started
       controller.storage.teams.save(team, function(err, saved) {
@@ -60,8 +61,8 @@ module.exports = function(controller) {
               
               var btn_message = ims.messages[0];
 
-              if (!btn_message)
-                return;
+              if (!btn_message) return;
+              if (btn_message);
 
               btn_message.channel = channel;
               btn_message.user = user.userId;

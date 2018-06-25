@@ -180,6 +180,7 @@ module.exports = function(controller) {
         var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
         
         if (!confirmedChoice) return;
+        if (confirmedChoice.callback != "image_tag") return;
 
         // console.log(event);
         // console.log(confirmedChoice);
@@ -527,13 +528,18 @@ module.exports = function(controller) {
           data: event.actions[0]
         }
 
-        controller.studio.getScripts().then((list) => {
+        controller.storage.teams.get(event.team.id).then((res) => {
           
-          var name = event.actions[0].value.includes('channel') ? 'remote' : event.actions[0].value;
-          
-          var script = _.findWhere(list, { name: name });
+          controller.studio.getScripts().then((list) => {
 
-          controller.storage.teams.get(event.team.id).then((res) => {
+            var name = event.actions[0].value;
+
+            if (event.actions[0].value.includes('channel')) 
+              name = "remote";
+            else if (res.entered && event.actions[0].value == "three_color_buttons") 
+              name = "input_nodes_1";
+
+            var script = _.findWhere(list, { name: name });
               
             if (event.actions[0].value == "prisoners_room") {
               if (res.prisoner_started) 
@@ -545,7 +551,8 @@ module.exports = function(controller) {
 
                   return user;
                 });
-                                
+                
+                res.prisoner_players = _.where(res.users, { prisoner: true });
                 
                 controller.storage.teams.save(res, function(err, saved) {
                                     
@@ -553,6 +560,10 @@ module.exports = function(controller) {
 
                 });
 
+              }
+            } else if (event.actions[0].value == "three_color_buttons") {
+              if (res.entered) {
+                
               }
             }
 
