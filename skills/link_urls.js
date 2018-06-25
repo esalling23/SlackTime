@@ -36,7 +36,7 @@ module.exports = function(controller) {
     "tamagotchi": "https://vimeo.com/276042849/eadeb8b59b", 
     "prisoners_intro": "https://vimeo.com/276045361/3660b5fee7", 
     "prisoners_share": "https://vimeo.com/276045432/22ce4e535f", 
-    "prisoners_steal": "https://vimeo.com/276045434/809da266b6"
+    "prisoners_eliminate": "https://vimeo.com/276045434/809da266b6"
   }
   
 }

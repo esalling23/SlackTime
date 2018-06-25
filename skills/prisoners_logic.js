@@ -3,6 +3,7 @@ const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
   
+  // A player responds to the prisoners dilemma
   controller.on('prisoners_selection', function(bot, event) {
     var choice = event.actions[0].value;
     
@@ -11,8 +12,8 @@ module.exports = function(controller) {
       if (!team.prisoner_players) team.prisoner_players = _.where(team.users, { prisoner: true });
             
       var thisUser = _.findWhere(team.users, { userId: event.user });
-      
 
+      // If there's already a choice stored for this player, return
       if (team.prisoner_decisions[thisUser.userId].choice) return;
 
       team.prisoner_decisions[thisUser.userId].choice = choice;
@@ -23,6 +24,7 @@ module.exports = function(controller) {
           decisions: saved.prisoner_decisions
         }
         
+        // Follow up message
         controller.makeCard(bot, event, "prisoners_dilemma", "follow_up", vars, function(card) {
           
           bot.api.chat.update({
@@ -31,12 +33,14 @@ module.exports = function(controller) {
             attachments: card.attachments
           }, function(err, updated) {
             
+            // Trigger update message for all players
             controller.prisoners_update(bot, saved, event, "feedback");
             
             var decisions = _.filter(saved.prisoner_decisions, function(d) {
               return d.choice;
             });
             
+            // If all players have decided, move on to the check
             if (decisions.length == saved.prisoner_players.length) {
               setTimeout(function() {
                 controller.trigger("prisoners_check", [bot, saved.id]);
@@ -51,16 +55,20 @@ module.exports = function(controller) {
     });
   });
     
+  // Check players responses 
   controller.on('prisoners_check', function(bot, id) {
       
     controller.storage.teams.get(id, function(err, team) {
       var web = new WebClient(team.bot.app_token);
       var usersToKick = [];
       var thread = "default";
+      // Define the groups of player's choices
       var blockers = _.where(team.prisoner_decisions, { choice: "block" });
       var stealers = _.where(team.prisoner_decisions, { choice: "steal" });
       var sharers = _.where(team.prisoner_decisions, { choice: "share" });
 
+      // If no blockers or stealers, or 100% of players stole
+      // Kick out stealers
       if((blockers.length > 0 && stealers.length > 0) || stealers.length == team.prisoner_players.length) {
         thread = "steal_kick";
         _.each(stealers, (b) => {
@@ -68,6 +76,8 @@ module.exports = function(controller) {
         });
       }
 
+      // If no stealers but someone blocked
+      // Kick out blockers
       if(blockers.length > 0 && stealers.length <= 0) {
         thread = "block_kick";
         _.each(blockers, (b) => {
@@ -75,7 +85,8 @@ module.exports = function(controller) {
         });
       }
 
-      // Kick out sharers if anyone stole without being blocked
+      // If anyone stole without being blocked
+      // Kick out sharers
       if(blockers.length <= 0 && stealers.length >= 1) {
         thread = "share_kick";
         _.each(sharers, (b) => {
@@ -98,6 +109,10 @@ module.exports = function(controller) {
         team.prisoner_success = 0;
       }
       
+      // If any users are being kicked we want to store prisoner_eliminate as true
+      // This determined end of game video 
+      if (usersToKick.length > 0 && !team.prisoner_eliminate) team.prisoner_eliminate = true;
+      
       // Save the determined thread for after players review responses
       team.prisoner_thread = thread;
 
@@ -106,6 +121,13 @@ module.exports = function(controller) {
         // Determine and define players to kick out
         saved.just_kicked = _.filter(saved.prisoner_players, function(player) {
           return usersToKick.includes(player.userId);
+        });
+        
+        saved.prisoner_decisions = _.mapObject(saved.prisoner_decisions, function(player, key) {
+          if (usersToKick.includes(key))
+            player.kicked = true;
+          
+          return player;
         });
 
         controller.storage.teams.save(saved, function(err, updated) {
@@ -207,12 +229,18 @@ module.exports = function(controller) {
         if (team.just_kicked.length > 0)
           controller.prisoners_message(bot, team.id, "kicked");
         
-        if (saved.prisoner_complete) return;
-        // Only if prisoners dilemma is not complete
+        if (saved.prisoner_complete) {
+          // If prisoners dilemma is over, send final message
+          controller.prisoners_message(bot, team.id, "end");
+        } else {
+          // Only if prisoners dilemma is not complete
 
-        // Send remaining players to next round 
-        if (team.prisoner_players.length >= 1) {
-          controller.prisoners_message(bot, team.id, "default");
+          // Send remaining players to next round 
+          if (team.prisoner_players.length >= 1) {
+            controller.prisoners_message(bot, team.id, "default");
+          }
+          
+          
         }
         
         
