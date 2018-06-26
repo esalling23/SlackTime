@@ -96,7 +96,7 @@ module.exports = function(controller) {
           message += vars.prisoners_winners[0].name + " and " + vars.prisoners_winners[1].name;
           message += " split the pot!";
         } else if (vars.prisoners_winners.length == 0) {
-          message += "No one won anything!";
+          message += "All players were eliminated. Better watch this video.";
         }
         
         template.attachments[0].text = message;

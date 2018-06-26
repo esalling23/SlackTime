@@ -113,7 +113,7 @@ module.exports = function(controller) {
                                       
                     controller.prisoners_message(bot, saved.id, "end");
 
-                  }, 10000);
+                  }, 8000);
                 }
               });
 

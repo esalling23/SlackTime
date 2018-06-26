@@ -239,7 +239,7 @@ module.exports = function(controller) {
             // If prisoners dilemma is over, send final message
             controller.prisoners_message(bot, saved.id, "end");
             
-          }, 15000);
+          }, 8000);
         } 
           
                   
