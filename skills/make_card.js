@@ -99,6 +99,14 @@ module.exports = function(controller) {
           message += "All players were eliminated. Better watch this video.";
         }
         
+                
+        if (vars.prisoners_winners.length > 0) {
+          message = ":moneybag: :moneybag: :moneybag: " + message + " :moneybag: :moneybag: :moneybag:";
+        } else {
+          message = ":cry: :cry: :cry: " + message + " :cry: :cry: :cry:";
+        }
+
+        
         template.attachments[0].text = message;
         
         template.attachments[0].actions[0].url = vars.prisoners_link + "/" + vars.team + "/" + vars.user;
