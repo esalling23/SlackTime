@@ -540,6 +540,7 @@ module.exports = function(controller) {
               name = "input_nodes_1";
 
             var script = _.findWhere(list, { name: name });
+            var scriptName = script.name;
               
             if (event.actions[0].value == "prisoners_room") {
               if (res.prisoner_started) 
@@ -563,11 +564,11 @@ module.exports = function(controller) {
               }
             } else if (event.actions[0].value == "three_color_buttons") {
               if (res.entered) {
-                
+                scriptName = "input_nodes_1"
               }
             }
 
-            controller.studio.get(bot, script.name, event.user, event.channel).then((currentScript) => {
+            controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
               
               controller.storage.teams.save(res).then(saved => {
                 

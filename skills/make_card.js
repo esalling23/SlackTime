@@ -96,8 +96,16 @@ module.exports = function(controller) {
           message += vars.prisoners_winners[0].name + " and " + vars.prisoners_winners[1].name;
           message += " split the pot!";
         } else if (vars.prisoners_winners.length == 0) {
-          message += "No one won anything!";
+          message += "All players were eliminated. Better watch this video.";
         }
+        
+                
+        if (vars.prisoners_winners.length > 0) {
+          message = ":moneybag: :moneybag: :moneybag: " + message + " :moneybag: :moneybag: :moneybag:";
+        } else {
+          message = ":cry: :cry: :cry: " + message + " :cry: :cry: :cry:";
+        }
+
         
         template.attachments[0].text = message;
         

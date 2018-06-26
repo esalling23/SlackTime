@@ -87,7 +87,7 @@ module.exports = function(controller) {
 
       // If anyone stole without being blocked
       // Kick out sharers
-      if((blockers.length <= 0 && stealers.length >= 1) && stealers.length < team.prisoner_decisions.length) {
+      if((blockers.length <= 0 && stealers.length >= 1) && stealers.length < Object.keys(team.prisoner_decisions).length) {
         thread = "share_kick";
         _.each(sharers, (b) => {
           usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
@@ -239,7 +239,7 @@ module.exports = function(controller) {
             // If prisoners dilemma is over, send final message
             controller.prisoners_message(bot, saved.id, "end");
             
-          }, 15000);
+          }, 8000);
         } 
           
                   

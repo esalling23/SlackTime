@@ -64,17 +64,6 @@ module.exports = function(controller) {
         // do something...
         // console.log('SEND:', message);
         
-          if (message.type == "dilemma") {
-          
-            controller.storages.teams.get(bot.config.id, function(err, team) {
-              
-              var user = _.findWhere(team.prisoner_players, { userId: message.user });
-              
-              // controller.store_prisoners_msg(message, user, team);
-
-            });
-          }
-
       
         if (message.type == "feedback") {
           controller.storage.teams.get(bot.config.id, function(err, team) {
