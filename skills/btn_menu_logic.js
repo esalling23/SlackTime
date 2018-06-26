@@ -42,12 +42,19 @@ module.exports = function(controller) {
       var prisoners = _.where(params.team.users, { prisoner: true }).length;
       console.log(prisoners, " are the number of prisoners in the movement logic");
             
-      vars.prisoners = process.env.prisoners_players - prisoners;
-      vars.started = params.team.prisoner_started;
+      vars.prisoners_length = process.env.prisoners_players - prisoners;
+      vars.prisoners_started = params.team.prisoner_started;
       vars.prisoners_time = controller.prisoners_initial().toDateString();
-      
-      if (vars.prisoners > 0)
-        vars.wait = "Looks like you have to wait...";
+
+      vars.prisoners_users = params.team.users;
+
+      if (vars.prisoners_length < 0) vars.prisoners_length = 0;
+
+      if (vars.prisoners_length == 2 || !params.team.prisoner_time || params.team.prisoner_time.length <= 0) {
+        setTimeout(function() {
+          controller.addTime(params.bot, params.team.id, true);
+        }, 2000);
+      }
               
     }
     

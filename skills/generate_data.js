@@ -54,6 +54,7 @@ module.exports = function(controller) {
       teamData.prisoner_success = 0;
       teamData.prisoner_complete = false;
       teamData.prisoner_thread = "default";
+      teamData.prisoner_eliminate = false;
       
       teamData.noChatChannels = [teamData.gamelog_channel_id];
       
