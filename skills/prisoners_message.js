@@ -104,7 +104,18 @@ module.exports = function(controller) {
                 channel: message.channel, 
                 ts: message.ts, 
                 attachments: card.attachments
-              }, function(err, updated) {});
+              }, function(err, updated) {
+                console.log(err, updated);
+                
+                // Send end message in the case of last one standing
+                if (thread == "success_alone"){
+                  setTimeout(function() {
+                                      
+                    controller.prisoners_message(bot, saved.id, "end");
+
+                  }, 10000);
+                }
+              });
 
             });
 
@@ -119,18 +130,20 @@ module.exports = function(controller) {
   
   // Determine submissions to display for prisoners dilemma
   // RETURNS fields Array
-  controller.prisoner_decisions = function(decisions, type) {
+  controller.prisoner_fields = function(players, type) {
     var fields = [];
     
-    _.each(decisions, function(d) {
-      // Set the value to be the players choice
-      var value = d.choice;
+    _.each(players, function(d) {
+      // Set the value to be the players choice or the state of the prisoner
+      var value = d.choice ? d.choice : d.prisoner;
       
       // If this is the follow_up thread
       // Set the value to be whether the player has made a choice
       if (type == "follow_up") {
         value = d.choice ? "Submitted" : "Not Submitted";
-      } 
+      } else if (type == "prison") {
+        value = d.prisoner ? "Present" : "Not Present";
+      }
             
       // If player was kicked, display that
       if (d.kicked) value = "Kicked";
@@ -182,17 +195,18 @@ module.exports = function(controller) {
 
             if (type == "prison") {
               vars.prisoners_time = controller.prisoners_initial().toDateString();
+              
+              vars.prisoners_length = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length; 
+              vars.prisoners_users = team.users;
+              vars.prisoners_started = team.prisoner_started;
+                         
+              if (vars.prisoners_length < 0) vars.prisoners_length = 0;
 
-              if (_.where(team.users, { prisoner: true }).length == 1 || !team.prisoner_time || team.prisoner_time.length <= 0) {
+              if (vars.prisoners_length == 2 || !team.prisoner_time || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
                   controller.addTime(bot, team.id, true);
                 }, 2000);
               }
-              
-              vars.prisoners = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length; 
-              vars.prisoners_started = team.prisoner_started;
-                         
-              if (vars.prisoners < 0) vars.prisoners = 0;
 
             } else if (type == "feedback") {
               vars.prisoner_decisions = team.prisoner_decisions;

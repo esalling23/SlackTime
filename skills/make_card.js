@@ -60,18 +60,24 @@ module.exports = function(controller) {
       if (vars.location)
         template.location = vars.location;
       
-      if (vars.prisoners <= 0 && !vars.prisoners_started) {
+      // Display begin prisoners dilemma button for dev purposes
+      if (vars.prisoners_length <= 0 && !vars.prisoners_started) {
           template.attachments[0].actions.push({
             "type": "button",
             "name": "prisoners",
             "value": "onboard",
             "text": "Begin Dilemma"
           });
-        }
+      } 
+      
+      // Display fields of players presence in prison
+      if (vars.prisoners_users) {
+        template.attachments[0].fields = controller.prisoner_fields(vars.prisoners_users, "prison");
+      }
       
       // Prisoner decision variables for response display
       if (vars.prisoner_decisions) {
-        template.attachments[0].fields = controller.prisoner_decisions(vars.prisoner_decisions, thread_name);
+        template.attachments[0].fields = controller.prisoner_fields(vars.prisoner_decisions, thread_name);
       }
       
       // Prisoner's dilemma end message based on users;
@@ -80,7 +86,7 @@ module.exports = function(controller) {
         
         if (vars.prisoners_winners.length > 2) {
           _.each(_.pluck(vars.prisoners_winners, "name"), (n, i) => {
-            message += i == vars.prisoners_winners.length ? " and " + n : n + ",";
+            message += i == vars.prisoners_winners.length - 1 ? "and " + n : n + ", ";
           });
           message += " split the pot!";
         } else if (vars.prisoners_winners.length == 1) {
@@ -93,7 +99,7 @@ module.exports = function(controller) {
           message += "No one won anything!";
         }
         
-        convo.setVar("prisoners_end", message);
+        template.attachments[0].text = message;
         
         template.attachments[0].actions[0].url = vars.prisoners_link + "/" + vars.team + "/" + vars.user;
         

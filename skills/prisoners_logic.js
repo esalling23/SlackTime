@@ -87,7 +87,7 @@ module.exports = function(controller) {
 
       // If anyone stole without being blocked
       // Kick out sharers
-      if(blockers.length <= 0 && stealers.length >= 1) {
+      if((blockers.length <= 0 && stealers.length >= 1) && stealers.length < team.prisoner_decisions.length) {
         thread = "share_kick";
         _.each(sharers, (b) => {
           usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
@@ -101,7 +101,7 @@ module.exports = function(controller) {
         
         // If players have shared 3 times in a row, send them to the finish 
         if (team.prisoner_success == 3) {
-          thread = "end";
+          thread = "success";
           team.prisoner_complete = true;
         }
       } else {
@@ -110,8 +110,9 @@ module.exports = function(controller) {
       }
       
       // If any users are being kicked we want to store prisoner_eliminate as true
-      // This determined end of game video 
-      if (usersToKick.length > 0 && !team.prisoner_eliminate) team.prisoner_eliminate = true;
+      // This determines end-of-game video 
+      if (usersToKick.length > 0 && !team.prisoner_eliminate) 
+        team.prisoner_eliminate = true;
       
       // Save the determined thread for after players review responses
       team.prisoner_thread = thread;
@@ -211,10 +212,6 @@ module.exports = function(controller) {
       return player;
     });
     
-    if (team.prisoner_players.length == 1) {
-       team.prisoner_complete = true; 
-    }
-    
     // Reset choices and store kicked players
     team.prisoner_decisions = _.mapObject(team.prisoner_decisions, function(d, k) {
       d.choice = undefined;
@@ -229,18 +226,18 @@ module.exports = function(controller) {
       setTimeout(function() {
         // Kick out players
         if (team.just_kicked.length > 0)
-          controller.prisoners_message(bot, team.id, "kicked");
+          controller.prisoners_message(bot, saved.id, "kicked");
         
         // Send remaining players to next round 
-        if (team.prisoner_players.length >= 1) {
-          controller.prisoners_message(bot, team.id, "default");
+        if (saved.prisoner_players.length >= 1 && !saved.prisoner_complete) {
+          controller.prisoners_message(bot, saved.id, "default");
         }
         
-        if (saved.prisoner_complete) {
+        if (team.prisoner_players.length < 1 || saved.prisoner_complete) {
           setTimeout(function() {
             
             // If prisoners dilemma is over, send final message
-            controller.prisoners_message(bot, team.id, "end");
+            controller.prisoners_message(bot, saved.id, "end");
             
           }, 15000);
         } 
