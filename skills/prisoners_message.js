@@ -61,8 +61,13 @@ module.exports = function(controller) {
       
       // If this is supposed to be a new round but only one player remains
       // Set thread to success_alone and prisoners_complete to true
-      if (team.prisoner_players.length == 1 && thread == "default"){
+      if (team.prisoner_players.length == 1 && thread == "default") {
         thread = 'success_alone';
+        team.prisoner_complete = true;
+      }
+      
+      if (team.prisoner_stolen && thread == "default") {
+        thread = 'success_stolen';
         team.prisoner_complete = true;
       }
       
@@ -108,7 +113,7 @@ module.exports = function(controller) {
                 console.log(err, updated);
                 
                 // Send end message in the case of last one standing
-                if (thread == "success_alone"){
+                if (thread == "success_alone" || thread == "success_stolen"){
                   setTimeout(function() {
                                       
                     controller.prisoners_message(bot, saved.id, "end");

@@ -89,6 +89,7 @@ module.exports = function(controller) {
       // Kick out sharers
       if((blockers.length <= 0 && stealers.length >= 1) && stealers.length < Object.keys(team.prisoner_decisions).length) {
         thread = "share_kick";
+        team.prisoner_stolen = true;
         _.each(sharers, (b) => {
           usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
         });
@@ -202,7 +203,6 @@ module.exports = function(controller) {
 
     });
     
-    
     // Reset prisoner players based on players that have been kicked out
     team.prisoner_players = _.filter(team.prisoner_players, function(player) {
       return !_.findWhere(team.just_kicked, { "userId": player.userId });
@@ -240,9 +240,7 @@ module.exports = function(controller) {
             controller.prisoners_message(bot, saved.id, "end");
             
           }, 8000);
-        } 
-          
-                  
+        }                   
         
       }, 5000);
       
