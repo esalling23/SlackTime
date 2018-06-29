@@ -36,15 +36,7 @@ module.exports = function(controller) {
       if (team.noChatChannels.includes(message.channel))
         controller.deleteThisMsg(message, team.bot.app_token);
       else {
-        controller.dataStore(message, "chat");
-        // if (team.chat_channels.includes(message.channel) && message.file) {
-        //    // if we are in a chat channel and the message includes a file, upload that file to cloudinary 
-        //   controller.fileUpload(bot, message, function(result) {
-        //     event.url = result.url;
-        //     controller.dataStore(event, "chat");
-        //   });
-        // } else 
-        //   controller.dataStore(message, "chat");
+        controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
 
       }
 

@@ -5,7 +5,11 @@ module.exports = function(controller) {
   }
   
   controller.ignoreEmails = [
-    // "esalling23@gmail.com", 
+    "esalling23@gmail.com", 
+    "erica.salling@gmail.com", 
+    "erica@elab.emerson.edu",
+    "testingthebots@gmail.com", 
+    
     "wadek2@gmail.com", 
     "sam@extraludic.com"
   ]

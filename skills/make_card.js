@@ -82,29 +82,30 @@ module.exports = function(controller) {
       
       // Prisoner's dilemma end message based on users;
       if (vars.prisoners_winners) {
-        var message = "";
+        var message = "The game is over! Watch the video.";
         
-        if (vars.prisoners_winners.length > 2) {
-          _.each(_.pluck(vars.prisoners_winners, "name"), (n, i) => {
-            message += i == vars.prisoners_winners.length - 1 ? "and " + n : n + ", ";
-          });
-          message += " split the pot!";
-        } else if (vars.prisoners_winners.length == 1) {
-          message += vars.prisoners_winners[0].name;
-          message += " won the pot!";
-        } else if (vars.prisoners_winners.length == 2) {
-          message += vars.prisoners_winners[0].name + " and " + vars.prisoners_winners[1].name;
-          message += " split the pot!";
-        } else if (vars.prisoners_winners.length == 0) {
-          message += "All players were eliminated. Better watch this video.";
-        }
+        // OLD: just sad to get rid of all this 
+//         if (vars.prisoners_winners.length > 2) {
+//           _.each(_.pluck(vars.prisoners_winners, "name"), (n, i) => {
+//             message += i == vars.prisoners_winners.length - 1 ? "and " + n : n + ", ";
+//           });
+//           message += " split the pot!";
+//         } else if (vars.prisoners_winners.length == 1) {
+//           message += vars.prisoners_winners[0].name;
+//           message += " won the pot!";
+//         } else if (vars.prisoners_winners.length == 2) {
+//           message += vars.prisoners_winners[0].name + " and " + vars.prisoners_winners[1].name;
+//           message += " split the pot!";
+//         } else if (vars.prisoners_winners.length == 0) {
+//           message += "All players were eliminated. Better watch this video.";
+//         }
         
                 
-        if (vars.prisoners_winners.length > 0) {
+//         if (vars.prisoners_winners.length > 0) {
           message = ":moneybag: :moneybag: :moneybag: " + message + " :moneybag: :moneybag: :moneybag:";
-        } else {
-          message = ":cry: :cry: :cry: " + message + " :cry: :cry: :cry:";
-        }
+//         } else {
+//           message = ":cry: :cry: :cry: " + message + " :cry: :cry: :cry:";
+//         }
 
         
         template.attachments[0].text = message;

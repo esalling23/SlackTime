@@ -22,7 +22,7 @@ module.exports = function(controller) {
     // console.log(event, "is the interactive message callback event");
     
     // Store all interactive message events to the database
-    controller.dataStore(event, "interactive").then((data) => {
+    controller.dataStore(bot, event, "interactive").then((data) => {
 
       // A user selected a menu option
       if (event.actions[0].name.match(/^choose(.*)$/)) {
@@ -141,7 +141,6 @@ module.exports = function(controller) {
 
           // Locate the saved choice based on the user key
           var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-          var script;
 
           controller.storage.teams.get(event.team.id).then((res) => {
             
@@ -536,8 +535,10 @@ module.exports = function(controller) {
 
             if (event.actions[0].value.includes('channel')) 
               name = "remote";
-            else if (res.entered && event.actions[0].value == "three_color_buttons") 
+            else if (res.entered && event.actions[0].value == "three_color_buttons") {
               name = "input_nodes_1";
+              opt.data.value = "input_nodes_1";
+            }
 
             var script = _.findWhere(list, { name: name });
             var scriptName = script.name;
@@ -561,10 +562,6 @@ module.exports = function(controller) {
 
                 });
 
-              }
-            } else if (event.actions[0].value == "three_color_buttons") {
-              if (res.entered) {
-                scriptName = "input_nodes_1"
               }
             }
 

@@ -8,12 +8,10 @@ module.exports = function(controller) {
   controller.fileUpload = function(bot, message, cb) {
     var destination_path = 'tmp/uploaded/';
 
-    // the url to the file is in url_private. there are other fields containing image thumbnails as appropriate
-    var url = message.file.url_private;
-
+    // the url to the file is in url_private    
     var opts = {
         method: 'GET',
-        url: url,
+        url: message.file.url_private,
         headers: {
           Authorization: 'Bearer ' + bot.config.bot.token, // Authorization header with bot's access token
         }
@@ -30,7 +28,7 @@ module.exports = function(controller) {
     stream.on("finish", function() {
       // When stream is finished, upload the file
       cloudinary.v2.uploader.unsigned_upload(filePath, "image_counter_bot", 
-          { resource_type: "image", tags: [ 'user_' + message.user, 'team_' + message.team ] },
+          { resource_type: "auto", tags: [ 'user_' + message.user, 'team_' + message.team ] },
          function(err, result) {
         console.log(err, result);
         
