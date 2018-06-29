@@ -12,6 +12,7 @@ const web = new WebClient(token);
 
 module.exports = function(controller) {
   
+  
     controller.on("count_colors", function (bot, event, team) {
       
       var users = _.filter(team.users, function(user) {
@@ -61,8 +62,8 @@ module.exports = function(controller) {
               
               var btn_message = ims.messages[0];
 
-              if (!btn_message) return;
-              if (btn_message);
+              if (!btn_message || !btn_message.attachments) return;
+              if (btn_message.attachments[0].callback_id != "three_color_buttons") return;
 
               btn_message.channel = channel;
               btn_message.user = user.userId;
