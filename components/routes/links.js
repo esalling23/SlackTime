@@ -6,6 +6,8 @@ module.exports = function(webserver, controller) {
     
     controller.storage.teams.get(req.params.team, function(err, team) {
       
+      var bot = controller.spawn(team.bot);
+      
       var user = _.findWhere(team.users, { "userId" : req.params.user });
       
       if (!user) user = { userId: "untrackable", bot_chat: 'gamelog' };
@@ -20,7 +22,7 @@ module.exports = function(webserver, controller) {
         linkName: req.params.link
       }
 
-      controller.dataStore(opt, "link").then((result) => {
+      controller.dataStore(bot, opt, "link").then((result) => {
 
         res.redirect(url);
 

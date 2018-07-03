@@ -356,6 +356,7 @@ packages:
     dev: false
     engines:
       node: '>=4.2.0'
+    hasBin: true
     optionalDependencies:
       body-parser: 1.18.2
       express: 4.16.3
@@ -754,6 +755,7 @@ packages:
       ware: 1.3.0
       ws: 3.3.3
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-u7Vk+V24XcJd2Yzn+0QphRN+Jt4=
   /brace-expansion/1.1.11:
@@ -963,6 +965,7 @@ packages:
       find-replace: 1.0.3
       typical: 2.6.1
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-aUdPvQRAyBvQd2n7jXcsMDz68ckBJELXNzBybCHOibUWEg0mWTnaYCSRU8h9R+aNRSvDihJtssSRCiDRpLaezA==
   /commander/2.15.1:
@@ -1137,6 +1140,7 @@ packages:
       semver: 5.5.0
       sigmund: 1.0.1
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-WkjsUNVCu+ITKDj73QDvi0trvpdDWdkDyHybDGSXPfekLCqwmpD7CP7iPbvBgosNuLcI96XTDwNa75JyFl7tEQ==
   /ee-first/1.1.1:
@@ -1154,6 +1158,7 @@ packages:
       esprima: 4.0.0
       through: 2.3.8
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-IKRVVoAYr4pIx4yIWNsz9mOsboxlNXiu7TNBnem/K/uTHdkyzXWDzHCK7UTolqBbgaBz0tQHsD3YNls0uIIjiw==
   /error-ex/1.3.1:
@@ -1190,6 +1195,7 @@ packages:
     dev: false
     engines:
       node: '>=4'
+    hasBin: true
     resolution:
       integrity: sha512-oftTcaMu/EGrEIu904mWteKIv8vMuOgGYo7EhVJJN00R/EED9DCua/xxHRdYnKtcECzVg7xOWhflvJMnqcFZjw==
   /etag/1.8.1:
@@ -1425,6 +1431,7 @@ packages:
     dev: false
     engines:
       node: '>=0.4.7'
+    hasBin: true
     optionalDependencies:
       uglify-js: 2.8.29
     resolution:
@@ -1437,6 +1444,7 @@ packages:
     dev: false
     engines:
       node: '>=0.4.7'
+    hasBin: true
     optionalDependencies:
       uglify-js: 2.8.29
     resolution:
@@ -1462,6 +1470,7 @@ packages:
     dev: false
     engines:
       node: '>=0.10'
+    hasBin: true
     resolution:
       integrity: sha1-zcvAgYgmWtEZtqWnyKtw7s+10n0=
   /har-validator/4.2.1:
@@ -1597,6 +1606,7 @@ packages:
       integrity: sha512-oTZqweIP51xaGPI4uPa56/Pri/480R+mo7SeU+YETByQNhDG55ycFyNLIgta9vXhILrxXDmF7ZGhqZIcuN0gJQ==
   /in-publish/2.0.0:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-4g/146KvwmkDILbcVSaCqcf631E=
   /inherits/2.0.3:
@@ -1738,6 +1748,7 @@ packages:
       mkdirp: 0.5.1
       nopt: 3.0.6
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-2hFG00QxFFMJyJvn9p7Rbo4P8H4=
   /jsbn/0.1.1:
@@ -1879,6 +1890,7 @@ packages:
       request: 2.81.0
       yargs: 3.29.0
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-3MWSL9hWUQN9S94k/ZMkjQsk6wU=
   /lodash-decorators/4.5.0/lodash@4.17.5:
@@ -2016,6 +2028,7 @@ packages:
       integrity: sha512-lc/aahn+t4/SWV/qcmumYjymLsWfN3ELhpmVuUFjgsORruuZPVSwAQryq+HHGvO/SI2KVX26bx+En+zhM8g8hQ==
   /mime/1.4.1:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-KI1+qOZu5DcW6wayYHSzR/tXKCDC5Om4s1z2QJjDULzLcmf3DvzS7oluY4HCTrc+9FiKmWUgeNLg7W3uIQvxtQ==
   /min-document/2.19.0:
@@ -2046,6 +2059,7 @@ packages:
     dependencies:
       minimist: 0.0.8
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=
   /moment/2.19.3:
@@ -2123,6 +2137,7 @@ packages:
     dev: false
     engines:
       npm: '>=1.4.0'
+    hasBin: true
     resolution:
       integrity: sha1-QCj3d4sXcIpImTCm5SrDvKDaQdA=
   /mute-stream/0.0.5:
@@ -2150,6 +2165,7 @@ packages:
   /node-uuid/1.4.8:
     deprecated: Use uuid module instead
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-sEDrCSOWivq/jTL7HxfxFn/auQc=
   /node-xmpp-client/3.2.0:
@@ -2185,6 +2201,7 @@ packages:
     dependencies:
       abbrev: 1.1.1
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-xkZdvwirzU2zWTF/eaxopkayj/k=
   /normalize-package-data/2.4.0:
@@ -2747,6 +2764,7 @@ packages:
       integrity: sha1-NkjfLXKUZB5/eGc//CloHZutkHM=
   /sdp-transform/2.4.0:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-Hb2+b1/tyGll3V1M+4QXxNcdsr5ZrjHznMGXkV/41CIr9J23jx707xEeamIcKkYrzUAutLGJMD3nPh+XV4FAbQ==
   /sdp/2.7.0:
@@ -2755,10 +2773,12 @@ packages:
       integrity: sha512-H/r89sRrnrJULbMzHLhC/LwQiMHu4GeItj6X3p7a6ADngGDnJXFIu2baTO6sjPBxMG+vtmlkUj7qwMccNzgk1w==
   /semver/5.0.3:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha1-d0Zt5YnNXTyV8TiqeLxWmjy10no=
   /semver/5.5.0:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA==
   /send/0.16.2:
@@ -2891,6 +2911,7 @@ packages:
     dev: false
     engines:
       node: '>=0.10.0'
+    hasBin: true
     optionalDependencies:
       bcrypt-pbkdf: 1.0.1
       ecc-jsbn: 0.1.1
@@ -3063,6 +3084,7 @@ packages:
     dev: false
     engines:
       node: '>=0.8.0'
+    hasBin: true
     optional: true
     optionalDependencies:
       uglify-to-browserify: 1.0.2
@@ -3115,6 +3137,7 @@ packages:
       integrity: sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
   /uuid/3.2.1:
     dev: false
+    hasBin: true
     resolution:
       integrity: sha512-jZnMwlb9Iku/O3smGWvZhauCf6cvvpKi4BKRiliS3cxnI+Gz9j5MEpTz2UFuXiKPJocb7gnsLHwiS05ige5BEA==
   /validate-npm-package-license/3.0.3:
@@ -3197,6 +3220,7 @@ packages:
     dev: false
     engines:
       node: '>= 0.10.0'
+    hasBin: true
     resolution:
       integrity: sha1-+OGqHuWlPsW/FR/6CXQqatdpeHY=
   /winston/2.4.2:
@@ -3343,7 +3367,7 @@ packages:
       tarball: 'https://github.com/dodo/reconnect-core/tarball/merged'
     version: 0.0.1
 registry: 'https://registry.npmjs.org/'
-shrinkwrapMinorVersion: 7
+shrinkwrapMinorVersion: 8
 shrinkwrapVersion: 3
 specifiers:
   '@slack/client': ^3.16.0
