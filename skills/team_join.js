@@ -7,7 +7,7 @@ module.exports = function(controller) {
     controller.on('team_join', function(bot, message) {
 
         console.log("a user joined", message);
-        if (!controller.isUser(message.user)) return;
+        if (!controller.isUser(message.user.id)) return;
       
         controller.storage.teams.get(message.team_id, function(err, team) {
           

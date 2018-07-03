@@ -5,6 +5,9 @@ module.exports = function(webserver, controller) {
   webserver.get('/download/:file/:team/:user', function(req, res){
     
     controller.storage.teams.get(req.params.team, function(err, team) {
+      
+      var bot = controller.spawn(team.bot);
+      
       var user = _.findWhere(team.users, { "userId" : req.params.user });
       
       var file = req.params.file;
@@ -25,7 +28,7 @@ module.exports = function(webserver, controller) {
 
       opt.url = filePath;
 
-      controller.dataStore(opt, "download").then((result) => {
+      controller.dataStore(bot, opt, "download").then((result) => {
 
         res.redirect(filePath);
 
