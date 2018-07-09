@@ -12,10 +12,10 @@ module.exports = function(controller) {
       console.log(response.statusCode);
       console.log(response.headers['content-type']);
       
-    }).pipe(fs.createWriteStream("randomText.txt"));
+    }).pipe(fs.createWriteStream("./tmp/randomText.txt"));
 
     stream.on("finish", function(data) {
-      fs.readFile('randomText.txt', 'utf8', function(err, data) { 
+      fs.readFile('./tmp/randomText.txt', 'utf8', function(err, data) { 
         if (err) 
           throw err;
         else {

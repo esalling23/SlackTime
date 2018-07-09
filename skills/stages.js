@@ -24,7 +24,7 @@ module.exports = function(controller) {
 //   });
   
 //   var json = JSON.stringify(data);
-//   fs.writeFile('newscripts.json', json, 'utf8', function() {
+//   fs.writeFile('./tmp/newscripts.json', json, 'utf8', function() {
 //     console.log('done');
 //   });
 
