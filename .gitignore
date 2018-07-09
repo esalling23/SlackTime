@@ -6,3 +6,4 @@ components/routes/_*
 .data
 json
 tmp
+*.save.*
