@@ -74,7 +74,7 @@ module.exports = function(controller) {
       // If this is the end thread, set winner variables
       if (thread == "end") {
         vars.prisoners_winners = team.prisoner_players;
-        vars.prisoners_link = "https://escape-room-production.glitch.me/link/";
+        vars.prisoners_link = process.env.domain + "/link/";
         
         if (team.prisoner_eliminate)
           vars.prisoners_link += "prisoners_eliminate";

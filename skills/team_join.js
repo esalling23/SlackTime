@@ -7,7 +7,7 @@ module.exports = function(controller) {
     controller.on('team_join', function(bot, message) {
 
         console.log("a user joined", message);
-        if (!controller.isUser(message.user.id)) return;
+        if (!controller.isUser(message.user)) return;
       
         controller.storage.teams.get(message.team_id, function(err, team) {
           
@@ -15,13 +15,15 @@ module.exports = function(controller) {
           
           var web = new WebClient(team.bot.app_token);
 
-          web.users.profile.get(message.user.id).then(res => {
+          web.users.list().then(res => {
+            
+            var thisUser = _.findWhere(res.members, { id: message.user.id });
             
             team.users.push({
               userId: message.user.id, 
               name: message.user.name, 
               startBtns: ["default", "primary", "danger"], 
-              email: res.profile.email
+              email: thisUser.profile.email
             });
 
             team.users = team.users;
@@ -29,7 +31,7 @@ module.exports = function(controller) {
             controller.storage.teams.save(team, function(err, saved) {
               console.log(saved, "someone joined so we added them to the users list");
 
-
+              web = new WebClient(team.bot.app_token);
               web.groups.list().then(list => {
                 var channel = _.findWhere(list.groups, { name: process.env.progress_channel }).id;
 
