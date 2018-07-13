@@ -31,7 +31,7 @@ module.exports = function(controller) {
       if (message.event) {
 
         if (message.event.type == "pin_removed" || message.event.type == "pin_added") {
-          console.log("PIN: \n", message);
+          // console.log("PIN: \n", message);
 
           var event = {
             team: message.team_id,
@@ -53,12 +53,12 @@ module.exports = function(controller) {
 
         controller.dataStore(bot, message, "thread").catch(err => console.log('data storage thread comment error: ', err));
 
-        console.log(message, " a thread");
+        // console.log(message, " a thread");
       }
 
       if (message.file && message.file.url_private) {
 
-        console.log("FILE: \n", message);
+        // console.log("FILE: \n", message);
 
         var comment = message.file.subtype == 'file_comment' || message.file.pretty_type == "Post" || message.event.subtype == 'file_comment' || message.file.pretty_type == "Plain Text";
 

@@ -24,6 +24,9 @@ module.exports = function(webserver, controller) {
         return decisions.includes(player.userId);
       });
 
+      // reset prisoner times
+      team.prisoner_time = [];
+
       controller.storage.teams.save(team, function(err, saved) {
 
         if (saved.prisoner_started) {
@@ -37,7 +40,7 @@ module.exports = function(webserver, controller) {
         } else {
           console.log("this game hasn't started! let's send that message");
           // if game is not started, start it
-          controller.prisoners_message(bot, saved.id, "default");
+          controller.trigger("prisoners_onboard", [bot, team.id]);
         }
 
       });

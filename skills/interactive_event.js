@@ -501,7 +501,7 @@ module.exports = function(controller) {
 
           if (event.actions[0].value == "onboard") {
             if (!team.prisoner_started)
-              controller.trigger("prisoners_onboard", [bot, event]);
+              controller.trigger("prisoners_onboard", [bot, team.id]);
           } else if (event.actions[0].value == "next") {
             controller.prisoners_next(bot, event, team);
           }

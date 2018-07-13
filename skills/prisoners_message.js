@@ -34,8 +34,6 @@ module.exports = function(controller) {
 
   controller.prisoners_message = function(bot, id, thread) {
 
-    console.log(id, thread, " /n we wanna send a message here");
-
     controller.storage.teams.get(id, function(err, team) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
