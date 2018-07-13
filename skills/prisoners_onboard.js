@@ -9,7 +9,7 @@ module.exports = function(controller) {
 
 
   controller.on("prisoners_onboard", function(bot, id) {
-    
+
     controller.storage.teams.get(id, function(err, team) {
 
       if (team.prisoner_started) return;
@@ -33,7 +33,10 @@ module.exports = function(controller) {
       controller.storage.teams.save(team, function(err, saved) {
 
         console.log(err, saved);
-        controller.prisoners_message(bot, saved.id, "default");
+        if (team.prisoner_players.length >= 3)
+          controller.prisoners_message(bot, saved.id, "default");
+        else
+          controller.prisoners_message(bot, saved.id, "too_few_players")
 
       });
 

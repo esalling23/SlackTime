@@ -38,6 +38,8 @@ module.exports = function(controller) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
 
+      var script = thread == "too_few_players" ? "prisoners_room" : "prisoners_dilemma";
+
       // Determine which players object to use based on thread
       var players = ((thread) => {
         switch(thread) {
@@ -46,6 +48,7 @@ module.exports = function(controller) {
           case 'times_up':
             return team.times_up;
           case 'end':
+          case 'too_few_players':
             return _.where(team.users, { prisoner: true });
           default:
             return team.prisoner_players;
@@ -103,7 +106,7 @@ module.exports = function(controller) {
             message.channel = user.bot_chat;
 
             // Make the prisoners_dilemma card
-            controller.makeCard(bot, message, "prisoners_dilemma", thread, vars, function(card) {
+            controller.makeCard(bot, message, script, thread, vars, function(card) {
 
               bot.api.chat.update({
                 channel: message.channel,
