@@ -53,32 +53,12 @@ module.exports = function(controller) {
 
         controller.dataStore(bot, message, "thread").catch(err => console.log('data storage thread comment error: ', err));
 
-          // Save a file comments and post uploads as a chat type data object
-          if (comment) {
-            controller.dataStore(bot, message, "chat").catch(err => console.log('data storage file comment error: ', err));
-          } else {
-            // If this is a file upload
-            var messId = message.team.id ? message.team.id : message.team;
-            controller.storage.teams.get(messId, function(err, team){
-
-              // upload it to our cloudinary account
-              controller.fileUpload(bot, message, function(err, result) {
-
-                if (err) console.log("File Upload Error: \n", err);
-                // Set the message url to the cloudinary url of the uploaded file
-                message.url = result.url;
-
-                // If this is the image counter channel, trigger event
-                if(team.image_channel_id == message.channel && acceptedTypes.indexOf(message.event.files[0].filetype) > -1) {
-                  controller.trigger("image_counter_upload", [{ bot: bot, message: message, result: result }]);
-                  message.image_counter_upload = true;
-                } else {
-                  message.image_counter_upload = false;
-                }
+        // console.log(message, " a thread");
+      }
 
       if (message.file && message.file.url_private) {
 
-        console.log("FILE: \n", message);
+        // console.log("FILE: \n", message);
 
         var comment = message.file.subtype == 'file_comment' || message.file.pretty_type == "Post" || message.event.subtype == 'file_comment' || message.file.pretty_type == "Plain Text";
 
