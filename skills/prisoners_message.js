@@ -3,14 +3,42 @@ const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
 
-  // Sends prisoner dilemma messages for different events to ALL players
+  controller.store_prisoners_msg = function(message, user, team) {
+    var exists = _.findWhere(team.prisoners_messages, { user: user.userId });
+    var channel = user.bot_chat;
+    if (exists) {
+      team.prisoners_messages = _.map(team.prisoners_messages, function(msg) {
+        if (msg.user == user.userId) {
+          msg = message;
+          msg.channel = channel;
+          msg.user =  user.userId;
+          msg.team_id = team.id;
+        }
+
+        return msg;
+      });
+    } else {
+      var msg = message;
+      msg.channel = channel;
+      msg.user = user.userId;
+      msg.team_id = team.id;
+      team.prisoners_messages.push(msg);
+    }
+
+    controller.storage.teams.save(team, function(err, saved) {
+      console.log("saved a prisoner message: ", saved.prisoners_messages);
+    });
+  }
+
+
+
   controller.prisoners_message = function(bot, id, thread) {
+
+    console.log(id, thread, " /n we wanna send a message here");
 
     controller.storage.teams.get(id, function(err, team) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
-
-      var script = thread == "too_few_players" ? "prisoners_room" : "prisoners_dilemma";
 
       // Determine which players object to use based on thread
       var players = ((thread) => {
@@ -20,7 +48,6 @@ module.exports = function(controller) {
           case 'times_up':
             return team.times_up;
           case 'end':
-          case 'too_few_players':
             return _.where(team.users, { prisoner: true });
           default:
             return team.prisoner_players;
@@ -33,22 +60,6 @@ module.exports = function(controller) {
       if (thread == "decisions" || thread == "follow_up") {
         vars.prisoner_decisions = team.prisoner_decisions;
       }
-       else if (thread == "end") {
-        // If this is the end thread, set winner variables
-        vars.prisoners_winners = team.prisoner_players;
-        vars.prisoners_link = process.env.domain + "/link/";
-
-        if (team.prisoner_eliminate)
-          vars.prisoners_link += "prisoners_eliminate";
-        else
-          vars.prisoners_link += "prisoners_share";
-
-      }
-      else if (thread == "too_few_players") {
-        vars.prisoners_users = team.users;
-        vars.prisoners_time = controller.prisoners_initial().toDateString();
-        vars.prisoners_length = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length;
-      }
 
       // If this is supposed to be a new round but only one player remains
       // Set thread to success_alone and prisoners_complete to true
@@ -60,6 +71,17 @@ module.exports = function(controller) {
       if (team.prisoner_stolen && thread == "default") {
         thread = 'success_stolen';
         team.prisoner_complete = true;
+      }
+
+      // If this is the end thread, set winner variables
+      if (thread == "end") {
+        vars.prisoners_winners = team.prisoner_players;
+        vars.prisoners_link = process.env.domain + "/link/";
+
+        if (team.prisoner_eliminate)
+          vars.prisoners_link += "prisoners_eliminate";
+        else
+          vars.prisoners_link += "prisoners_share";
       }
 
       controller.storage.teams.save(team, function(err, saved) {
@@ -81,22 +103,16 @@ module.exports = function(controller) {
 
             // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
-            message.user = user.userId;
 
-            // console.log(bot.id, " bot");
-            // console.log(message.channel, " message channel");
-            // console.log(script, " the script");
-            // console.log(thread, " the thread");
-            // console.log(vars);
             // Make the prisoners_dilemma card
-            controller.makeCard(bot, message, script, thread, vars, function(card) {
+            controller.makeCard(bot, message, "prisoners_dilemma", thread, vars, function(card) {
 
               bot.api.chat.update({
                 channel: message.channel,
                 ts: message.ts,
                 attachments: card.attachments
               }, function(err, updated) {
-                // console.log(err, updated);
+                console.log(err, updated);
 
                 // Send end message in the case of last one standing
                 if (thread == "success_alone" || thread == "success_stolen"){
@@ -149,7 +165,7 @@ module.exports = function(controller) {
     return fields;
   }
 
-  // Sends prisoners message based on events
+
   controller.prisoners_update = function(bot, team, event, type) {
 
     var web = new WebClient(bot.config.bot.token);
@@ -230,6 +246,4 @@ module.exports = function(controller) {
 
     }).catch(err => console.log('convo list error: ', err));
   }
-
-
 }
