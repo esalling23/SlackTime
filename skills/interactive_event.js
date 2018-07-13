@@ -12,15 +12,15 @@ function deleteMsg(message, channel, bot) {
 }
 
 module.exports = function(controller) {
-  
-  // for choose/confirm 
+
+  // for choose/confirm
   // Temporary storage
   var choiceSelect = [];
-  
+
   controller.on('interactive_message_callback', function(bot, event) {
-    
+
     // console.log(event, "is the interactive message callback event");
-    
+
     // Store all interactive message events to the database
     controller.dataStore(bot, event, "interactive").then((data) => {
 
@@ -85,11 +85,11 @@ module.exports = function(controller) {
             // console.log("we are adding this choice");
               // Create object to hold this selection
               // Selection is "valid" or the solution/key if the value is "correct"
-              // Any other value will be incorrect 
+              // Any other value will be incorrect
               // NO TWO VALUES CAN BE THE SAME
               choiceSelect.push({
                 user: event.user,
-                choice: choice, 
+                choice: choice,
                 value: value,
                 callback: event.callback_id
               });
@@ -143,16 +143,16 @@ module.exports = function(controller) {
           var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
 
           controller.storage.teams.get(event.team.id).then((res) => {
-            
+
             var opt = {
-              bot: bot, 
+              bot: bot,
               event: event,
-              team: res, 
+              team: res,
               data: confirmedChoice
             }
-            
+
             var scriptName = confirmedChoice.value;
-            
+
             if (confirmedChoice.value.includes('channel')) {
               opt.thread = 'channel_code';
               scriptName = 'remote'
@@ -177,7 +177,7 @@ module.exports = function(controller) {
       // Tag an image in the image-counter
       if (event.actions[0].name.match(/^tag/)) {
         var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
-        
+
         if (!confirmedChoice) return;
         if (confirmedChoice.callback != "image_tag") return;
 
@@ -187,13 +187,13 @@ module.exports = function(controller) {
         controller.trigger("image_tag_submit", [{
           bot: bot,
           message: event,
-          url: event.original_message.attachments[0].image_url, 
+          url: event.original_message.attachments[0].image_url,
           location: confirmedChoice.value
         }]);
       }
 
       // user submitted a code
-      if (event.actions[0].name.match(/^code(.*)/)) {      
+      if (event.actions[0].name.match(/^code(.*)/)) {
         var reply = event.original_message;
 
         var options = {};
@@ -206,7 +206,7 @@ module.exports = function(controller) {
 
           var confirmedChoice = _.findWhere(choiceSelect, { user: event.user });
           var callback_id = event.callback_id.replace("_code", "").replace("_confirm", "");
-          
+
           // If this is a remote code, use the callback id as a special channel parameter
           // Also set the codeType to "remote" via callback_id
           if (type.includes('remote')) {
@@ -257,7 +257,7 @@ module.exports = function(controller) {
 
             });
           });
-          
+
           options.code = code;
           options.codeType = 'keypad';
 
@@ -274,16 +274,16 @@ module.exports = function(controller) {
         controller.trigger("code_entered", [options]);
 
       }
-      
+
       // Text Button Updates (Changes letter on click, starting from A and going to I)
       if (event.actions[0].name.match(/^letter/)) {
-        
+
         const letters = ['A','B','C','D','E','F','G','H','I'];
 
         console.log(event);
         var callback_id = event.callback_id;
         var reply = event.original_message;
-        
+
         // cycle through attachments
         _.each(reply.attachments, function(attachment) {
           attachment = _.map(attachment.actions, function(action) {
@@ -298,17 +298,17 @@ module.exports = function(controller) {
         });
 
         bot.api.chat.update({
-          channel: event.channel, 
-          ts: reply.ts, 
+          channel: event.channel,
+          ts: reply.ts,
           attachments: reply.attachments
-        }, function(err, updated) { 
+        }, function(err, updated) {
 
           console.log("letter update");
         });
 
 
       }
-      
+
 
       // button color change
       if (event.actions[0].name.match(/^color/)) {
@@ -322,7 +322,7 @@ module.exports = function(controller) {
             // console.log(action);
             if (action.value == event.actions[0].value) {
               switch (action.style) {
-                case 'danger': 
+                case 'danger':
                   action.style = 'primary';
                   break;
 
@@ -341,10 +341,10 @@ module.exports = function(controller) {
         });
 
         bot.api.chat.update({
-          channel: event.channel, 
-          ts: reply.ts, 
+          channel: event.channel,
+          ts: reply.ts,
           attachments: reply.attachments
-        }, function(err, updated) { 
+        }, function(err, updated) {
 
           if (callback_id == "three_color_buttons") {
             // console.log(event.team.id);
@@ -356,13 +356,13 @@ module.exports = function(controller) {
               _.each(updated.message.attachments[0].actions, function(btn) {
                 startBtns.push(btn.style == "" ? "default" : btn.style);
               });
-              
+
               thisUser.startBtns = startBtns;
 
               team.users = _.map(team.users, function(user) {
-                if (user.userId == thisUser.userId) 
+                if (user.userId == thisUser.userId)
                   return thisUser;
-                else 
+                else
                   return user;
               });
 
@@ -378,29 +378,29 @@ module.exports = function(controller) {
 
 
       }
-      
+
       // Pick up a certain tamagotchi
       if (event.actions[0].name.match(/^tamagotchi/)) {
-        
+
         var data = {
-          team: event.team.id ? event.team.id : event.team, 
-          player: event.user, 
+          team: event.team.id ? event.team.id : event.team,
+          player: event.user,
           type: event.actions[0].value
         }
 
-        request.post({ url: 'https://tamagotchi-' + process.env.environment + '.glitch.me/pickup', form: data }, function(err, req, body) {
+        request.post({ url: process.env.egg_domain + '/pickup', form: data }, function(err, req, body) {
 
         });
 
       }
 
-      
+
       if (event.actions[0].name.match(/^start/)) {
 
         var options = {
-          bot: bot, 
-          message: event, 
-          forced: false, 
+          bot: bot,
+          message: event,
+          forced: false,
           team: event.team
         };
 
@@ -453,12 +453,12 @@ module.exports = function(controller) {
           reply.attachments[0].actions[nxt].text = "Next >";
 
           bot.api.chat.update({
-            channel: event.channel, 
-            ts: reply.ts, 
+            channel: event.channel,
+            ts: reply.ts,
             attachments: reply.attachments
           }, function(err, updated) { console.log(err, updated)});
 
-        });     
+        });
 
       }
 
@@ -488,8 +488,8 @@ module.exports = function(controller) {
         reply.attachments[0].actions[2].text = ">";
 
         bot.api.chat.update({
-          channel: event.channel, 
-          ts: reply.ts, 
+          channel: event.channel,
+          ts: reply.ts,
           attachments: reply.attachments
         }, function(err, updated) { console.log(err, updated) });
 
@@ -501,7 +501,7 @@ module.exports = function(controller) {
 
           if (event.actions[0].value == "onboard") {
             if (!team.prisoner_started)
-              controller.trigger("prisoners_onboard", [bot, event]);
+              controller.trigger("prisoners_onboard", [bot, team.id]);
           } else if (event.actions[0].value == "next") {
             controller.prisoners_next(bot, event, team);
           }
@@ -516,24 +516,24 @@ module.exports = function(controller) {
         controller.trigger("prisoners_selection", [bot, event]);
 
       }
-      
-      
+
+
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
-        
+
         var opt = {
-          bot: bot, 
-          event: event, 
+          bot: bot,
+          event: event,
           data: event.actions[0]
         }
 
         controller.storage.teams.get(event.team.id).then((res) => {
-          
+
           controller.studio.getScripts().then((list) => {
 
             var name = event.actions[0].value;
 
-            if (event.actions[0].value.includes('channel')) 
+            if (event.actions[0].value.includes('channel'))
               name = "remote";
             else if (res.entered && event.actions[0].value == "three_color_buttons") {
               name = "input_nodes_1";
@@ -542,9 +542,9 @@ module.exports = function(controller) {
 
             var script = _.findWhere(list, { name: name });
             var scriptName = script.name;
-              
+
             if (event.actions[0].value == "prisoners_room") {
-              if (res.prisoner_started) 
+              if (res.prisoner_started)
                 opt.thread = "already_started";
               else {
                 res.users = _.map(res.users, function(user) {
@@ -553,11 +553,11 @@ module.exports = function(controller) {
 
                   return user;
                 });
-                
+
                 res.prisoner_players = _.where(res.users, { prisoner: true });
-                
+
                 controller.storage.teams.save(res, function(err, saved) {
-                                    
+
                   controller.prisoners_update(bot, saved, event, "prison");
 
                 });
@@ -566,15 +566,15 @@ module.exports = function(controller) {
             }
 
             controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
-              
+
               controller.storage.teams.save(res).then(saved => {
-                
+
                 opt.team = saved;
-                opt.user = _.findWhere(res.users, { userId: event.user }), 
+                opt.user = _.findWhere(res.users, { userId: event.user }),
                 opt.script = currentScript;
 
                 controller.confirmMovement(opt);
-                
+
               });
 
             });

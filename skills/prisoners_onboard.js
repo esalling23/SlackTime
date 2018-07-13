@@ -8,9 +8,8 @@ const web = new WebClient(token);
 module.exports = function(controller) {
   
   
-  controller.on("prisoners_onboard", function(bot, message) {
+  controller.on("prisoners_onboard", function(bot, id) {
 
-    var id = message.team.id ? message.team.id : message.team
     // add everyone to a picture-counting channel 
     controller.storage.teams.get(id, function(err, team) {
       
@@ -35,7 +34,7 @@ module.exports = function(controller) {
       controller.storage.teams.save(team, function(err, saved) {
         
         console.log(err, saved);
-        controller.prisoners_message(bot, saved.id, message, "default");
+        controller.prisoners_message(bot, saved.id, "default");
         
       });
         

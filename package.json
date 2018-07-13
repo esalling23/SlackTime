@@ -1,10 +1,11 @@
 {
   "name": "daedalus-dev",
   "version": "0.0.2",
-  "description": "A starter kit for building a custom Slack bot with Botkit Studio",
+  "description": "Daedalus Bot - Development Version",
   "main": "bot.js",
   "scripts": {
-    "start": "node bot.js"
+    "start": "node bot.js",
+    "debug": "node inspect bot.js"
   },
   "dependencies": {
     "body-parser": "^1.18.2",

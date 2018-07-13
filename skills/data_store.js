@@ -1,27 +1,27 @@
 const _ = require("underscore");
 
 module.exports = function(controller) {
-  
+
   controller.dataStore = function(bot, event, type, opt) {
     return new Promise((resolve, reject) => {
-      
+
       var ObjectID = require('bson').ObjectID;
-      var storage = ["chat", "pin", "dnd", "thread"].includes(type) ? "chat" : "events";
+      var storage = ["chat", "pin", "dnd", "thread"].includes(type) ? "chat" : type == "upload" ? "file_uploads" : "events";
       var relatedMsgTs;
-      
+
       console.log(type + " data storage with this msg: ", event);
 
       var dataEvent = {
         id: new ObjectID(),
-        team: event.team.id ? event.team.id : event.team, 
+        team: event.team.id ? event.team.id : event.team,
         user: event.user,
         channel: event.channel,
-        time: new Date(), 
+        time: new Date(),
         ts: event.ts ? event.ts : event.event_ts
       }
-      
+
       controller.storage.teams.get(dataEvent.team, function(err, team) {
-      
+
         if (type == "interactive" || type == "code") {
 
           // Set the type of "button" clicked (ie: select, button)
@@ -40,18 +40,18 @@ module.exports = function(controller) {
           var button;
           if (event.actions[0].selected_options)
             button = _.findWhere(_.findWhere(attachment.actions, { name: action }).options, { value: value });
-          else 
+          else
             button = _.findWhere(attachment.actions, { value: value });
 
           // ****
-          // Buttons with changing properties 
-          // ****        
+          // Buttons with changing properties
+          // ****
           if (dataEvent.action == "color") {
             // Determine old/new color for color-changing buttons
             var oldColor = button.style;
             dataEvent.oldColor = oldColor == "" ? "grey" : oldColor == "primary" ? "green" : "red";
             dataEvent.newColor = oldColor == "" ? "red" : oldColor == "primary" ? "grey" : "green";
-          } 
+          }
           else if (dataEvent.action == "letter") {
             // Determine old/new letter for letter-changing buttons
             var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
@@ -73,8 +73,8 @@ module.exports = function(controller) {
               });
             });
           }
-        } 
-        else if (type == "chat" || type == "thread") {
+        }
+        else if (["chat", "thread", "upload"].includes(type)) {
           dataEvent.message = event.text;
           dataEvent.type = event.type;
 
@@ -82,15 +82,15 @@ module.exports = function(controller) {
           if (event.file) {
             dataEvent.fileName = event.file.title;
             dataEvent.fileUrl = event.url ? event.url : event.file.url_private;
-            
+
             if (event.file.pretty_type == "Post") {
               dataEvent.fileType = "Slack Post";
             } else if (event.file.pretty_type == "Plain Text") {
               dataEvent.fileType = "Slack Snippet";
             } else
               dataEvent.fileType = "User Upload";
-            
-            if (event.comment && dataEvent.type == "file_comment") 
+
+            if (event.comment && dataEvent.type == "file_comment")
               dataEvent.user = event.comment.user;
           }
 
@@ -100,16 +100,16 @@ module.exports = function(controller) {
             dataEvent.type = event.type;
             dataEvent.channel = event.raw_message.event.item.channel;
             dataEvent.message = event.event.reaction;
-            
+
             relatedMsgTs = event.raw_message.event.item.ts;
           }
-          
+
           if (type == "thread") {
             dataEvent.type += " (thread comment)";
             relatedMsgTs = event.thread_ts;
           }
 
-        } 
+        }
         else if (type == "download" || type == "link") {
           // Download and link type and url
           dataEvent.type = type;
@@ -127,7 +127,7 @@ module.exports = function(controller) {
           dataEvent.correct = opt.codeObj.correct;
           dataEvent.type = opt.codeType;
 
-          if (opt.codeObj.puzzle) 
+          if (opt.codeObj.puzzle)
             dataEvent.puzzle = opt.codeObj.puzzle;
 
         }
@@ -139,7 +139,7 @@ module.exports = function(controller) {
         }
 
         var message = {
-          channel: dataEvent.channel, 
+          channel: dataEvent.channel,
           ts: relatedMsgTs
         }
 
@@ -168,11 +168,11 @@ module.exports = function(controller) {
           }).catch(err => console.log('Event Stages Error ', err));
 
         }).catch(err => console.log('Find Related Message Error ', err));
-        
+
       });
 
     });
-    
+
   };
-  
+
 }
