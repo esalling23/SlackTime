@@ -5,40 +5,26 @@ const minPerDay = 1440;
 
 module.exports = function(controller) {
 
-  // Takes a bot object and team ID
-  // Sets the prisoner's dilemma time object for triggering onboarding
-  controller.prisoners_time = function(bot, id, started) {
+  controller.addTime = function(bot, id) {
 
     controller.storage.teams.get(id, function(err, team) {
-      var updated = false;
-      // Sanity check
-      if (!team.prisoner_time) team.prisoner_time = {};
 
-      // If we aren't starting the game
-      // Reset timer
-      if (!started) {
-        // Grab the start date (now) and end time
-        var start = new Date();
-        console.log(" the environment we have is ", process.env.environment);
-        var end = process.env.environment == "dev" ? controller.prisoners_initial_dev() : controller.prisoners_initial();
-        if (team.prisoner_time.start) updated = true;
-        // Create new prisoner time object
-        team.prisoner_time = {
-          start: start,
-          end: end,
-          complete: false
-        };
-        console.log("time is started for team " + team.id, team.prisoner_time);
+      if (!team.prisoner_time) team.prisoner_time = [];
 
-      } else {
-        // if we are starting the game
-        // empty the timer object and set team prisoner_started boolean
-        team.prisoner_time.complete = true;
-        team.prisoner_started = true;
-        console.log("game started, time removed " + team.prisoner_time);
-      }
+      var start = new Date();
+
+      var end = controller.prisoners_initial_dev();
+
+      team.prisoner_time.push({
+        num: team.prisoner_time.length,
+        start: start,
+        end: end,
+        complete: false
+      });
 
       controller.storage.teams.save(team, function(err, saved) {
+
+        console.log("time is started for team " + saved.id, saved.prisoner_time);
 
         if (saved.prisoner_started)
           controller.prisoners_message(bot, saved.id, "default");
@@ -60,19 +46,16 @@ module.exports = function(controller) {
     nextDate = new Date( nextDate.getTime() - 240 * 60000 );
 
     var end = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate(), process.env.prisoners_initial);
-    console.log('setting the prisoners timer ', end);
 
     return end;
   }
 
   controller.prisoners_initial_dev = function() {
     var start = new Date();
-    var nextDate = new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
-    // Silly hosting uses the wrong timezone, reset it to use EST
-    nextDate = new Date( nextDate.getTime() - 240 * 60000 );
-    console.log('set prisoner timer for dev');
-    return nextDate;
+
+    return new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
   }
+
 
   var getMonth = function(obj, date) {
     if ((date >= 30 && obj.getMonth() == 1) ||
