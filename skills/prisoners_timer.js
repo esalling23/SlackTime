@@ -39,6 +39,10 @@ module.exports = function(controller) {
 
         if (saved.prisoner_started)
           controller.prisoners_message(bot, saved.id, "default");
+        else {
+          // send updated prison room
+          controller.prisoners_message(bot, saved.id, "too_few_players");
+        }
 
       });
     });

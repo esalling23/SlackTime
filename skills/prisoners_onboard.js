@@ -35,13 +35,10 @@ module.exports = function(controller) {
         if (team.prisoner_players.length >= process.env.prisoner_players) {
           // If there are enough players, remove the clock
           controller.prisoners_time(bot, saved.id, true);
-          // Send the initial dilemma message to start the game
-          controller.prisoners_message(bot, saved.id, "default");
         } else {
           // If there are too few players, reset the clock
           controller.prisoners_time(bot, saved.id, false);
-          // and send an updated timer message
-          controller.prisoners_message(bot, saved.id, "too_few_players");
+
         }
 
       });
