@@ -3,13 +3,13 @@
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
-  controller.catch_trigger = function(event) {
+  controller.on('message_received', function(bot, message) {
 
-    controller.evaluateTrigger((.*), event.user).then(function(script) {
-      console.log(script);
-      if (process.env.environment != 'dev') return;
-      else console.log('ready to trigger');
-    }).catch(err => console.log('Trigger evaluation error: ', err));
+    if (process.env.environment == 'dev') {
+      controller.studio.runTrigger(bot, message.text, message.address, message.channel).catch(function (err) {
+       bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
+      });
+    }
 
-  }
+  });
 }
