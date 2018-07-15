@@ -33,9 +33,8 @@ module.exports = function(controller) {
       if (thread == "decisions" || thread == "follow_up") {
         vars.prisoner_decisions = team.prisoner_decisions;
       }
-
-      // If this is the end thread, set winner variables
-      if (thread == "end") {
+       else if (thread == "end") {
+        // If this is the end thread, set winner variables
         vars.prisoners_winners = team.prisoner_players;
         vars.prisoners_link = process.env.domain + "/link/";
 
@@ -43,6 +42,11 @@ module.exports = function(controller) {
           vars.prisoners_link += "prisoners_eliminate";
         else
           vars.prisoners_link += "prisoners_share";
+
+      }
+      else if (thread == "too_few_players") {
+        vars.prisoners_users = team.users;
+        vars.prisoners_time = controller.prisoners_initial().toDateString();
       }
 
       // If this is supposed to be a new round but only one player remains
@@ -138,6 +142,7 @@ module.exports = function(controller) {
     return fields;
   }
 
+  // Sends prisoners message based on events
   controller.prisoners_update = function(bot, team, event, type) {
 
     var web = new WebClient(bot.config.bot.token);
