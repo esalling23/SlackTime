@@ -1,25 +1,15 @@
 
+
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
-  controller.secretTriggers = function(trigger) {
-    var secrets = {
-      "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s",
-      "prisoners_room": "greedymother"
-    };
+  controller.catch_trigger = function(event) {
 
-    return Object.keys(secrets).map(function(key) {
-      return secrets[key];
-    }).includes(trigger);
+    controller.evaluateTrigger((.*), event.user).then(function(script) {
+      console.log(script);
+      if (process.env.environment != 'dev') return;
+      else console.log('ready to trigger');
+    }).catch(err => console.log('Trigger evaluation error: ', err));
+
   }
-
-  controller.on('direct_message', function(bot, message) {
-
-    if (process.env.environment == 'dev' || controller.secretTriggers(message.text)) {
-      controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
-       bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-      });
-    }
-
-  });
 }
