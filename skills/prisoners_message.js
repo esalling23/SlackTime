@@ -47,6 +47,7 @@ module.exports = function(controller) {
       else if (thread == "too_few_players") {
         vars.prisoners_users = team.users;
         vars.prisoners_time = controller.prisoners_initial().toDateString();
+        vars.prisoners_length = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length;
       }
 
       // If this is supposed to be a new round but only one player remains
