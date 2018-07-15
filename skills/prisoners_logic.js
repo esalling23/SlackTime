@@ -2,62 +2,62 @@ const _ = require("underscore");
 const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
-  
+
   // A player responds to the prisoners dilemma
   controller.on('prisoners_selection', function(bot, event) {
     var choice = event.actions[0].value;
-    
+
     controller.storage.teams.get(event.team.id, function(err, team) {
       if (!team.prisoner_success) team.prisoner_success = 0;
       if (!team.prisoner_players) team.prisoner_players = _.where(team.users, { prisoner: true });
-            
+
       var thisUser = _.findWhere(team.users, { userId: event.user });
 
       // If there's already a choice stored for this player, return
       if (team.prisoner_decisions[thisUser.userId].choice) return;
 
       team.prisoner_decisions[thisUser.userId].choice = choice;
-      
+
       controller.storage.teams.save(team, function(err, saved) {
-        
+
         var vars = {
           prisoner_decisions: saved.prisoner_decisions
         }
-        
+
         // Follow up message
         controller.makeCard(bot, event, "prisoners_dilemma", "follow_up", vars, function(card) {
-          
+
           bot.api.chat.update({
-            channel: event.channel, 
-            ts: event.original_message.ts, 
+            channel: event.channel,
+            ts: event.original_message.ts,
             attachments: card.attachments
           }, function(err, updated) {
-            
+
             // Trigger update message for all players
             controller.prisoners_update(bot, saved, event, "feedback");
-            
+
             var decisions = _.filter(saved.prisoner_decisions, function(d) {
               return d.choice;
             });
-            
+
             // If all players have decided, move on to the check
             if (decisions.length == saved.prisoner_players.length) {
               setTimeout(function() {
                 controller.trigger("prisoners_check", [bot, saved.id]);
               }, 1000);
             }
-            
+
           });
-          
+
         });
       });
-      
+
     });
   });
-    
-  // Check players responses 
+
+  // Check players responses
   controller.on('prisoners_check', function(bot, id) {
-      
+
     controller.storage.teams.get(id, function(err, team) {
       var web = new WebClient(team.bot.app_token);
       var usersToKick = [];
@@ -94,13 +94,13 @@ module.exports = function(controller) {
           usersToKick.push(_.findKey(team.prisoner_decisions, { name: b.name }));
         });
       }
-      
+
       // If everyone shared, count up for success
       if(blockers.length <= 0 && stealers.length <= 0) {
         team.prisoner_success++;
         thread = "success_count";
-        
-        // If players have shared 3 times in a row, send them to the finish 
+
+        // If players have shared 3 times in a row, send them to the finish
         if (team.prisoner_success == 3) {
           thread = "success";
           team.prisoner_complete = true;
@@ -109,12 +109,12 @@ module.exports = function(controller) {
         // Reset prisoner success if not everyone shared
         team.prisoner_success = 0;
       }
-      
+
       // If any users are being kicked we want to store prisoner_eliminate as true
-      // This determines end-of-game video 
-      if (usersToKick.length > 0 && !team.prisoner_eliminate) 
+      // This determines end-of-game video
+      if (usersToKick.length > 0 && !team.prisoner_eliminate)
         team.prisoner_eliminate = true;
-      
+
       // Save the determined thread for after players review responses
       team.prisoner_thread = thread;
 
@@ -126,25 +126,25 @@ module.exports = function(controller) {
         });
 
         controller.storage.teams.save(saved, function(err, updated) {
-                    
+
           // Send feedback message with player responses
           setTimeout(function() {
-            
+
             controller.prisoners_message(bot, updated.id, "decisions");
 
           }, 5000);
-          
+
         });
-        
+
       });
 
     });
-    
+
   });
-  
-  // Keep track of which players are ready to move on 
+
+  // Keep track of which players are ready to move on
   controller.prisoners_next = function(bot, event, team) {
-    
+
     var attachments = event.original_message.attachments;
     // Remove "Got it!" button and replace with text
     delete attachments[1].actions;
@@ -152,17 +152,17 @@ module.exports = function(controller) {
 
     // Set this player to be ready to move on
     team.prisoner_players = _.map(team.prisoner_players, function(u) {
-      if (u.userId == event.user) 
+      if (u.userId == event.user)
         u.prisoner_ready = true;
-      
+
       return u;
     });
-    
+
     controller.storage.teams.save(team, function(err, saved) {
-      
+
       bot.api.chat.update({
-        channel: event.channel, 
-        ts: event.original_message.ts, 
+        channel: event.channel,
+        ts: event.original_message.ts,
         attachments: event.original_message.attachments
       }, function(err, updated) { console.log(err, updated) });
 
@@ -171,15 +171,15 @@ module.exports = function(controller) {
         controller.prisoners_continue(bot, saved);
       }
     });
-    
+
   };
-  
+
   // Send along the prisoners to the next stage
   controller.prisoners_continue = function(bot, team) {
-    
+
     // Send the global response to all players based on saved thread
     _.each(team.prisoner_players, function(user) {
-          
+
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
 
       // Delete most recent message
@@ -202,7 +202,7 @@ module.exports = function(controller) {
       });
 
     });
-    
+
     // Reset prisoner players based on players that have been kicked out
     team.prisoner_players = _.filter(team.prisoner_players, function(player) {
       return !_.findWhere(team.just_kicked, { "userId": player.userId });
@@ -211,44 +211,42 @@ module.exports = function(controller) {
       player.prisoner_ready = false;
       return player;
     });
-    
+
     // Reset choices and store kicked players
     team.prisoner_decisions = _.mapObject(team.prisoner_decisions, function(d, k) {
       d.choice = undefined;
-      
+
       if (_.pluck(team.just_kicked, "userId").includes(k)) d.kicked = true;
-      
+
       return d;
     });
-    
+
     controller.storage.teams.save(team, function(err, saved) {
-      
+
       setTimeout(function() {
         // Kick out players
         if (team.just_kicked.length > 0)
           controller.prisoners_message(bot, saved.id, "kicked");
-        
-        // Send remaining players to next round 
+
+        // Send remaining players to next round
         if (saved.prisoner_players.length >= 1 && !saved.prisoner_complete) {
           controller.prisoners_message(bot, saved.id, "default");
         }
-        
+
         if (team.prisoner_players.length < 1 || saved.prisoner_complete) {
           setTimeout(function() {
-            
+
             // If prisoners dilemma is over, send final message
             controller.prisoners_message(bot, saved.id, "end");
-            
-          }, 8000);
-        }                   
-        
-      }, 5000);
-      
-      
-    });
-    
-  }
-    
- 
-}
 
+          }, 8000);
+        }
+
+      }, 5000);
+
+
+    });
+
+  }
+
+}

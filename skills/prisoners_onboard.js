@@ -16,13 +16,12 @@ module.exports = function(controller) {
 
       var web = new WebClient(team.bot.app_token);
 
+      // Determine prisoner players and set initial variables
       team.prisoner_players = _.where(team.users, { prisoner: true });
-      team.prisoner_started = true;
       team.prisoner_complete = false;
-
       team.prisoner_success = 0;
+      // Set base prisoner_decisions object
       team.prisoner_decisions = {};
-
       _.each(team.prisoner_players, function(p) {
         team.prisoner_decisions[p.userId] = {
           name: p.name,
@@ -32,11 +31,18 @@ module.exports = function(controller) {
 
       controller.storage.teams.save(team, function(err, saved) {
 
-        console.log(err, saved);
-        if (team.prisoner_players.length >= 3)
+        // If we have enough players
+        if (team.prisoner_players.length >= process.env.prisoner_players) {
+          // If there are enough players, remove the clock
+          controller.prisoners_time(bot, saved.id, true);
+          // Send the initial dilemma message to start the game
           controller.prisoners_message(bot, saved.id, "default");
-        else
-          controller.prisoners_message(bot, saved.id, "too_few_players")
+        } else {
+          // If there are too few players, reset the clock
+          controller.prisoners_time(bot, saved.id, false);
+          // and send an updated timer message
+          controller.prisoners_message(bot, saved.id, "too_few_players");
+        }
 
       });
 

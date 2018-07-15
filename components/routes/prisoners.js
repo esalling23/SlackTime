@@ -41,6 +41,7 @@ module.exports = function(webserver, controller) {
           console.log("this game hasn't started! let's send that message");
           // if game is not started, start it
           controller.trigger("prisoners_onboard", [bot, team.id]);
+
         }
 
       });

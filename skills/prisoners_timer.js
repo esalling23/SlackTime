@@ -5,22 +5,33 @@ const minPerDay = 1440;
 
 module.exports = function(controller) {
 
-  controller.addTime = function(bot, id) {
+  // Takes a bot object and team ID
+  // Sets the prisoner's dilemma time object for triggering onboarding
+  controller.prisoners_time = function(bot, id, started) {
 
     controller.storage.teams.get(id, function(err, team) {
 
-      if (!team.prisoner_time) team.prisoner_time = [];
+      // Sanity check
+      if (!team.prisoner_time) team.prisoner_time = {};
 
-      var start = new Date();
-
-      var end = controller.prisoners_initial_dev();
-
-      team.prisoner_time.push({
-        num: team.prisoner_time.length,
-        start: start,
-        end: end,
-        complete: false
-      });
+      // If we aren't starting the game
+      // Reset timer
+      if (!started) {
+        // Grab the start date (now) and end time
+        var start = new Date();
+        var end = controller.prisoners_initial_dev();
+        // Create new prisoner time object
+        team.prisoner_time = {
+          start: start,
+          end: end,
+          complete: false
+        };
+      } else {
+        // if we are starting the game
+        // empty the timer object and set team prisoner_started boolean
+        team.prisoner_time = {};
+        team.prisoner_started = true;
+      }
 
       controller.storage.teams.save(team, function(err, saved) {
 
@@ -47,7 +58,6 @@ module.exports = function(controller) {
 
     return new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
   }
-
 
   var getMonth = function(obj, date) {
     if ((date >= 30 && obj.getMonth() == 1) ||

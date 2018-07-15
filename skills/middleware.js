@@ -58,8 +58,6 @@ module.exports = function(controller) {
 
       if (message.file && message.file.url_private) {
 
-        // console.log("FILE: \n", message);
-
         var comment = message.file.subtype == 'file_comment' || message.file.pretty_type == "Post" || message.event.subtype == 'file_comment' || message.file.pretty_type == "Plain Text";
 
         // Save a file comments and post uploads as a chat type data object
@@ -194,7 +192,7 @@ module.exports = function(controller) {
 
       // Catch for image counter feedback messages
       if (message.type == "already_complete") {
-      // Get the team information
+        // Get the team information
         controller.storage.teams.get(bot.config.id, function(err, team) {
           var web = new WebClient(team.bot.app_token);
 
@@ -255,7 +253,7 @@ module.exports = function(controller) {
 
       }
 
-        next();
+      next();
 
     });
 
