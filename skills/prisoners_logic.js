@@ -41,11 +41,6 @@ module.exports = function(controller) {
             attachments: card.attachments
           }, function(err, updated) {
 
-            controller.prisoners_check(bot, saved.id, "Prison", false, function(users) {
-              var web = new WebClient(team.bot.app_token);
-              controller.prisoners_leftout(web, bot, users);
-            });
-
             // Trigger update message for all players
             controller.prisoners_update(bot, saved, event, "feedback");
 
@@ -158,8 +153,6 @@ module.exports = function(controller) {
   // Keep track of which players are ready to move on
   controller.prisoners_next = function(bot, event, team) {
 
-    const title =  "Cool! Now just waiting for the other players...";
-
     var attachments = event.original_message.attachments;
     // Remove "Got it!" button and replace with text
     delete attachments[1].actions;
@@ -167,7 +160,7 @@ module.exports = function(controller) {
 
     // Set this player to be ready to move on
     team.prisoner_players = _.map(team.prisoner_players, function(u) {
-      if (u.bot_chat == event.channel)
+      if (u.userId == event.user)
         u.prisoner_ready = true;
 
       return u;

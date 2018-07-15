@@ -3,35 +3,7 @@ const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
 
-  controller.store_prisoners_msg = function(message, user, team) {
-    var exists = _.findWhere(team.prisoners_messages, { user: user.userId });
-    var channel = user.bot_chat;
-    if (exists) {
-      team.prisoners_messages = _.map(team.prisoners_messages, function(msg) {
-        if (msg.user == user.userId) {
-          msg = message;
-          msg.channel = channel;
-          msg.user =  user.userId;
-          msg.team_id = team.id;
-        }
-
-        return msg;
-      });
-    } else {
-      var msg = message;
-      msg.channel = channel;
-      msg.user = user.userId;
-      msg.team_id = team.id;
-      team.prisoners_messages.push(msg);
-    }
-
-    controller.storage.teams.save(team, function(err, saved) {
-      console.log("saved a prisoner message: ", saved.prisoners_messages);
-    });
-  }
-
-
-
+  // Sends prisoner dilemma messages for different events to ALL players
   controller.prisoners_message = function(bot, id, thread) {
 
     controller.storage.teams.get(id, function(err, team) {
@@ -62,6 +34,17 @@ module.exports = function(controller) {
         vars.prisoner_decisions = team.prisoner_decisions;
       }
 
+      // If this is the end thread, set winner variables
+      if (thread == "end") {
+        vars.prisoners_winners = team.prisoner_players;
+        vars.prisoners_link = process.env.domain + "/link/";
+
+        if (team.prisoner_eliminate)
+          vars.prisoners_link += "prisoners_eliminate";
+        else
+          vars.prisoners_link += "prisoners_share";
+      }
+
       // If this is supposed to be a new round but only one player remains
       // Set thread to success_alone and prisoners_complete to true
       if (team.prisoner_players.length == 1 && thread == "default") {
@@ -72,17 +55,6 @@ module.exports = function(controller) {
       if (team.prisoner_stolen && thread == "default") {
         thread = 'success_stolen';
         team.prisoner_complete = true;
-      }
-
-      // If this is the end thread, set winner variables
-      if (thread == "end") {
-        vars.prisoners_winners = team.prisoner_players;
-        vars.prisoners_link = process.env.domain + "/link/";
-
-        if (team.prisoner_eliminate)
-          vars.prisoners_link += "prisoners_eliminate";
-        else
-          vars.prisoners_link += "prisoners_share";
       }
 
       controller.storage.teams.save(team, function(err, saved) {
@@ -166,7 +138,6 @@ module.exports = function(controller) {
     return fields;
   }
 
-
   controller.prisoners_update = function(bot, team, event, type) {
 
     var web = new WebClient(bot.config.bot.token);
@@ -180,6 +151,7 @@ module.exports = function(controller) {
           return team.prisoner_decisions[p.userId].choice;
         });
       }
+
 
       _.each(players, function(user) {
 
@@ -212,8 +184,8 @@ module.exports = function(controller) {
 
               if (vars.prisoners_length == 2 || team.prisoner_time == {} || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
-                  controller.prisoners_time(bot, team.id, false);
-                }, 10000);
+                  controller.prisoners_time(bot, team.id, true);
+                }, 2000);
               }
 
             } else if (type == "feedback") {
@@ -247,4 +219,6 @@ module.exports = function(controller) {
 
     }).catch(err => console.log('convo list error: ', err));
   }
+
+
 }

@@ -58,8 +58,6 @@ module.exports = function(controller) {
 
       if (message.file && message.file.url_private) {
 
-        // console.log("FILE: \n", message);
-
         var comment = message.file.subtype == 'file_comment' || message.file.pretty_type == "Post" || message.event.subtype == 'file_comment' || message.file.pretty_type == "Plain Text";
 
         // Save a file comments and post uploads as a chat type data object
@@ -267,7 +265,7 @@ module.exports = function(controller) {
 
       }
 
-        next();
+      next();
 
     });
 

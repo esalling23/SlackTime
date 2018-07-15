@@ -3,8 +3,6 @@ const request = require("request");
 
 module.exports = function(controller) {
 
-  var usersPrisoned = [];
-
   controller.confirmMovement = function(params) {
 
     var thread = params.thread ? params.thread : controller.determineThread(params.script, params.user);
@@ -13,7 +11,7 @@ module.exports = function(controller) {
     if (!thread)
       thread = 'default';
 
-    // console.log(params.user.codesEntered, params.data.value);
+    console.log(params.user.codesEntered, params.data.value);
 
     // If this user has already entered this code
     if (params.user.codesEntered) {
@@ -54,13 +52,9 @@ module.exports = function(controller) {
 
       if (vars.prisoners_length == 2 || !params.team.prisoner_time || params.team.prisoner_time.length <= 0) {
         setTimeout(function() {
-          controller.prisoners_time(params.bot, params.team.id, false);
-        }, 10000);
+          controller.prisoners_time(params.bot, params.team.id, true);
+        }, 2000);
       }
-
-      setTimeout(function() {
-        controller.prisoners_update(params.bot, params.team, params.event, "prison");
-      }, 5000)
 
     }
 

@@ -32,33 +32,19 @@ module.exports = function(controller) {
     // If we hear anything in the no-chat channels, delete it
     controller.storage.teams.get(message.team, function(err, team) {
 
-      // if (team.noChatChannels.includes(message.channel))
-      //   controller.deleteThisMsg(message, team.bot.app_token);
-      // else {
-      controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
-      // }
+      if (team.noChatChannels.includes(message.channel))
+        controller.deleteThisMsg(message, team.bot.app_token);
+      else {
+        controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
+      }
 
     });
 
   });
 
-  controller.hears('gamelog_update_kiwi', 'direct_message', function(bot, message) {
+  controller.hears('gamestart', 'direct_message', function(bot, message) {
 
-   if (message.match[0] != "gamelog_update_kiwi") return;
-
-   var log = {
-     bot: bot,
-     team: bot.config.id,
-   }
-
-   controller.trigger('gamelog_update', [log]);
- });
-
-  controller.hears('flavor_flave', 'direct_message', function(bot, message) {
-
-    var botChannels = {};
-
-    if (message.match[0] != "flavor_flave") return;
+    if (process.env.environment != 'dev') return;
 
     controller.storage.teams.get(message.team, function(err, team) {
 
@@ -66,14 +52,26 @@ module.exports = function(controller) {
 
           bot.api.im.open({ user: user.userId }, function(err, direct_message) {
 
-            botChannels[user.userId] = direct_message.channel.id;
-
-            console.log("onboarding this player", user);
+            user.bot_chat = direct_message.channel.id;
+            user.startBtns = ["default", "primary", "danger"];
 
             if (err) {
               console.log('Error sending onboarding message:', err);
             } else {
-              controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
+
+              team.gameStarted = true;
+
+              team.users = _.map(team.users, function(u) {
+                if (u.userId == user.userId)
+                  return user;
+                else
+                  return u;
+              });
+
+              controller.storage.teams.save(team, function(err, saved) {
+                 console.log(saved);
+
+                  controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
 
                 var template = convo.threads.default[0];
                 template.username = process.env.username;
@@ -125,12 +123,6 @@ module.exports = function(controller) {
   });
 
 
-
-  controller.hears('timer_start', 'direct_message', function(bot,message) {
-    if (process.env.environment != 'dev') return;
-    controller.prisoners_time(bot, message.team, true);
-
-  });
 
   controller.hears('chat', 'direct_message', function(bot,message) {
     if (process.env.environment != 'dev') return;
@@ -215,7 +207,6 @@ module.exports = function(controller) {
 
   // Listen for
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
-
     if (process.env.environment != 'dev') return;
     console.log(message, "in the hears");
     var options = {
@@ -241,9 +232,8 @@ module.exports = function(controller) {
   });
 
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
-
-    // if (process.env.environment != 'dev') return;
-    if (message.match[0] != "prison") return;
+    console.log(message.user);
+    if (process.env.environment != 'dev') return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
       convo.changeTopic("correct");
@@ -252,48 +242,16 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "reset_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
-        var web = new WebClient(team.bot.app_token);
-        controller.prisoners_leftout(users);
-      });
-    });
-  });
-
-  controller.hears("check_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "check_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.trigger("prisoners_check", [bot, team.id]);
-    });
-  });
-
-  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "continue_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      ready = _.where(team.prisoner_players, { "prisoner_ready": true });
-
-      console.log(ready.length, team.prisoner_players.length);
-      console.log("lets check and continue ", ready.length == team.prisoner_players.length);
-      if (ready.length == team.prisoner_players.length) {
-        controller.prisoners_continue(bot, team);
-      }
-    });
-  });
 
   controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
-
+    console.log(message.user);
     if (process.env.environment != 'dev') return;
     controller.trigger("image_counter_onboard", [bot, message]);
 
   });
 
   controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
-
+    console.log(message.user);
     if (process.env.environment != 'dev') return;
     controller.trigger("prisoners_onboard", [bot, message]);
 
