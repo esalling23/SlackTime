@@ -9,7 +9,7 @@ module.exports = function(controller) {
       var storage = ["chat", "pin", "dnd", "thread"].includes(type) ? "chat" : type == "upload" ? "file_uploads" : "events";
       var relatedMsgTs;
 
-      console.log(type + " data storage with this msg: ", event);
+      // console.log(type + " data storage with this msg: ", event);
 
       var dataEvent = {
         id: new ObjectID(),
