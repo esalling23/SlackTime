@@ -26,20 +26,26 @@ module.exports = function(controller) {
     }).pipe(fs.createWriteStream(filePath));
 
     stream.on("finish", function() {
-      // When stream is finished, upload the file
-      cloudinary.v2.uploader.unsigned_upload(filePath, "image_counter_bot",
-          { resource_type: "auto", tags: [ 'user_' + message.user, 'team_' + message.team ] },
-         function(err, result) {
-        console.log(err, result);
+      sharp(filePath)
+        .resize(500)
+        .toFile(outPath, function(err) {
+          console.log(err);
+          // When stream is finished, upload the file
+          cloudinary.v2.uploader.unsigned_upload(outPath, "image_counter_bot",
+              { resource_type: "auto", tags: [ 'user_' + message.user, 'team_' + message.team ] },
+             function(err, result) {
+                console.log(err, result);
 
-        if (fs.existsSync(filePath)) {
-          // Remove the file from the temporary storage
-          fs.unlinkSync(filePath);
-        }
+                if (fs.existsSync(filePath)) {
+                  // Remove the file from the temporary storage
+                  fs.unlinkSync(filePath);
+                }
 
-        // if we have a callback, run it
-        if (cb) cb(err, result);
-      });
+                // if we have a callback, run it
+                if (cb) cb(result);
+           });
+        });
+
     });
   };
 }
