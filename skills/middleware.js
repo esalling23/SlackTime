@@ -69,7 +69,9 @@ module.exports = function(controller) {
           controller.storage.teams.get(messId, function(err, team){
 
             // upload it to our cloudinary account
-            controller.fileUpload(bot, message, function(result) {
+            controller.fileUpload(bot, message, function(err, result) {
+
+              if (err) console.log("File Upload Error: \n", err);
               // Set the message url to the cloudinary url of the uploaded file
               message.url = result.url;
 
