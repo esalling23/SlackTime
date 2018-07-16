@@ -45,7 +45,7 @@ module.exports = function(controller) {
                 }
 
                 // if we have a callback, run it
-                if (cb) cb(result);
+                if (cb) cb(err, result);
            });
         });
 
