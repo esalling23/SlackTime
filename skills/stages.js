@@ -3,7 +3,7 @@ const fs = require('fs');
 
 module.exports = function(controller) {
 
-  // var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
+  // var data = JSON.parse(fs.readFileSync('./scripts1.json', 'utf8'));
   // var replace = {
   //   "escape-room-production.glitch.me": process.env.domain,
   //   "tamagotchi-production.glitch.me": process.env.egg_domain

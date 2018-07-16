@@ -44,8 +44,6 @@ module.exports = function(controller) {
 
   controller.hears('gamestart', 'direct_message', function(bot, message) {
 
-    if (process.env.environment != 'dev') return;
-
     controller.storage.teams.get(message.team, function(err, team) {
 
        _.each(team.users, function(user) {
@@ -207,7 +205,7 @@ module.exports = function(controller) {
 
   // Listen for
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
-    if (process.env.environment != 'dev') return;
+
     console.log(message, "in the hears");
     var options = {
       bot: bot,
