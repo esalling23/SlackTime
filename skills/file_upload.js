@@ -1,6 +1,7 @@
 const request = require('request');
 const cloudinary = require('cloudinary');
 const fs = require('fs');
+const sharp = require('sharp');
 // const
 
 module.exports = function(controller) {
