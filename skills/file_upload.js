@@ -8,6 +8,7 @@ module.exports = function(controller) {
 
   controller.fileUpload = function(bot, message, cb) {
     var destination_path = './tmp/uploaded/';
+    var small_path = './tmp/reduced_uploads/';
 
     // the url to the file is in url_private
     var opts = {
