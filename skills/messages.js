@@ -69,19 +69,4 @@ module.exports = function(controller) {
 
 
   }
-
-  controller.findRecentMessages = function(opt) {
-    return new Promise((resolve, reject) => {
-      // console.log(opt[1], " is this users bot channel");
-      opt[0].conversations.history(opt[1]).then(res => {
-        var msg = res.messages[0];
-
-        if (msg)
-          resolve({ msg: msg, channel: opt[1] });
-        else
-          resolve("no message found");
-
-      }).catch(err => console.log("history error in finding messages: ", err));
-    });
-  }
 }
