@@ -26,16 +26,17 @@ module.exports = function(controller) {
           end: end,
           complete: false
         };
+        console.log("time is started for team " + saved.id, saved.prisoner_time);
+
       } else {
         // if we are starting the game
         // empty the timer object and set team prisoner_started boolean
         team.prisoner_time = {};
         team.prisoner_started = true;
+        console.log("game started, time removed " + team.prisoner_time);
       }
 
       controller.storage.teams.save(team, function(err, saved) {
-
-        console.log("time is started for team " + saved.id, saved.prisoner_time);
 
         if (saved.prisoner_started)
           controller.prisoners_message(bot, saved.id, "default");

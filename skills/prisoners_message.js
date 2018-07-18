@@ -82,6 +82,11 @@ module.exports = function(controller) {
             // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
 
+            console.log(bot.token, " bot");
+            console.log(message.user, " message user");
+            console.log(script, " the script");
+            console.log(thread, " the thread");
+            console.log(vars);
             // Make the prisoners_dilemma card
             controller.makeCard(bot, message, script, thread, vars, function(card) {
 
@@ -158,7 +163,6 @@ module.exports = function(controller) {
         });
       }
 
-
       _.each(players, function(user) {
 
         if (user.userId != event.user) {
@@ -202,11 +206,9 @@ module.exports = function(controller) {
             vars.user = user.userId;
             vars.team = team.id;
 
-            // console.log(btn_message);
-
-            // console.log(btn_message.user + " user and channel: " + btn_message.channel);
-            // console.log(script, thread);
-            // console.log(bot);
+            console.log(btn_message.user + " user and channel: " + btn_message.channel);
+            console.log(script, thread);
+            console.log(bot);
 
             controller.makeCard(bot, btn_message, script, thread, vars, function(card) {
               bot.api.chat.update({
