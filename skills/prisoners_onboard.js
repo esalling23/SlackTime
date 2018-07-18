@@ -31,11 +31,14 @@ module.exports = function(controller) {
 
       controller.storage.teams.save(team, function(err, saved) {
 
+
         // If we have enough players
         if (team.prisoner_players.length >= process.env.prisoner_players) {
+          console.log("thats enough ppl, let's reset the timer");
           // If there are enough players, remove the clock
           controller.prisoners_time(bot, saved.id, true);
         } else {
+            console.log("thats not enough ppl");
           // If there are too few players, reset the clock
           controller.prisoners_time(bot, saved.id, false);
 
