@@ -82,11 +82,11 @@ module.exports = function(controller) {
             // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
 
-            console.log(bot.token, " bot");
-            console.log(message.user, " message user");
-            console.log(script, " the script");
-            console.log(thread, " the thread");
-            console.log(vars);
+            console.log(bot.id, " bot");
+            console.log(message.channel, " message channel");
+            // console.log(script, " the script");
+            // console.log(thread, " the thread");
+            // console.log(vars);
             // Make the prisoners_dilemma card
             controller.makeCard(bot, message, script, thread, vars, function(card) {
 
