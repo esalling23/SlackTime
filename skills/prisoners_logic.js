@@ -153,6 +153,8 @@ module.exports = function(controller) {
   // Keep track of which players are ready to move on
   controller.prisoners_next = function(bot, event, team) {
 
+    const title =  "Cool! Now just waiting for the other players...";
+
     var attachments = event.original_message.attachments;
     // Remove "Got it!" button and replace with text
     delete attachments[1].actions;
@@ -160,7 +162,7 @@ module.exports = function(controller) {
 
     // Set this player to be ready to move on
     team.prisoner_players = _.map(team.prisoner_players, function(u) {
-      if (u.userId == event.user)
+      if (u.bot_chat == event.channel)
         u.prisoner_ready = true;
 
       return u;
@@ -172,23 +174,21 @@ module.exports = function(controller) {
         channel: event.channel,
         ts: event.original_message.ts,
         attachments: event.original_message.attachments
-      }, function(err, msg) {
+      }, function(err, updated) {
+
+        console.log(err, updated);
 
         setTimeout(function() {
 
-          var ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
-          // Find the prisoner that belongs to the just-updated messages
-          // We want to make sure we saved them as ready
-          var thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": msg.channel });
-
           // If all players are ready, continue the game
-          if (ready.length == saved.prisoner_players.length) {
+          if (_.where(saved.prisoner_players, { "prisoner_ready": true }).length == saved.prisoner_players.length) {
             controller.prisoners_continue(bot, saved);
           }
-          else if (!thisPrisoner.prisoner_ready) {
-            // Check for unsaved but ready players
+
+          // Check for unsaved but ready players
+          if (!_.findWhere(saved.prisoner_players, { "bot_chat": updated.channel }).prisoner_ready) {
             saved.prisoner_players = _.map(saved.prisoner_players, function(u) {
-              if (u.bot_chat == msg.channel)
+              if (u.bot_chat == updated.channel)
                 u.prisoner_ready = true;
 
               return u;
@@ -196,13 +196,7 @@ module.exports = function(controller) {
 
             controller.storage.teams.save(saved, function(err, updated) {
 
-              ready = _.where(updated.prisoner_players, { "prisoner_ready": true });
-
-              console.log("special save to make sure player was made ready: ", thisPrisoner);
-              if (ready.length == updated.prisoner_players.length) {
-                controller.prisoners_continue(bot, updated);
-              }
-
+              console.log("special save to make sure player was made ready: ", _.findWhere(saved.prisoner_players, { "bot_chat": updated.channel }))
             });
           }
 
