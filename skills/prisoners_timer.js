@@ -26,7 +26,7 @@ module.exports = function(controller) {
           end: end,
           complete: false
         };
-        console.log("time is started for team " + saved.id, saved.prisoner_time);
+        console.log("time is started for team " + team.id, saved.prisoner_time);
 
       } else {
         // if we are starting the game
