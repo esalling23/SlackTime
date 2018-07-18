@@ -12,7 +12,7 @@ module.exports = function(controller) {
 
     controller.storage.teams.get(id, function(err, team) {
 
-      if (team.prisoner_started) return;
+      // if (team.prisoner_started) return;
 
       var web = new WebClient(team.bot.app_token);
 
@@ -22,6 +22,7 @@ module.exports = function(controller) {
       team.prisoner_success = 0;
       // Set base prisoner_decisions object
       team.prisoner_decisions = {};
+
       _.each(team.prisoner_players, function(p) {
         team.prisoner_decisions[p.userId] = {
           name: p.name,
