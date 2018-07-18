@@ -166,21 +166,23 @@ module.exports = function(controller) {
         channel: event.channel,
         ts: event.original_message.ts,
         attachments: event.original_message.attachments
-      }, function(err, updated) {
+      }, function(err, msg) {
 
         console.log(err, updated);
 
         setTimeout(function() {
 
+          const ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
+          const thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": updated.channel });
+
           // If all players are ready, continue the game
-          if (_.where(saved.prisoner_players, { "prisoner_ready": true }).length == saved.prisoner_players.length) {
+          if (ready.length == saved.prisoner_players.length) {
             controller.prisoners_continue(bot, saved);
           }
-
-          // Check for unsaved but ready players
-          if (!_.findWhere(saved.prisoner_players, { "bot_chat": updated.channel }).prisoner_ready) {
+          else if (!thisPrisoner.prisoner_ready) {
+            // Check for unsaved but ready players
             saved.prisoner_players = _.map(saved.prisoner_players, function(u) {
-              if (u.bot_chat == updated.channel)
+              if (u.bot_chat == msg.channel)
                 u.prisoner_ready = true;
 
               return u;
@@ -188,7 +190,11 @@ module.exports = function(controller) {
 
             controller.storage.teams.save(saved, function(err, updated) {
 
-              console.log("special save to make sure player was made ready: ", _.findWhere(saved.prisoner_players, { "bot_chat": updated.channel }))
+              console.log("special save to make sure player was made ready: ", thisPrisoner);
+              if (ready.length == updated.prisoner_players.length) {
+                controller.prisoners_continue(bot, updated);
+              }
+
             });
           }
 
