@@ -81,6 +81,7 @@ module.exports = function(controller) {
 
             // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
+            message.user = user.userId;
 
             console.log(bot.id, " bot");
             console.log(message.channel, " message channel");
