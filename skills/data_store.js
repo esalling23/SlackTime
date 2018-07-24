@@ -79,11 +79,12 @@ module.exports = function(controller) {
           dataEvent.type = event.type;
 
           // Settings for file name and url
-          if (event.file) {
-            dataEvent.fileName = event.file.title;
-            dataEvent.fileUrl = event.url ? event.url : event.file.url_private;
+          if (event.files && event.files[0]) {
+            let file = event.files[0];
+            dataEvent.fileName = file.title;
+            dataEvent.fileUrl = event.url ? event.url : file.url_private;
 
-            if (event.file.pretty_type == "Post") {
+            if (file.pretty_type == "Post") {
               dataEvent.fileType = "Slack Post";
             } else if (file.pretty_type == "Plain Text") {
               dataEvent.fileType = "Slack Snippet";
