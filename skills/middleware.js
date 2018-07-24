@@ -56,9 +56,9 @@ module.exports = function(controller) {
         // console.log(message, " a thread");
       }
 
-      if (message.file && message.file.url_private) {
+      if (message.files && message.files[0].url_private) {
 
-        var comment = message.file.subtype == 'file_comment' || message.file.pretty_type == "Post" || message.event.subtype == 'file_comment' || message.file.pretty_type == "Plain Text";
+        var comment = message.subtype == 'file_comment' || message.files[0].pretty_type == "Post" || message.event.subtype == 'file_comment' || message.files[0].pretty_type == "Plain Text";
 
         // Save a file comments and post uploads as a chat type data object
         if (comment) {

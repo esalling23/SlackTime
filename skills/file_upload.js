@@ -13,7 +13,7 @@ module.exports = function(controller) {
     // the url to the file is in url_private
     var opts = {
         method: 'GET',
-        url: message.file.url_private,
+        url: message.files[0].url_private,
         headers: {
           Authorization: 'Bearer ' + bot.config.bot.token, // Authorization header with bot's access token
         }
