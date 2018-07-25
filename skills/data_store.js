@@ -79,8 +79,8 @@ module.exports = function(controller) {
           dataEvent.type = event.type;
 
           // Settings for file name and url
-          if (event.files && event.files[0]) {
-            let file = event.files[0];
+          if (event.event.files && event.event.files[0]) {
+            let file = event.event.files[0];
             dataEvent.fileName = file.title;
             dataEvent.fileUrl = event.url ? event.url : file.url_private;
 
