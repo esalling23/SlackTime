@@ -56,9 +56,9 @@ module.exports = function(controller) {
         // console.log(message, " a thread");
       }
 
-      if (message.files && message.files[0].url_private) {
+      if (message.event.files && message.event.files[0].url_private) {
 
-        var comment = message.subtype == 'file_comment' || message.files[0].pretty_type == "Post" || message.event.subtype == 'file_comment' || message.files[0].pretty_type == "Plain Text";
+        var comment = message.subtype == 'file_comment' || message.event.files[0].pretty_type == "Post" || message.event.subtype == 'file_comment' || message.event.files[0].pretty_type == "Plain Text";
 
         // Save a file comments and post uploads as a chat type data object
         if (comment) {
@@ -76,7 +76,7 @@ module.exports = function(controller) {
               message.url = result.url;
 
               // If this is the image counter channel, trigger event
-              if(team.image_channel_id == message.channel && acceptedTypes.indexOf(message.file.filetype) > -1) {
+              if(team.image_channel_id == message.channel && acceptedTypes.indexOf(message.event.files[0].filetype) > -1) {
                 controller.trigger("image_counter_upload", [{ bot: bot, message: message, result: result }]);
                 message.image_counter_upload = true;
               } else {
