@@ -14,10 +14,12 @@ module.exports = function(controller) {
       var thisUser = _.findWhere(team.users, { userId: event.user });
 
       if (!team.prisoner_decisions[thisUser.userId]) {
-        team.prisoner_decisions[thisUser.userId] = {
-          name: thisUser.name,
-          choice: undefined
-        };
+        _.each(team.prisoner_players, function(p) {
+          team.prisoner_decisions[p.userId] = {
+            name: thisUser.name,
+            choice: undefined
+          };
+        });
       }
       // If there's already a choice stored for this player, return
       if (team.prisoner_decisions[thisUser.userId].choice) return;
