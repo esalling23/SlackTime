@@ -42,7 +42,7 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears('timer_start', 'ambient,direct_mention', function(bot,message) {
+  controller.hears('timer_start', 'direct_message', function(bot,message) {
 
     controller.prisoners_time(bot, message.team, true);
 
