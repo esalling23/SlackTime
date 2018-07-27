@@ -207,9 +207,11 @@ module.exports = function(controller) {
             vars.user = user.userId;
             vars.team = team.id;
 
+            console.log(btn_message);
+
             console.log(btn_message.user + " user and channel: " + btn_message.channel);
             console.log(script, thread);
-            console.log(bot);
+            // console.log(bot);
 
             controller.makeCard(bot, btn_message, script, thread, vars, function(card) {
               bot.api.chat.update({
