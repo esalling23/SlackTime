@@ -32,13 +32,19 @@ module.exports = function(controller) {
     // If we hear anything in the no-chat channels, delete it
     controller.storage.teams.get(message.team, function(err, team) {
 
-      if (team.noChatChannels.includes(message.channel))
-        controller.deleteThisMsg(message, team.bot.app_token);
-      else {
-        controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
-      }
+      // if (team.noChatChannels.includes(message.channel))
+      //   controller.deleteThisMsg(message, team.bot.app_token);
+      // else {
+      controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
+      // }
 
     });
+
+  });
+
+  controller.hears('timer_start', 'ambient,direct_mention', function(bot,message) {
+
+    controller.prisoners_time(bot, message.team, true);
 
   });
 
