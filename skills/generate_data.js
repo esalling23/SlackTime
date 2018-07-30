@@ -49,7 +49,7 @@ module.exports = function(controller) {
 
       teamData.prisoner_players = [];
       teamData.prisoner_started = false;
-      teamData.prisoner_time = [];
+      teamData.prisoner_time = {};
       teamData.prisoner_decisions = [];
       teamData.prisoner_success = 0;
       teamData.prisoner_complete = false;
@@ -147,7 +147,7 @@ module.exports = function(controller) {
                   console.log(err, saved);
 
                 });
-                
+
               }, 2000 * teamData.users.length + 1);
 
           }, 1000);

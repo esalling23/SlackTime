@@ -7,7 +7,6 @@ const web = new WebClient(token);
 
 module.exports = function(controller) {
 
-
   controller.on("prisoners_onboard", function(bot, id) {
 
     controller.storage.teams.get(id, function(err, team) {
