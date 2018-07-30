@@ -219,7 +219,7 @@ module.exports = function(controller) {
 
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
     console.log(message.user);
-    if (process.env.environment != 'dev') return;
+    // if (process.env.environment != 'dev') return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
       convo.changeTopic("correct");
