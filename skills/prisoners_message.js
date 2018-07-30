@@ -193,9 +193,9 @@ module.exports = function(controller) {
 
               if (vars.prisoners_length < 0) vars.prisoners_length = 0;
 
-              if (vars.prisoners_length == 2 || !team.prisoner_time || team.prisoner_time.length <= 0) {
+              if (vars.prisoners_length == 2 || team.prisoner_time == {} || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
-                  controller.prisoners_time(bot, team.id, true);
+                  controller.prisoners_time(bot, team.id, false);
                 }, 2000);
               }
 
