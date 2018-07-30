@@ -54,13 +54,14 @@ module.exports = function(controller) {
     var start = new Date();
     var nextDate = new Date(start.getTime() + milPerMin * minPerDay);
     var end = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate(), process.env.prisoners_initial);
+    console.log('setting the prisoners timer ', end);
 
     return end;
   }
 
   controller.prisoners_initial_dev = function() {
     var start = new Date();
-
+    console.log('set prisoner timer for dev');
     return new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
   }
 
