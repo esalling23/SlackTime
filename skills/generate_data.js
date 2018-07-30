@@ -147,7 +147,7 @@ module.exports = function(controller) {
                   console.log(err, saved);
 
                 });
-                
+
               }, 2000 * teamData.users.length + 1);
 
           }, 1000);
