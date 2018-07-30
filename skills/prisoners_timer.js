@@ -10,7 +10,7 @@ module.exports = function(controller) {
   controller.prisoners_time = function(bot, id, started) {
 
     controller.storage.teams.get(id, function(err, team) {
-
+      var updated = false;
       // Sanity check
       if (!team.prisoner_time) team.prisoner_time = {};
 
@@ -20,6 +20,7 @@ module.exports = function(controller) {
         // Grab the start date (now) and end time
         var start = new Date();
         var end = controller.prisoners_initial();
+        if (team.prisoner_time.start) updated = true;
         // Create new prisoner time object
         team.prisoner_time = {
           start: start,
@@ -40,7 +41,7 @@ module.exports = function(controller) {
 
         if (saved.prisoner_started)
           controller.prisoners_message(bot, saved.id, "default");
-        else {
+        else if (updated) {
           // send updated prison room
           controller.prisoners_message(bot, saved.id, "too_few_players");
         }
