@@ -179,7 +179,9 @@ module.exports = function(controller) {
         setTimeout(function() {
 
           const ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
-          const thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": updated.channel });
+          // Find the prisoner that belongs to the just-updated messages
+          // We want to make sure we saved them as ready
+          const thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": msg.channel });
 
           // If all players are ready, continue the game
           if (ready.length == saved.prisoner_players.length) {
