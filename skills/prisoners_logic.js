@@ -176,8 +176,6 @@ module.exports = function(controller) {
         attachments: event.original_message.attachments
       }, function(err, msg) {
 
-        console.log(err, updated);
-
         setTimeout(function() {
 
           const ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
