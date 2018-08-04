@@ -83,8 +83,8 @@ module.exports = function(controller) {
             message.channel = user.bot_chat;
             message.user = user.userId;
 
-            console.log(bot.id, " bot");
-            console.log(message.channel, " message channel");
+            // console.log(bot.id, " bot");
+            // console.log(message.channel, " message channel");
             // console.log(script, " the script");
             // console.log(thread, " the thread");
             // console.log(vars);
@@ -96,7 +96,7 @@ module.exports = function(controller) {
                 ts: message.ts,
                 attachments: card.attachments
               }, function(err, updated) {
-                console.log(err, updated);
+                // console.log(err, updated);
 
                 // Send end message in the case of last one standing
                 if (thread == "success_alone" || thread == "success_stolen"){
@@ -207,10 +207,10 @@ module.exports = function(controller) {
             vars.user = user.userId;
             vars.team = team.id;
 
-            console.log(btn_message);
+            // console.log(btn_message);
 
-            console.log(btn_message.user + " user and channel: " + btn_message.channel);
-            console.log(script, thread);
+            // console.log(btn_message.user + " user and channel: " + btn_message.channel);
+            // console.log(script, thread);
             // console.log(bot);
 
             controller.makeCard(bot, btn_message, script, thread, vars, function(card) {
