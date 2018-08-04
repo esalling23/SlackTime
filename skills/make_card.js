@@ -12,7 +12,7 @@ module.exports = function(controller) {
     if (script_name == "prisoners_dilemma" && thread_name == "decisions")
       var prison = true;
 
-    console.log(context, " make card context");
+    // console.log(context, " make card context");
 
     controller.studio.get(bot, script_name, context.user, context.channel).then(function(convo) {
       // console.log(convo);

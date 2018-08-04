@@ -40,7 +40,7 @@ module.exports = function(controller) {
 
     });
 
-  });
+  });  
 
   controller.hears('timer_start', 'direct_message', function(bot,message) {
 
