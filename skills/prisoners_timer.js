@@ -55,7 +55,8 @@ module.exports = function(controller) {
     var start = new Date();
     // Add a full 24 hours
     var nextDate = new Date(start.getTime() + milPerMin * minPerDay);
-    nextDate.setTime( nextDate.getTime() + nextDate.getTimezoneOffset() * 60 * 1000 );
+    // Silly hosting uses the wrong timezone, reset it to use EST
+    nextDate = new Date( nextDate.getTime() - 240 * 60000 );
 
     var end = new Date(nextDate.getFullYear(), nextDate.getMonth(), nextDate.getDate(), process.env.prisoners_initial);
     console.log('setting the prisoners timer ', end);
