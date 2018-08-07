@@ -551,14 +551,8 @@ module.exports = function(controller) {
 
             if (event.actions[0].value == "prisoners_room") {
 							do {
-								setTimeout(function(){
-									maxWaitTime--;
-									console.log("waiting", usersClicking);
-									console.log(maxWaitTime);
-								}, 100)
-							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime > 0)
-
-							maxWaitTime = 5;
+								console.log("waiting", usersClicking);
+							} while (usersClicking.indexOf(event.user) != 0)
 
               if (res.prisoner_started)
                 opt.thread = "already_started";
