@@ -556,6 +556,8 @@ module.exports = function(controller) {
 								}, 100)
 							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime > 0)
 
+							maxWaitTime = 5;
+
               if (res.prisoner_started)
                 opt.thread = "already_started";
               else {
