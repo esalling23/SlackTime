@@ -553,8 +553,8 @@ module.exports = function(controller) {
 								console.log("waiting", usersClicking);
 								setTimeout(function(){
 									maxWaitTime--;
-								}, 1000)
-							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime <= 0)
+								}, 100)
+							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime > 0)
 
               if (res.prisoner_started)
                 opt.thread = "already_started";
