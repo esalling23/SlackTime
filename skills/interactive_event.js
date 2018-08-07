@@ -524,6 +524,10 @@ module.exports = function(controller) {
 
 				usersClicking++;
 
+				do {
+					console.log("waiting for users to finish up")
+				} while(usersClicking > 1)
+
         var opt = {
           bot: bot,
           event: event,
@@ -560,6 +564,8 @@ module.exports = function(controller) {
                 });
 
                 res.prisoner_players = _.where(res.users, { prisoner: true });
+
+								console.log("users clicking: ", usersClicking);
 
 								setTimeout(function() {
 									controller.storage.teams.save(res, function(err, saved) {
