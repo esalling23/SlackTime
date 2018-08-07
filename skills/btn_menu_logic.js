@@ -56,6 +56,10 @@ module.exports = function(controller) {
         }, 2000);
       }
 
+      setTimeout(function() {
+        controller.prisoners_update(bot, saved, event, "prison");
+      }, 2000)
+
     }
 
     if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel", "aris_projector", "desk", "prisoners_room"].includes(params.data.value))
@@ -71,7 +75,7 @@ module.exports = function(controller) {
     controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
         // replace the original button message with a new one
         params.bot.replyInteractive(params.event, card);
-        if (cb) cb(params.user);
+
     });
   }
 
