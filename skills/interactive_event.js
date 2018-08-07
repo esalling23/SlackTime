@@ -565,24 +565,24 @@ module.exports = function(controller) {
 							// console.log(res.users);
 
               }
-							
-            } else {
 
-							controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+            }
 
-	              controller.storage.teams.save(res).then(saved => {
+						controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
-	                opt.team = saved;
-	                opt.user = _.findWhere(res.users, { userId: event.user }),
-	                opt.script = currentScript;
+              controller.storage.teams.save(res).then(saved => {
 
-	                controller.confirmMovement(opt);
+                opt.team = saved;
+                opt.user = _.findWhere(res.users, { userId: event.user }),
+                opt.script = currentScript;
 
-	              });
+                controller.confirmMovement(opt);
 
-	            });
+              });
 
-						}
+            });
+
+
 
           });
 
