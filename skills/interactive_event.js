@@ -16,6 +16,7 @@ module.exports = function(controller) {
   // for choose/confirm
   // Temporary storage
   var choiceSelect = [];
+	var usersClicking = 0;
 
   controller.on('interactive_message_callback', function(bot, event) {
 
@@ -521,6 +522,8 @@ module.exports = function(controller) {
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
 
+				usersClicking++;
+
         var opt = {
           bot: bot,
           event: event,
@@ -558,26 +561,28 @@ module.exports = function(controller) {
 
                 res.prisoner_players = _.where(res.users, { prisoner: true });
 
-                controller.storage.teams.save(res, function(err, saved) {
+								setTimeout(function() {
+									controller.storage.teams.save(res, function(err, saved) {
 
-                  controller.prisoners_update(bot, saved, event, "prison");
+	                  controller.prisoners_update(bot, saved, event, "prison");
 
-									controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+										controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
-			              controller.storage.teams.save(res).then(saved => {
+				              controller.storage.teams.save(res).then(saved => {
 
-			                opt.team = saved;
-			                opt.user = _.findWhere(res.users, { userId: event.user }),
-			                opt.script = currentScript;
+				                opt.team = saved;
+				                opt.user = _.findWhere(res.users, { userId: event.user }),
+				                opt.script = currentScript;
 
-			                controller.confirmMovement(opt);
+				                controller.confirmMovement(opt);
+												usersClicking--;
 
-			              });
+				              });
 
-			            });
+				            });
 
-                });
-
+	                });
+								}, usersClicking * 100);
               }
 
             } else {
@@ -590,15 +595,12 @@ module.exports = function(controller) {
 	                opt.script = currentScript;
 
 	                controller.confirmMovement(opt);
+									usersClicking--;
 
 	              });
 
 	            });
 						}
-
-
-
-
 
           });
 
