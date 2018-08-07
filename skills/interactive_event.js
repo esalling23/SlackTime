@@ -551,7 +551,7 @@ module.exports = function(controller) {
 
             if (event.actions[0].value == "prisoners_room") {
 							do {
-								console.log("waiting ", usersClicking, event.user);
+								// console.log("waiting ", usersClicking, event.user);
 							} while (usersClicking.indexOf(event.user) != 0)
 
               if (res.prisoner_started)
