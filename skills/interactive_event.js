@@ -550,7 +550,7 @@ module.exports = function(controller) {
 							do {
 								console.log("waiting", usersClicking);
 							} while (usersClicking.indexOf(event.user) != 0)
-							
+
               if (res.prisoner_started)
                 opt.thread = "already_started";
               else {
@@ -569,7 +569,7 @@ module.exports = function(controller) {
 
 								controller.storage.teams.save(res, function(err, saved) {
 
-									delete usersClicking[usersClicking.indexOf(event.user)];
+									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 									console.log("reduced users clicking, ", usersClicking);
 
                   controller.prisoners_update(bot, saved, event, "prison");
@@ -601,7 +601,7 @@ module.exports = function(controller) {
 	                opt.script = currentScript;
 
 	                controller.confirmMovement(opt);
-									delete usersClicking[usersClicking.indexOf(event.user)];
+									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 
 	              });
 
