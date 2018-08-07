@@ -564,25 +564,10 @@ module.exports = function(controller) {
 
 							// console.log(res.users);
 
-              res.prisoner_players = _.where(res.users, { prisoner: true });
-
-							// console.log("users clicking: ", usersClicking);
-
-							controller.storage.teams.save(res, function(err, saved) {
-
-            controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
-
-              controller.storage.teams.save(res).then(saved => {
-
-                opt.team = saved;
-                opt.user = _.findWhere(res.users, { userId: event.user }),
-                opt.script = currentScript;
-
-                controller.confirmMovement(opt);
-
-              });
-
+              }
+							
             } else {
+
 							controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
 	              controller.storage.teams.save(res).then(saved => {
@@ -592,11 +577,11 @@ module.exports = function(controller) {
 	                opt.script = currentScript;
 
 	                controller.confirmMovement(opt);
-									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 
 	              });
 
 	            });
+
 						}
 
           });

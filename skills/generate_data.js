@@ -99,6 +99,8 @@ module.exports = function(controller) {
 
              _.each(teamData.users, function(user) {
 
+               console.log(user);
+
                 options.bot.api.im.open({ user: user.userId }, function(err, direct_message) {
 
                   console.log(err, direct_message);
