@@ -525,8 +525,8 @@ module.exports = function(controller) {
 				usersClicking++;
 
 				do {
-					console.log("waiting for users to finish up")
-				} while(usersClicking > 1)
+					console.log("waiting for users to finish up", usersClicking);
+				} while(usersClicking > 1);
 
         var opt = {
           bot: bot,
@@ -567,28 +567,28 @@ module.exports = function(controller) {
 
 								console.log("users clicking: ", usersClicking);
 
-								setTimeout(function() {
-									controller.storage.teams.save(res, function(err, saved) {
+								controller.storage.teams.save(res, function(err, saved) {
 
-	                  controller.prisoners_update(bot, saved, event, "prison");
+									usersClicking--;
+									console.log("reduced users clicking, ", usersClicking);
 
-										controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+                  controller.prisoners_update(bot, saved, event, "prison");
 
-				              controller.storage.teams.save(res).then(saved => {
+									controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
-				                opt.team = saved;
-				                opt.user = _.findWhere(res.users, { userId: event.user }),
-				                opt.script = currentScript;
+			              controller.storage.teams.save(res).then(saved => {
 
-				                controller.confirmMovement(opt);
-												usersClicking--;
+			                opt.team = saved;
+			                opt.user = _.findWhere(res.users, { userId: event.user }),
+			                opt.script = currentScript;
 
-				              });
+			                controller.confirmMovement(opt);
 
-				            });
+			              });
 
-	                });
-								}, usersClicking * 300);
+			            });
+
+                });
               }
 
             } else {
