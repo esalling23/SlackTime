@@ -522,6 +522,7 @@ module.exports = function(controller) {
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
 
+				if (usersClicking.includes(event.user)) return;
 				usersClicking.push(event.user);
 
         var opt = {
