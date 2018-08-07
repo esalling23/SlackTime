@@ -563,21 +563,24 @@ module.exports = function(controller) {
                 });
 
               }
-            }
+							
+            } else {
 
-            controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+							controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
-              controller.storage.teams.save(res).then(saved => {
+	              controller.storage.teams.save(res).then(saved => {
 
-                opt.team = saved;
-                opt.user = _.findWhere(res.users, { userId: event.user }),
-                opt.script = currentScript;
+	                opt.team = saved;
+	                opt.user = _.findWhere(res.users, { userId: event.user }),
+	                opt.script = currentScript;
 
-                controller.confirmMovement(opt);
+	                controller.confirmMovement(opt);
 
-              });
+	              });
 
-            });
+	            });
+
+						}
 
           });
 
