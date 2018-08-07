@@ -558,7 +558,7 @@ module.exports = function(controller) {
                 opt.thread = "already_started";
               else {
                 res.users = _.map(res.users, function(user) {
-                  if (user.userId == event.user)
+                  if (usersClicking.includes(user.userId))
                     user.prisoner = true;
 
                   return user;
