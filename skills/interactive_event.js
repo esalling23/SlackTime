@@ -17,6 +17,7 @@ module.exports = function(controller) {
   // Temporary storage
   var choiceSelect = [];
 	var usersClicking = [];
+	var maxWaitTime = 5;
 
   controller.on('interactive_message_callback', function(bot, event) {
 
@@ -550,7 +551,10 @@ module.exports = function(controller) {
             if (event.actions[0].value == "prisoners_room") {
 							do {
 								console.log("waiting", usersClicking);
-							} while (usersClicking.indexOf(event.user) != 0)
+								setTimeout(function(){
+									maxWaitTime--;
+								}, 1000)
+							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime <= 0)
 
               if (res.prisoner_started)
                 opt.thread = "already_started";
