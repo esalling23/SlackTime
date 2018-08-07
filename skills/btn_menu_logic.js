@@ -3,7 +3,7 @@ const request = require("request");
 
 module.exports = function(controller) {
 
-  controller.confirmMovement = function(params) {
+  controller.confirmMovement = function(params, cb) {
 
     var thread = params.thread ? params.thread : controller.determineThread(params.script, params.user);
     var vars = {};
@@ -71,7 +71,7 @@ module.exports = function(controller) {
     controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
         // replace the original button message with a new one
         params.bot.replyInteractive(params.event, card);
-
+        if (cb) cb(params.user);
     });
   }
 
