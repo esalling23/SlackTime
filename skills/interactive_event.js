@@ -582,7 +582,7 @@ module.exports = function(controller) {
 				            });
 
 	                });
-								}, usersClicking * 100);
+								}, usersClicking * 300);
               }
 
             } else {
