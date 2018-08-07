@@ -550,9 +550,10 @@ module.exports = function(controller) {
 
             if (event.actions[0].value == "prisoners_room") {
 							do {
-								console.log("waiting", usersClicking);
 								setTimeout(function(){
 									maxWaitTime--;
+									console.log("waiting", usersClicking);
+									console.log(maxWaitTime);
 								}, 100)
 							} while (usersClicking.indexOf(event.user) != 0 || maxWaitTime > 0)
 
