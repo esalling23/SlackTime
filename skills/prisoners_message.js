@@ -224,7 +224,8 @@ module.exports = function(controller) {
 
                   // Find the prisoner that belongs to the just-updated messages
                   // We want to make sure we saved them as ready
-                  const thisPrisoner = _.findWhere(team.prisoner_players, { "bot_chat": msg.channel });
+                  const thisPrisoner = _.findWhere(team.users, { "bot_chat": msg.channel });
+                  console.log("time to do an extra check ", thisPrisoner);
 
                   // If all players are ready, continue the game
                   if (!thisPrisoner.prisoner) {
@@ -240,7 +241,7 @@ module.exports = function(controller) {
 
                     controller.storage.teams.save(team, function(err, updated) {
 
-                      
+                      controller.prisoners_update(bot, updated, event, "prison");
 
                     });
                   }
