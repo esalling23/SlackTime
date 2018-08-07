@@ -570,27 +570,17 @@ module.exports = function(controller) {
 
 								controller.storage.teams.save(res, function(err, saved) {
 
-									// usersClicking.splice(usersClicking.indexOf(event.user), 1);
+									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 
-                  controller.prisoners_update(bot, saved, event, "prison");
+									console.log("reduced users clicking, ", usersClicking);
 
 									controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
-			              controller.storage.teams.save(res).then(saved => {
+		                opt.team = saved;
+		                opt.user = _.findWhere(res.users, { userId: event.user }),
+		                opt.script = currentScript;
 
-			                opt.team = saved;
-			                opt.user = _.findWhere(res.users, { userId: event.user }),
-			                opt.script = currentScript;
-
-			                controller.confirmMovement(opt, function(user) {
-												if (usersClicking.indexOf(user.userId) > -1)
-													usersClicking.splice(usersClicking.indexOf(event.user), 1);
-
-												console.log("reduced users clicking, ", usersClicking);
-
-											});
-
-			              });
+		                controller.confirmMovement(opt);
 
 			            });
 
