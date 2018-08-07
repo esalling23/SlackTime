@@ -3,7 +3,7 @@ const request = require("request");
 
 module.exports = function(controller) {
 
-  controller.confirmMovement = function(params, cb) {
+  controller.confirmMovement = function(params) {
 
     var thread = params.thread ? params.thread : controller.determineThread(params.script, params.user);
     var vars = {};
@@ -57,7 +57,7 @@ module.exports = function(controller) {
       }
 
       setTimeout(function() {
-        controller.prisoners_update(bot, saved, event, "prison");
+        controller.prisoners_update(params.bot, params.team, params.event, "prison");
       }, 2000)
 
     }
