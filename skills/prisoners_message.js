@@ -241,7 +241,7 @@ module.exports = function(controller) {
 
                     controller.storage.teams.save(team, function(err, updated) {
 
-                      controller.prisoners_update(bot, updated, event, "prison");
+                      controller.prisoners_update(bot, updated, { user: "" }, "prison");
 
                     });
                   }
