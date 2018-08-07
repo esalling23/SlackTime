@@ -550,9 +550,9 @@ module.exports = function(controller) {
             var scriptName = script.name;
 
             if (event.actions[0].value == "prisoners_room") {
-							do {
-								// console.log("waiting ", usersClicking, event.user);
-							} while (usersClicking.indexOf(event.user) != 0)
+							// do {
+							// 	// console.log("waiting ", usersClicking, event.user);
+							// } while (usersClicking.indexOf(event.user) != 0)
 
               if (res.prisoner_started)
                 opt.thread = "already_started";
