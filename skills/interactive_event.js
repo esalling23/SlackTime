@@ -16,7 +16,7 @@ module.exports = function(controller) {
   // for choose/confirm
   // Temporary storage
   var choiceSelect = [];
-	var usersClicking = 0;
+	var usersClicking = [];
 
   controller.on('interactive_message_callback', function(bot, event) {
 
@@ -522,11 +522,7 @@ module.exports = function(controller) {
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
 
-				usersClicking++;
-
-				do {
-					console.log("waiting for users to finish up", usersClicking);
-				} while(usersClicking > 1);
+				usersClicking.push(event.user);
 
         var opt = {
           bot: bot,
@@ -551,6 +547,10 @@ module.exports = function(controller) {
             var scriptName = script.name;
 
             if (event.actions[0].value == "prisoners_room") {
+							do {
+								console.log("waiting", usersClicking);
+							} while (usersClicking.indexOf(event.user) != 0)
+							
               if (res.prisoner_started)
                 opt.thread = "already_started";
               else {
@@ -569,7 +569,7 @@ module.exports = function(controller) {
 
 								controller.storage.teams.save(res, function(err, saved) {
 
-									usersClicking--;
+									delete usersClicking[usersClicking.indexOf(event.user)];
 									console.log("reduced users clicking, ", usersClicking);
 
                   controller.prisoners_update(bot, saved, event, "prison");
@@ -601,7 +601,7 @@ module.exports = function(controller) {
 	                opt.script = currentScript;
 
 	                controller.confirmMovement(opt);
-									usersClicking--;
+									delete usersClicking[usersClicking.indexOf(event.user)];
 
 	              });
 
