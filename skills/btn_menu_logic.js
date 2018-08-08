@@ -3,6 +3,8 @@ const request = require("request");
 
 module.exports = function(controller) {
 
+  var usersPrisoned = [];
+
   controller.confirmMovement = function(params) {
 
     var thread = params.thread ? params.thread : controller.determineThread(params.script, params.user);
@@ -76,11 +78,12 @@ module.exports = function(controller) {
         // replace the original button message with a new one
         params.bot.replyInteractive(params.event, card);
 
+        if (params.data.value != "prisoners_room") return;
+
+        usersPrisoned.push(params.event.user);
 
         setTimeout(function() {
 
-          if (params.data.value != "prisoners_room") return;
-          
           var team = params.team;
 
           // Find the prisoner that belongs to the just-updated messages
@@ -92,7 +95,7 @@ module.exports = function(controller) {
           if (!thisPrisoner.prisoner) {
             // Check for unsaved but ready players
             team.users = _.map(team.users, function(user) {
-              if (user.userId == event.user)
+              if (usersPrisoned.includes(user.userId))
                 user.prisoner = true;
 
               return user;
@@ -102,7 +105,10 @@ module.exports = function(controller) {
 
             controller.storage.teams.save(team, function(err, updated) {
 
-              controller.prisoners_update(bot, updated, { user: "" }, "prison");
+              setTimeout(function() {
+                controller.prisoners_update(bot, updated, { user: "" }, "prison");
+
+              }, 3000)
 
             });
           }
