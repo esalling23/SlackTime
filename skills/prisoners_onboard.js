@@ -22,7 +22,7 @@ module.exports = function(controller) {
           if (!message)
             return;
 
-          console.log(message);
+          console.log(message, " this might be a prisoner message?");
 
           if (message.attachments[0].title == "Prison") {
             prisoners.push(user.userId);
@@ -41,6 +41,7 @@ module.exports = function(controller) {
         });
 
         controller.storage.teams.save(team, function(err, saved) {
+          console.log(saved.users, " we checked, and we updated");
           cb(saved.users);
         });
 
