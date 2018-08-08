@@ -220,37 +220,7 @@ module.exports = function(controller) {
                 attachments: card.attachments
               }, function(err, updated) {
 
-                setTimeout(function() {
-
-                  // Find the prisoner that belongs to the just-updated messages
-                  // We want to make sure we saved them as ready
-                  const thisPrisoner = _.findWhere(team.users, { "bot_chat": updated.channel });
-                  console.log("time to do an extra check ", thisPrisoner);
-
-                  // If all players are ready, continue the game
-                  if (!thisPrisoner.prisoner) {
-                    // Check for unsaved but ready players
-                    team.users = _.map(team.users, function(user) {
-                      if (user.userId == event.user)
-                        user.prisoner = true;
-
-                      return user;
-                    });
-
-                    team.prisoner_players = _.where(team.users, { prisoner: true });
-
-                    controller.storage.teams.save(team, function(err, updated) {
-
-                      setTimeout(function() {
-
-                        controller.prisoners_update(bot, updated, { user: "" }, "prison");
-
-                      }, 5000);
-
-                    });
-                  }
-
-                }, 3000);
+                
 
               });
             });

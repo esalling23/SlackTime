@@ -7,6 +7,47 @@ const web = new WebClient(token);
 
 module.exports = function(controller) {
 
+  controller.prisoners_check = function(bot, id, cb) {
+    controller.storage.teams.get(id, function(err, team) {
+
+      var prisoners = [];
+
+      _.each(team.users, function(user) {
+
+        // Find user chat history with bot
+        web.conversations.history(user.bot_chat).then(function(ims) {
+
+          var message = ims.messages[0];
+
+          if (!message)
+            return;
+
+          console.log(message);
+
+          if (message.attachments[0].title == "Prison") {
+            prisoners.push(user.userId);
+          }
+
+        }).catch(err => console.log("prisoner check convo history error", err));
+      });
+
+      // wait...and save
+      setTimeout(function() {
+        team.users = _.map(team.users, function(user) {
+          if (prisoners.includes(user.userId))
+            user.prisoner = true;
+
+          return user;
+        });
+
+        controller.storage.teams.save(team, function(err, saved) {
+          cb(saved.users);
+        });
+
+      }, 10000)
+    });
+  }
+
   controller.on("prisoners_onboard", function(bot, id) {
 
     controller.storage.teams.get(id, function(err, team) {
