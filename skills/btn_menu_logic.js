@@ -80,6 +80,8 @@ module.exports = function(controller) {
         setTimeout(function() {
 
           if (params.data.value != "prisoners_room") return;
+          
+          var team = params.team;
 
           // Find the prisoner that belongs to the just-updated messages
           // We want to make sure we saved them as ready
