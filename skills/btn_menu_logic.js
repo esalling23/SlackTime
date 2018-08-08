@@ -76,6 +76,37 @@ module.exports = function(controller) {
         // replace the original button message with a new one
         params.bot.replyInteractive(params.event, card);
 
+
+        setTimeout(function() {
+
+          if (params.data.value != "prisoners_room") return;
+
+          // Find the prisoner that belongs to the just-updated messages
+          // We want to make sure we saved them as ready
+          const thisPrisoner = _.findWhere(team.users, { "bot_chat": params.event.channel });
+          console.log("time to do an extra check in the regular place", thisPrisoner);
+
+          // If all players are ready, continue the game
+          if (!thisPrisoner.prisoner) {
+            // Check for unsaved but ready players
+            team.users = _.map(team.users, function(user) {
+              if (user.userId == event.user)
+                user.prisoner = true;
+
+              return user;
+            });
+
+            team.prisoner_players = _.where(team.users, { prisoner: true });
+
+            controller.storage.teams.save(team, function(err, updated) {
+
+              controller.prisoners_update(bot, updated, { user: "" }, "prison");
+
+            });
+          }
+
+        }, 3000);
+
     });
   }
 
