@@ -241,7 +241,11 @@ module.exports = function(controller) {
 
                     controller.storage.teams.save(team, function(err, updated) {
 
-                      controller.prisoners_update(bot, updated, { user: "" }, "prison");
+                      setTimeout(function() {
+
+                        controller.prisoners_update(bot, updated, { user: "" }, "prison");
+
+                      }, 5000);
 
                     });
                   }
