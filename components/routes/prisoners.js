@@ -8,43 +8,22 @@ module.exports = function(webserver, controller) {
     controller.storage.teams.get(req.params.team, function(err, team) {
       console.log(err, team.id, " /n Team info");
       var bot = controller.spawn(team.bot);
-      var decisions = _.pluck(team.prisoner_decisions, "user");
-
-      console.log(decisions, team.prisoner_complete, " /n Team complete?");
 
       if (team.prisoner_complete) return;
 
-      // players that will be kicked due to not responding in time.
-      team.times_up = _.filter(team.prisoner_players, function(player) {
-        return !decisions.includes(player.userId);
-      });
+      controller.prisoners_check(bot, team.id, function(users) {
 
-      // players that are still in the game
-      team.prisoner_players = _.filter(team.prisoner_players, function(player) {
-        return decisions.includes(player.userId);
-      });
+        // reset prisoner times
+        team.prisoner_time.complete = true;
 
-      // reset prisoner times
-      team.prisoner_time = {};
+        controller.storage.teams.save(team, function(err, saved) {
 
-      controller.storage.teams.save(team, function(err, saved) {
-
-        // if (saved.prisoner_started) {
-        //   // Send times-up message to any late players
-        //   controller.prisoners_message(bot, saved.id, "times_up");
-        //   // check other responses if game is started
-        //   setTimeout(function() {
-        //     var obj = _.findWhere(saved.prisoner_time, { complete: false });
-        //     controller.trigger("prisoners_check", [bot, saved.id, obj]);
-        //   }, 5000);
-        // } else {
-          // console.log("this game hasn't started! let's send that message");
           // if game is not started, start it
           controller.trigger("prisoners_onboard", [bot, saved.id]);
 
-        // }
-
+        });
       });
+
     });
   });
 
