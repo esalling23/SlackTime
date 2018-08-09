@@ -10,6 +10,8 @@ module.exports = function(controller) {
   controller.prisoners_check = function(bot, id, cb) {
     controller.storage.teams.get(id, function(err, team) {
 
+      console.log(" checking the team with url: ", team.url);
+
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
 
@@ -17,7 +19,7 @@ module.exports = function(controller) {
 
       _.each(team.users, function(user) {
 
-        console.log(user);
+        console.log(user, " lets check this user!");
 
         // Find user chat history with bot
         web.conversations.history(user.bot_chat).then(function(ims) {
