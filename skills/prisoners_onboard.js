@@ -10,6 +10,9 @@ module.exports = function(controller) {
   controller.prisoners_check = function(bot, id, cb) {
     controller.storage.teams.get(id, function(err, team) {
 
+      var token = bot.config.token ? bot.config.token : bot.config.bot.token;
+      var web = new WebClient(token);
+
       var prisoners = [];
 
       _.each(team.users, function(user) {
