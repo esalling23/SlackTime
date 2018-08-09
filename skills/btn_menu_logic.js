@@ -55,12 +55,12 @@ module.exports = function(controller) {
       if (vars.prisoners_length == 2 || !params.team.prisoner_time || params.team.prisoner_time.length <= 0) {
         setTimeout(function() {
           controller.prisoners_time(params.bot, params.team.id, false);
-        }, 2000);
+        }, 10000);
       }
 
       setTimeout(function() {
         controller.prisoners_update(params.bot, params.team, params.event, "prison");
-      }, 2000)
+      }, 5000)
 
     }
 
