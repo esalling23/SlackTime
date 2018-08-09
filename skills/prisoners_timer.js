@@ -66,8 +66,11 @@ module.exports = function(controller) {
 
   controller.prisoners_initial_dev = function() {
     var start = new Date();
+    var nextDate = new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
+    // Silly hosting uses the wrong timezone, reset it to use EST
+    nextDate = new Date( nextDate.getTime() - 240 * 60000 );
     console.log('set prisoner timer for dev');
-    return new Date(start.getTime() + process.env.prisoners_initial * milPerMin);
+    return nextDate;
   }
 
   var getMonth = function(obj, date) {
