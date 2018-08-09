@@ -563,8 +563,12 @@ module.exports = function(controller) {
                   if (usersClicking.includes(user.userId))
                     user.prisoner = true;
 
+									console.log(user);
+
                   return user;
                 });
+
+								console.log(res.users);
 
                 res.prisoner_players = _.where(res.users, { prisoner: true });
 
