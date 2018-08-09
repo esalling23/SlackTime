@@ -40,7 +40,7 @@ module.exports = function(controller) {
 
     });
 
-  });  
+  });
 
   controller.hears('timer_start', 'direct_message', function(bot,message) {
 
@@ -50,32 +50,22 @@ module.exports = function(controller) {
 
   controller.hears('gamestart', 'direct_message', function(bot, message) {
 
+    var botChannels = {};
+
     controller.storage.teams.get(message.team, function(err, team) {
 
        _.each(team.users, function(user) {
 
           bot.api.im.open({ user: user.userId }, function(err, direct_message) {
 
-            user.bot_chat = direct_message.channel.id;
-            user.startBtns = ["default", "primary", "danger"];
+            botChannels[user.userId] = direct_message.channel.id;
+
+            console.log("onboarding this player", user);
 
             if (err) {
               console.log('Error sending onboarding message:', err);
             } else {
-
-              team.gameStarted = true;
-
-              team.users = _.map(team.users, function(u) {
-                if (u.userId == user.userId)
-                  return user;
-                else
-                  return u;
-              });
-
-              controller.storage.teams.save(team, function(err, saved) {
-                 console.log(saved);
-
-                  controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
+              controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
 
                 var template = convo.threads.default[0];
                 template.username = process.env.username;
