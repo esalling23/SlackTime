@@ -47,12 +47,8 @@ module.exports = function(controller) {
           return user;
         });
 
-        team.prisoner_players = _.where(team.users, { prisoner: true });
-
-        controller.storage.teams.save(team, function(err, saved) {
-          console.log(saved.users, " we checked, and we updated");
-          cb(saved.users);
-        });
+        console.log(team.users, " we checked, and we updated");
+        cb(team.users);
 
       });
 
