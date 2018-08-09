@@ -526,6 +526,7 @@ module.exports = function(controller) {
 
 				if (usersClicking.includes(event.user)) return;
 				usersClicking.push(event.user);
+				console.log("user clicked");
 
         var opt = {
           bot: bot,
@@ -548,6 +549,7 @@ module.exports = function(controller) {
 
             var script = _.findWhere(list, { name: name });
             var scriptName = script.name;
+						console.log(event.actions[0].value);
 
             if (event.actions[0].value == "prisoners_room") {
 							// do {
