@@ -77,9 +77,9 @@ module.exports = function(controller) {
         var msg = res.messages[0];
 
         if (msg)
-          resolve(msg, opt[1]);
+          resolve({ msg: msg, channel: opt[1] });
         else
-          reject("no message found");
+          resolve("no message found");
 
       }).catch(err => console.log("history error in finding messages: ", err));
     });
