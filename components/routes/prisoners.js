@@ -27,4 +27,16 @@ module.exports = function(webserver, controller) {
     });
   });
 
+  webserver.get('/prisoners_time/:team', function(req, res) {
+    console.log('team: ' + req.params.team);
+    // Time is up for a team!
+    controller.storage.teams.get(req.params.team, function(err, team) {
+      console.log(err, team.id, " /n Team info");
+      var bot = controller.spawn(team.bot);
+
+      controller.prisoners_time(bot, team.id, false);
+
+    });
+  });
+
 }
