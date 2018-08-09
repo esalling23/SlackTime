@@ -96,7 +96,7 @@ module.exports = function(controller) {
       template.username = process.env.username;
       template.icon_url = process.env.icon_url;
 
-      console.log(template);
+      console.log(template, " make card template");
 
       convo.stop('card_only');
       cb(template);

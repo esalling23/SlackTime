@@ -6,12 +6,14 @@ module.exports = function(webserver, controller) {
     console.log('team: ' + req.params.team);
     // Time is up for a team!
     controller.storage.teams.get(req.params.team, function(err, team) {
-      console.log(err, team.id, " /n Team info");
+      console.log(team.id, " /n Team info");
       var bot = controller.spawn(team.bot);
 
       if (team.prisoner_complete) return;
 
       controller.prisoners_check(bot, team.id, function(users) {
+
+        console.log(users, " are this prisoners users");
 
         // reset prisoner times
         team.prisoner_time.complete = true;
