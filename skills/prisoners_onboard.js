@@ -14,6 +14,8 @@ module.exports = function(controller) {
 
       _.each(team.users, function(user) {
 
+        console.log(user);
+
         // Find user chat history with bot
         web.conversations.history(user.bot_chat).then(function(ims) {
 
