@@ -32,9 +32,9 @@ module.exports = function(controller) {
         console.log(messages, " are the returned messages");
 
         _.each(messages, function(msg) {
-          console.log(msg.attachments[0].title);
-          if (msg.attachments[0].title == "Prison")
-            prisoners.push(msg.channel);
+          console.log(msg[0].attachments[0].title);
+          if (msg[0].attachments[0].title == "Prison")
+            prisoners.push(msg[1]);
         });
 
 
