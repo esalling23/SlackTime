@@ -73,7 +73,7 @@ module.exports = function(controller) {
   controller.findRecentMessages = function(opt) {
     return new Promise((resolve, reject) => {
       console.log(opt.channel, " is this users bot channel");
-      opt.web.conversations.history(opt.channel).then(res => {
+      opt[0].conversations.history(opt[1]).then(res => {
         var msg = res.messages[0];
 
         if (msg)
