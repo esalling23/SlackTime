@@ -31,10 +31,10 @@ module.exports = function(controller) {
       results.then(newData => {
         console.log(newData, " are the returned messages");
 
-        _.each(messages, function(msg) {
-          console.log(msg[0].attachments[0].title);
-          if (msg[0].attachments[0].title == "Prison")
-            prisoners.push(msg);
+        _.each(newData, function(m.msg) {
+          console.log(m.msg.attachments[0].title);
+          if (m.msg.attachments[0].title == "Prison")
+            prisoners.push(m.channel);
         });
 
 
