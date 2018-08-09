@@ -17,42 +17,39 @@ module.exports = function(controller) {
 
       var prisoners = [];
 
-      _.each(team.users, function(user) {
+      var data = [];
 
-        console.log(user, " lets check this user!");
-
-        // Find user chat history with bot
-        web.conversations.history(user.bot_chat).then(function(ims) {
-
-          var message = ims.messages[0];
-
-          if (!message)
-            return;
-
-          console.log(message, " this might be a prisoner message?");
-
-          if (message.attachments[0].title == "Prison") {
-            prisoners.push(user.userId);
-          }
-
-        }).catch(err => console.log("prisoner check convo history error", err));
+      _.each(team.users, function(u) {
+        data.push([web, u.bot_chat]);
       });
 
-      // wait...and save
-      setTimeout(function() {
+      var mapPromises = data.map(controller.findRecentMessages);
+      var results = Promise.all(mapPromises);
+
+      results.then(messages => {
+        console.log(messages, " are the returned messages");
+
+        _.each(messages, function(msg) {
+          if (msg.attachments[0].title == "Prison")
+            prisoners.push(msg.channel);
+        });
+
         team.users = _.map(team.users, function(user) {
-          if (prisoners.includes(user.userId))
+          if (prisoners.includes(user.bot_chat))
             user.prisoner = true;
 
           return user;
         });
+
+        team.prisoner_players = _.where(team.users, { prisoner: true });
 
         controller.storage.teams.save(team, function(err, saved) {
           console.log(saved.users, " we checked, and we updated");
           cb(saved.users);
         });
 
-      }, 10000)
+      });
+
     });
   }
 
