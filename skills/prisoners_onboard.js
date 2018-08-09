@@ -28,13 +28,13 @@ module.exports = function(controller) {
       var mapPromises = data.map(controller.findRecentMessages);
       var results = Promise.all(mapPromises);
 
-      results.then(messages => {
-        console.log(messages, " are the returned messages");
+      results.then(newData => {
+        console.log(newData, " are the returned messages");
 
         _.each(messages, function(msg) {
           console.log(msg[0].attachments[0].title);
           if (msg[0].attachments[0].title == "Prison")
-            prisoners.push(msg[1]);
+            prisoners.push(msg);
         });
 
 
