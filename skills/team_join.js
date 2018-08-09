@@ -8,21 +8,21 @@ module.exports = function(controller) {
 
         console.log("a user joined", message);
         if (!controller.isUser(message.user)) return;
-      
+
         controller.storage.teams.get(message.team_id, function(err, team) {
-          
+
           if (_.findWhere(team.users, { userId: message.user.id })) return;
-          
+
           var web = new WebClient(team.bot.app_token);
 
           web.users.list().then(res => {
-            
+
             var thisUser = _.findWhere(res.members, { id: message.user.id });
-            
+
             team.users.push({
-              userId: message.user.id, 
-              name: message.user.name, 
-              startBtns: ["default", "primary", "danger"], 
+              userId: message.user.id,
+              name: message.user.name,
+              startBtns: ["default", "primary", "danger"],
               email: thisUser.profile.email
             });
 
@@ -60,17 +60,19 @@ module.exports = function(controller) {
 
               if (!saved.gameStarted) return;
 
-              bot.api.im.open({ user: message.user.id }, function(err, direct_message) { 
+              bot.api.im.open({ user: message.user.id }, function(err, direct_message) {
 
                 saved.users = _.map(saved.users, function(u) {
-                  if (u.userId == message.user.id) 
-                    u.bot_chat == direct_message.channel.id;
-                  
+                  if (u.userId == message.user.id)
+                    u.bot_chat = direct_message.channel.id;
+
                   return u;
                 });
-                
+
+                console.log("new user joined with bot channel, ", saved.users);
+
                 controller.storage.teams.save(saved, function(err, updated) {
-                  
+
                   if (err) {
                     console.log('Error sending onboarding message:', err);
                   } else {
@@ -88,15 +90,15 @@ module.exports = function(controller) {
 
                     });
                   }
-                  
+
                 });
 
               });
             });
           }).catch(err => console.log("Team Join User Profile Get Error: ", err));
-          
+
         });
-      
+
     });
 
 }
