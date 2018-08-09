@@ -14,6 +14,9 @@ module.exports = function(webserver, controller) {
 
         console.log(users, " are this prisoners users");
 
+        team.users = users;
+        team.prisoner_players = _.where(users, { prisoner: true });
+
         // reset prisoner times
         team.prisoner_time.complete = true;
 
