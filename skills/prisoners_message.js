@@ -196,7 +196,7 @@ module.exports = function(controller) {
               if (vars.prisoners_length == 2 || team.prisoner_time == {} || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
                   controller.prisoners_time(bot, team.id, false);
-                }, 2000);
+                }, 10000);
               }
 
             } else if (type == "feedback") {
@@ -219,8 +219,6 @@ module.exports = function(controller) {
                 ts: btn_message.ts,
                 attachments: card.attachments
               }, function(err, updated) {
-
-                
 
               });
             });
