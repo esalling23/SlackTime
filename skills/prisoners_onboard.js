@@ -23,7 +23,7 @@ module.exports = function(controller) {
         data.push([web, u.bot_chat]);
       });
 
-      console.log(data, " is the data");
+      // console.log(data, " is the data");
 
       var mapPromises = data.map(controller.findRecentMessages);
       var results = Promise.all(mapPromises);
@@ -32,11 +32,15 @@ module.exports = function(controller) {
         console.log(messages, " are the returned messages");
 
         _.each(messages, function(msg) {
+          console.log(msg.attachments[0].title);
           if (msg.attachments[0].title == "Prison")
             prisoners.push(msg.channel);
         });
 
+
         team.users = _.map(team.users, function(user) {
+          console.log(prisoners, " are the prisoner's bot channels");
+          console.log(user.bot_chat, " is this users bot channel");
           if (prisoners.includes(user.bot_chat))
             user.prisoner = true;
 
