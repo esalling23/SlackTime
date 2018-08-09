@@ -40,7 +40,7 @@ module.exports = function(controller) {
 
     });
 
-  });  
+  });
 
   controller.hears('timer_start', 'direct_message', function(bot,message) {
 
@@ -50,45 +50,34 @@ module.exports = function(controller) {
 
   controller.hears('gamestart', 'direct_message', function(bot, message) {
 
+    var botChannels = {};
+
     controller.storage.teams.get(message.team, function(err, team) {
 
        _.each(team.users, function(user) {
 
           bot.api.im.open({ user: user.userId }, function(err, direct_message) {
 
-            user.bot_chat = direct_message.channel.id;
-            user.startBtns = ["default", "primary", "danger"];
+            botChannels[user.userId] = direct_message.channel.id;
+
+            console.log("onboarding this player", user);
 
             if (err) {
               console.log('Error sending onboarding message:', err);
             } else {
+              controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
 
-              team.gameStarted = true;
+                var template = convo.threads.default[0];
+                template.username = process.env.username;
+                template.icon_url = process.env.icon_url;
 
-              team.users = _.map(team.users, function(u) {
-                if (u.userId == user.userId)
-                  return user;
-                else
-                  return u;
-              });
+                convo.setVar("team", team.id);
+                convo.setVar("user", user.userId);
 
-              controller.storage.teams.save(team, function(err, saved) {
-                 console.log(saved);
+                convo.activate();
 
-                  controller.studio.get(bot, 'onboarding', user.userId, direct_message.channel.id).then(convo => {
-
-                    var template = convo.threads.default[0];
-                    template.username = process.env.username;
-                    template.icon_url = process.env.icon_url;
-
-                    convo.setVar("team", team.id);
-                    convo.setVar("user", user.userId);
-
-                    convo.activate();
-
-                  }).catch(function(err) {
-                    console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
-                  });
+              }).catch(function(err) {
+                console.log('Error: encountered an error loading onboarding script from Botkit Studio:', err);
               });
 
             }
@@ -96,6 +85,25 @@ module.exports = function(controller) {
           });
 
        });
+
+       setTimeout(function() {
+         team.gameStarted = true;
+
+         team.users = _.map(team.users, function(u) {
+
+           u.bot_chat = botChannels[u.userId];
+           u.startBtns = ["danger", "primary", "default"]
+           return u;
+
+         });
+
+         controller.storage.teams.save(team, function(err, saved) {
+            console.log(saved);
+        });
+
+
+       }, 1000 * team.users.length)
+
     });
 
   });
