@@ -33,7 +33,7 @@ module.exports = function(controller) {
       } else {
         // if we are starting the game
         // empty the timer object and set team prisoner_started boolean
-        team.prisoner_time = {};
+        team.prisoner_time.complete = true;
         team.prisoner_started = true;
         console.log("game started, time removed " + team.prisoner_time);
       }

@@ -28,7 +28,8 @@ module.exports = function(webserver, controller) {
   });
 
   webserver.get('/prisoners_time/:team', function(req, res) {
-    console.log('team: ' + req.params.team);
+    console.log('time to set the prisoner time for this team ' + req.params.team);
+
     // Time is up for a team!
     controller.storage.teams.get(req.params.team, function(err, team) {
       console.log(err, team.id, " /n Team info");
