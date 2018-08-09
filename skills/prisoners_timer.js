@@ -19,6 +19,7 @@ module.exports = function(controller) {
       if (!started) {
         // Grab the start date (now) and end time
         var start = new Date();
+        console.log(" the environment we have is ", process.env.environment);
         var end = process.env.environment == "dev" ? controller.prisoners_initial_dev() : controller.prisoners_initial();
         if (team.prisoner_time.start) updated = true;
         // Create new prisoner time object
