@@ -43,14 +43,16 @@ module.exports = function(controller) {
   });
 
   controller.hears('timer_start', 'direct_message', function(bot,message) {
-
+    if (process.env.environment != 'dev') return;
     controller.prisoners_time(bot, message.team, true);
 
   });
 
-  controller.hears('gamestart', 'direct_message', function(bot, message) {
+  controller.hears('flavor_flave', 'direct_message', function(bot, message) {
 
     var botChannels = {};
+
+    if (message.match[0] != "flavor_flave") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
 
@@ -202,6 +204,7 @@ module.exports = function(controller) {
   // Listen for
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
 
+    if (process.env.environment != 'dev') return;
     console.log(message, "in the hears");
     var options = {
       bot: bot,
@@ -226,7 +229,8 @@ module.exports = function(controller) {
   });
 
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
-    console.log(message.user);
+
+    if (process.env.environment != 'dev') return;
     // if (process.env.environment != 'dev') return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
@@ -238,14 +242,14 @@ module.exports = function(controller) {
 
 
   controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
-    console.log(message.user);
+
     if (process.env.environment != 'dev') return;
     controller.trigger("image_counter_onboard", [bot, message]);
 
   });
 
   controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
-    console.log(message.user);
+
     if (process.env.environment != 'dev') return;
     controller.trigger("prisoners_onboard", [bot, message]);
 
