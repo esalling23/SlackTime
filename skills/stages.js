@@ -3,30 +3,12 @@ const fs = require('fs');
 
 module.exports = function(controller) {
 
-  // var data = JSON.parse(fs.readFileSync('./scripts1.json', 'utf8'));
-  // var replace = {
-  //   "escape-room-production.glitch.me": process.env.domain,
-  //   "tamagotchi-production.glitch.me": process.env.egg_domain
-  // };
+  // var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
   //
   // data = _.map(data, function(d) {
   //   _.each(d.script, function(s) {
   //     _.each(s.script, function(x) {
-  //       if (x.attachments) {
-  //         _.each(x.attachments, function(a) {
-  //           if (a.actions) {
-  //             _.each(a.actions, function(btn) {
-  //               console.log(btn, " is a button object");
-  //               if (btn.name == "link_button") {
-  //                 console.log("this button is a link!!");
-  //                 btn.url = btn.url.replace("escape-room-production.glitch.me", process.env.domain);
-  //                 btn.url = btn.url.replace(/tamagotchi-production.glitch.me|tamagotchi-dev.glitch.me/g, process.env.egg_domain);
-  //                 console.log(btn.url);
-  //               }
-  //             });
-  //           }
-  //         });
-  //       }
+  //       x.triggers = [];
   //     });
   //   });
   //

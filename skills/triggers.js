@@ -1,5 +1,4 @@
 
-
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
@@ -8,7 +7,9 @@ module.exports = function(controller) {
       "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s"
     };
 
-    return Object.values(secrets).includes(trigger);
+    return Object.keys(secrets).map(function(key) {
+      return secrets[key];
+    }).includes(trigger);
   }
 
   controller.on('direct_message', function(bot, message) {
