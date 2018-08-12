@@ -42,11 +42,17 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears('timer_start', 'direct_message', function(bot,message) {
-    if (process.env.environment != 'dev') return;
-    controller.prisoners_time(bot, message.team, true);
+  controller.hears('gamelog_update_kiwi', 'direct_message', function(bot, message) {
 
-  });
+   if (message.match[0] != "gamelog_update_kiwi") return;
+
+   var log = {
+     bot: bot,
+     team: bot.config.id,
+   }
+
+   controller.trigger('gamelog_update', [log]);
+ });
 
   controller.hears('flavor_flave', 'direct_message', function(bot, message) {
 
@@ -119,6 +125,12 @@ module.exports = function(controller) {
   });
 
 
+
+  controller.hears('timer_start', 'direct_message', function(bot,message) {
+    if (process.env.environment != 'dev') return;
+    controller.prisoners_time(bot, message.team, true);
+
+  });
 
   controller.hears('chat', 'direct_message', function(bot,message) {
     if (process.env.environment != 'dev') return;

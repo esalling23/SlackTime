@@ -3,23 +3,23 @@ const fs = require('fs');
 
 module.exports = function(controller) {
 
-  // var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
-  //
-  // data = _.map(data, function(d) {
-  //   _.each(d.script, function(s) {
-  //     _.each(s.script, function(x) {
-  //       x.triggers = [];
-  //     });
-  //   });
-  //
-  //
-  //   return d;
-  // });
-  //
-  // var json = JSON.stringify(data);
-  // fs.writeFile('./newscripts.json', json, 'utf8', function() {
-  //   console.log('done');
-  // });
+  var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
+
+  data = _.map(data, function(d) {
+    _.each(d.script, function(s) {
+      _.each(s.script, function(x) {
+        x.triggers = [];
+      });
+    });
+
+
+    return d;
+  });
+
+  var json = JSON.stringify(data);
+  fs.writeFile('./newscripts.json', json, 'utf8', function() {
+    console.log('done');
+  });
 
 
   controller.codeStages = {
