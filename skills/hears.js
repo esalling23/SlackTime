@@ -271,6 +271,19 @@ module.exports = function(controller) {
     });
   });
 
+  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
+    if (message.match[0] != "continue_dilemma") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      ready = _.where(team.prisoner_players, { "prisoner_ready": true });
+
+      console.log(ready.length, team.prisoner_players.length);
+      console.log("lets check and continue ", ready.length == team.prisoner_players.length);
+      if (ready.length == team.prisoner_players.length) {
+        controller.prisoners_continue(bot, team);
+      }
+    });
+  });
 
   controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
 
