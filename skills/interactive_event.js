@@ -526,7 +526,7 @@ module.exports = function(controller) {
 
 				if (usersClicking.includes(event.user)) return;
 				usersClicking.push(event.user);
-				console.log("user clicked");
+				// console.log("user clicked");
 
         var opt = {
           bot: bot,
@@ -560,22 +560,22 @@ module.exports = function(controller) {
                   if (usersClicking.includes(user.userId))
                     user.prisoner = true;
 
-									console.log(user);
+									// console.log(user);
 
                   return user;
                 });
 
-								console.log(res.users);
+								// console.log(res.users);
 
                 res.prisoner_players = _.where(res.users, { prisoner: true });
 
-								console.log("users clicking: ", usersClicking);
+								// console.log("users clicking: ", usersClicking);
 
 								controller.storage.teams.save(res, function(err, saved) {
 
 									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 
-									console.log("reduced users clicking, ", usersClicking);
+									// console.log("reduced users clicking, ", usersClicking);
 
 									controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
