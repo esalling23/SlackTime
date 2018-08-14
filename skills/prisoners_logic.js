@@ -43,7 +43,7 @@ module.exports = function(controller) {
 
             controller.prisoners_check(bot, saved.id, "Prison", false, function(users) {
               var web = new WebClient(team.bot.app_token);
-              controller.prisoners_leftout(web, users);
+              controller.prisoners_leftout(web, bot, users);
             });
 
             // Trigger update message for all players
