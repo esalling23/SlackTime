@@ -61,7 +61,7 @@ module.exports = function(controller) {
   }
 
 
-  controller.prisoners_leftout = function(web, users) {
+  controller.prisoners_leftout = function(web, bot, users) {
 
     _.each(users, function(user) {
       controller.findRecentMessages(web, user.bot_chat).then(res => {
