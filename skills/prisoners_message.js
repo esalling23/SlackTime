@@ -3,44 +3,14 @@ const { WebClient } = require('@slack/client');
 
 module.exports = function(controller) {
 
-  controller.store_prisoners_msg = function(message, user, team) {
-    var exists = _.findWhere(team.prisoners_messages, { user: user.userId });
-    var channel = user.bot_chat;
-    if (exists) {
-      team.prisoners_messages = _.map(team.prisoners_messages, function(msg) {
-        if (msg.user == user.userId) {
-          msg = message;
-          msg.channel = channel;
-          msg.user =  user.userId;
-          msg.team_id = team.id;
-        }
-
-        return msg;
-      });
-    } else {
-      var msg = message;
-      msg.channel = channel;
-      msg.user = user.userId;
-      msg.team_id = team.id;
-      team.prisoners_messages.push(msg);
-    }
-
-    controller.storage.teams.save(team, function(err, saved) {
-      console.log("saved a prisoner message: ", saved.prisoners_messages);
-    });
-  }
-
-
-
+  // Sends prisoner dilemma messages for different events to ALL players
   controller.prisoners_message = function(bot, id, thread) {
-
-    console.log(id, thread, " /n we wanna send a message here");
 
     controller.storage.teams.get(id, function(err, team) {
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
       var web = new WebClient(token);
-      
-      console.log(err, team.id);
+
+      var script = thread == "too_few_players" ? "prisoners_room" : "prisoners_dilemma";
 
       // Determine which players object to use based on thread
       var players = ((thread) => {
@@ -50,12 +20,11 @@ module.exports = function(controller) {
           case 'times_up':
             return team.times_up;
           case 'end':
+          case 'too_few_players':
             return _.where(team.users, { prisoner: true });
           default:
             return team.prisoner_players;
         }})(thread);
-      
-      console.log(players, " the designated players");
 
       var vars = {};
 
@@ -63,6 +32,22 @@ module.exports = function(controller) {
       // Set decisions object on card vars
       if (thread == "decisions" || thread == "follow_up") {
         vars.prisoner_decisions = team.prisoner_decisions;
+      }
+       else if (thread == "end") {
+        // If this is the end thread, set winner variables
+        vars.prisoners_winners = team.prisoner_players;
+        vars.prisoners_link = process.env.domain + "/link/";
+
+        if (team.prisoner_eliminate)
+          vars.prisoners_link += "prisoners_eliminate";
+        else
+          vars.prisoners_link += "prisoners_share";
+
+      }
+      else if (thread == "too_few_players") {
+        vars.prisoners_users = team.users;
+        vars.prisoners_time = controller.prisoners_initial().toDateString();
+        vars.prisoners_length = process.env.prisoners_players - _.where(team.users, { prisoner: true }).length;
       }
 
       // If this is supposed to be a new round but only one player remains
@@ -77,24 +62,9 @@ module.exports = function(controller) {
         team.prisoner_complete = true;
       }
 
-      // If this is the end thread, set winner variables
-      if (thread == "end") {
-        vars.prisoners_winners = team.prisoner_players;
-        vars.prisoners_link = process.env.domain + "/link/";
-
-        if (team.prisoner_eliminate)
-          vars.prisoners_link += "prisoners_eliminate";
-        else
-          vars.prisoners_link += "prisoners_share";
-      }
-
       controller.storage.teams.save(team, function(err, saved) {
-        
-        console.log(err, saved.id);
 
         _.each(players, function(user) {
-          
-          console.log(user.bot_chat, " \n this users bot channel");
 
           if (vars.prisoners_link) {
             vars.user = user.userId;
@@ -105,24 +75,28 @@ module.exports = function(controller) {
           web.conversations.history(user.bot_chat).then(function(ims) {
 
             var message = ims.messages[0];
-            
-            console.log("we found the message to update \n", message);
 
             if (!message)
               return;
 
             // Set message channel to user's set bot_chat
             message.channel = user.bot_chat;
+            message.user = user.userId;
 
+            // console.log(bot.id, " bot");
+            // console.log(message.channel, " message channel");
+            // console.log(script, " the script");
+            // console.log(thread, " the thread");
+            // console.log(vars);
             // Make the prisoners_dilemma card
-            controller.makeCard(bot, message, "prisoners_dilemma", thread, vars, function(card) {
+            controller.makeCard(bot, message, script, thread, vars, function(card) {
 
               bot.api.chat.update({
                 channel: message.channel,
                 ts: message.ts,
                 attachments: card.attachments
               }, function(err, updated) {
-                console.log(err, updated, " updated message");
+                // console.log(err, updated);
 
                 // Send end message in the case of last one standing
                 if (thread == "success_alone" || thread == "success_stolen"){
@@ -175,7 +149,7 @@ module.exports = function(controller) {
     return fields;
   }
 
-
+  // Sends prisoners message based on events
   controller.prisoners_update = function(bot, team, event, type) {
 
     var web = new WebClient(bot.config.bot.token);
@@ -193,7 +167,6 @@ module.exports = function(controller) {
       _.each(players, function(user) {
 
         if (user.userId != event.user) {
-          console.log(user, " updating the prison for this player");
 
           var thisIM = _.findWhere(list.channels, { user: user.userId });
           var channel = thisIM.id;
@@ -209,6 +182,7 @@ module.exports = function(controller) {
               return;
 
             btn_message.channel = channel;
+            btn_message.user = user.userId;
 
             if (type == "prison") {
               vars.prisoners_time = controller.prisoners_initial().toDateString();
@@ -219,10 +193,10 @@ module.exports = function(controller) {
 
               if (vars.prisoners_length < 0) vars.prisoners_length = 0;
 
-              if (vars.prisoners_length == 2 || !team.prisoner_time || team.prisoner_time.length <= 0) {
+              if (vars.prisoners_length == 2 || team.prisoner_time == {} || team.prisoner_time.length <= 0) {
                 setTimeout(function() {
-                  controller.addTime(bot, team.id, true);
-                }, 2000);
+                  controller.prisoners_time(bot, team.id, false);
+                }, 10000);
               }
 
             } else if (type == "feedback") {
@@ -232,6 +206,12 @@ module.exports = function(controller) {
             vars.link = true;
             vars.user = user.userId;
             vars.team = team.id;
+
+            // console.log(btn_message);
+
+            // console.log(btn_message.user + " user and channel: " + btn_message.channel);
+            // console.log(script, thread);
+            // console.log(bot);
 
             controller.makeCard(bot, btn_message, script, thread, vars, function(card) {
               bot.api.chat.update({
@@ -250,4 +230,6 @@ module.exports = function(controller) {
 
     }).catch(err => console.log('convo list error: ', err));
   }
+
+
 }

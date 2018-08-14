@@ -5,5 +5,5 @@ components/routes/_*
 .sass-cache/*
 .data
 json
-tmp
 *.save.*
+dump

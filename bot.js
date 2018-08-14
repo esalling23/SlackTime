@@ -55,8 +55,7 @@ var env = require('node-env-file');
 env(__dirname + '/.env');
 
 if (!process.env.clientId || !process.env.clientSecret || !process.env.PORT) {
-  usage_tip();
-  // process.exit(1);
+  process.exit(1);
 }
 
 var Botkit = require('botkit');
@@ -77,7 +76,7 @@ var bot_options = {
 if (process.env.MONGO_URI) {
     var mongoStorage = require('botkit-storage-mongo')({
       mongoUri: process.env.MONGO_URI,
-      tables: ['events', 'uploads', 'chat']
+      tables: ['events', 'file_uploads', 'chat']
     });
     console.log(mongoStorage);
     bot_options.storage = mongoStorage;

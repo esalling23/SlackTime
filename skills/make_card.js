@@ -12,6 +12,8 @@ module.exports = function(controller) {
     if (script_name == "prisoners_dilemma" && thread_name == "decisions")
       var prison = true;
 
+    // console.log(context, " make card context");
+
     controller.studio.get(bot, script_name, context.user, context.channel).then(function(convo) {
       // console.log(convo);
       var thread;
@@ -94,7 +96,7 @@ module.exports = function(controller) {
       template.username = process.env.username;
       template.icon_url = process.env.icon_url;
 
-      console.log(template);
+      // console.log(template, " make card template");
 
       convo.stop('card_only');
       cb(template);
