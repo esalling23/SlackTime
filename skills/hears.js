@@ -256,8 +256,11 @@ module.exports = function(controller) {
   controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
     if (message.match[0] != "reset_dilemma") return;
 
-    controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
-      controller.prisoners_leftout(users);
+    controller.storage.teams.get(message.team, function(err, team) {
+      controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
+        var web = new WebClient(team.bot.app_token);
+        controller.prisoners_leftout(users);
+      });
     });
   });
 
