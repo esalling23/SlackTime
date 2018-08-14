@@ -61,10 +61,10 @@ module.exports = function(controller) {
   }
 
 
-  controller.prisoners_leftout = function(users) {
+  controller.prisoners_leftout = function(web, users) {
 
     _.each(users, function(user) {
-      controller.findRecentMessages.then(res => {
+      controller.findRecentMessages(web, user.bot_chat).then(res => {
         res.msg.channel = user.bot_chat;
         res.msg.user = user.userId;
 
