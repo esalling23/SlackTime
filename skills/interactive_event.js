@@ -555,9 +555,11 @@ module.exports = function(controller) {
             if (event.actions[0].value == "prisoners_room") {
 
               if (res.prisoner_started) {
+								console.log('prisoner thing started');
 								if (!thisUser.prisoner)
 									 opt.thread = "already_started";
 								else {
+									console.log('this user is already a prisoner tho!!')
 									controller.makeCard(bot, message, "prisoners_dilemma", "default", {}, function(card) {
 
 			              bot.api.chat.update({
@@ -565,6 +567,7 @@ module.exports = function(controller) {
 			                ts: message.ts,
 			                attachments: card.attachments
 			              }, function(err, updated) {
+											console.log(updated);
 											return;
 										});
 
