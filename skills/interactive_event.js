@@ -564,14 +564,17 @@ module.exports = function(controller) {
 
 			              bot.api.chat.update({
 			                channel: event.channel,
-			                ts: event.ts,
+			                ts: event.original_message.ts,
 			                attachments: card.attachments
 			              }, function(err, updated) {
 											console.log(updated);
-											return;
 										});
 
+										return;
+
 									});
+
+									return;
 								}
 							}
               else {
