@@ -252,22 +252,50 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "reset_dilemma") return;
+  // controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
+  //   if (message.match[0] != "reset_dilemma") return;
+  //
+  //   controller.storage.teams.get(message.team, function(err, team) {
+  //     controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
+  //       var web = new WebClient(team.bot.app_token);
+  //       controller.prisoners_leftout(users);
+  //     });
+  //   });
+  // });
+  //
+  // controller.hears("check_dilemma", 'direct_message', function(bot, message) {
+  //   if (message.match[0] != "check_dilemma") return;
+  //
+  //   controller.storage.teams.get(message.team, function(err, team) {
+  //     controller.trigger("prisoners_check", [bot, team.id]);
+  //   });
+  // });
+
+  controller.hears("players_get", 'direct_message', function(bot, message) {
+    if (message.match[0] != "players_get") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
-      controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
-        var web = new WebClient(team.bot.app_token);
-        controller.prisoners_leftout(users);
+      var web = new WebClient(bot.config.bot.token);
+      var presentUsers = [];
+
+      web.users.list().then(res => {
+        _.each(res.members, function(user) {
+          if (controller.isUser(user, false)) {
+            presentUsers.push({
+              userId: user.id,
+              name: user.name,
+              email: user.profile.email,
+              startBtns: ["default", "primary", "danger"]
+            });
+          }
+        });
+
+        team.users = presentUsers;
+
+        controller.storage.teams.save(team, function(err, saved) {
+          console.log(saved.users);
+        });
       });
-    });
-  });
-
-  controller.hears("check_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "check_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.trigger("prisoners_check", [bot, team.id]);
     });
   });
 
