@@ -183,10 +183,10 @@ module.exports = function(controller) {
 
         setTimeout(function() {
 
-          const ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
+          var ready = _.where(saved.prisoner_players, { "prisoner_ready": true });
           // Find the prisoner that belongs to the just-updated messages
           // We want to make sure we saved them as ready
-          const thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": msg.channel });
+          var thisPrisoner = _.findWhere(saved.prisoner_players, { "bot_chat": msg.channel });
 
           // If all players are ready, continue the game
           if (ready.length == saved.prisoner_players.length) {
@@ -202,6 +202,8 @@ module.exports = function(controller) {
             });
 
             controller.storage.teams.save(saved, function(err, updated) {
+
+              ready = _.where(updated.prisoner_players, { "prisoner_ready": true });
 
               console.log("special save to make sure player was made ready: ", thisPrisoner);
               if (ready.length == updated.prisoner_players.length) {
