@@ -10,7 +10,7 @@ module.exports = function(webserver, controller) {
 
       if (team.prisoner_complete) return;
 
-      controller.prisoners_check(bot, team.id, function(users) {
+      controller.prisoners_check(bot, team.id, "Prison", true, function(users) {
 
         console.log(users, " are this prisoners users");
 

@@ -32,10 +32,8 @@ module.exports = function(controller) {
         console.log(newData, " are the returned messages");
 
         _.each(newData, function(data) {
-          if (data.msg.attachments) {
-            if (data.msg.attachments[0].title == title)
-              prisoners.push(data.channel);
-          }
+          if (data.msg.attachments[0].title == title)
+            prisoners.push(data.channel);
         });
 
         team.users = _.map(team.users, function(user) {
@@ -61,14 +59,14 @@ module.exports = function(controller) {
   }
 
 
-  controller.prisoners_leftout = function(web, bot, users) {
+  controller.prisoners_leftout = function(users) {
 
     _.each(users, function(user) {
-      controller.findRecentMessages(web, user.bot_chat).then(res => {
+      controller.findRecentMessages.then(res => {
         res.msg.channel = user.bot_chat;
         res.msg.user = user.userId;
 
-        controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
+        controller.makeCard(bot, event, "prisoners_dilemma", "default", vars, function(card) {
 
           bot.api.chat.update({
             channel: event.channel,

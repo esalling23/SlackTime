@@ -41,6 +41,10 @@ module.exports = function(controller) {
             attachments: card.attachments
           }, function(err, updated) {
 
+            controller.prisoners_check(bot, saved.id, "Prison", false, function(users) {
+              controller.prisoners_leftout(users);
+            });
+
             // Trigger update message for all players
             controller.prisoners_update(bot, saved, event, "feedback");
 
