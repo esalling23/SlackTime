@@ -244,6 +244,7 @@ module.exports = function(controller) {
 
     // if (process.env.environment != 'dev') return;
     // if (process.env.environment != 'dev') return;
+    if (message.match[0] != "prison") return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
       convo.changeTopic("correct");
@@ -254,7 +255,7 @@ module.exports = function(controller) {
 
   controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
     if (message.match[0] != "reset_dilemma") return;
-    
+
     controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
       controller.prisoners_leftout(users);
     });
