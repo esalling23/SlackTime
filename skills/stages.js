@@ -43,11 +43,11 @@ module.exports = function(controller) {
           console.log('the script we are looking for is: ' + s.name);
           script = s.name;
           place.phase = _.filter(s.tags, function(t) {
-            console.log(t, t.split('_')[0] == 'phase');
+            // console.log(t, t.split('_')[0] == 'phase');
             return t.split('_')[0] == 'phase';
           })[0].replace('phase_', '');
 
-          console.log(place.phase);
+          // console.log(place.phase);
 
           place.node = parseInt(place.phase) + 2;
 

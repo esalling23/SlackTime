@@ -13,7 +13,7 @@ module.exports = function(controller) {
     if (!thread)
       thread = 'default';
 
-    console.log(params.user.codesEntered, params.data.value);
+    // console.log(params.user.codesEntered, params.data.value);
 
     // If this user has already entered this code
     if (params.user.codesEntered) {

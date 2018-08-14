@@ -73,7 +73,7 @@ module.exports = function(controller) {
               // console.log(event.actions[0].name);
 
               var key = parseInt(event.actions[0].name.match(/\d+/));
-              console.log(key);
+              // console.log(key);
               var val = {};
               var choiceMulti = {};
 
@@ -113,7 +113,7 @@ module.exports = function(controller) {
                       item.value = {};
 
                     var key = parseInt(event.actions[0].name.match(/\d+/));
-                    console.log(key);
+                    // console.log(key);
 
                     item.choice[key] = choice;
                     item.value[key] = value;
@@ -282,7 +282,7 @@ module.exports = function(controller) {
 
         const letters = ['A','B','C','D','E','F','G','H','I'];
 
-        console.log(event);
+        // console.log(event);
         var callback_id = event.callback_id;
         var reply = event.original_message;
 
@@ -315,7 +315,7 @@ module.exports = function(controller) {
       // button color change
       if (event.actions[0].name.match(/^color/)) {
 
-        console.log(event);
+        // console.log(event);
         var callback_id = event.callback_id;
         var reply = event.original_message;
         // we need to change this button's color homie
@@ -526,7 +526,7 @@ module.exports = function(controller) {
 
 				if (usersClicking.includes(event.user)) return;
 				usersClicking.push(event.user);
-				console.log("user clicked");
+				// console.log("user clicked");
 
         var opt = {
           bot: bot,
@@ -560,22 +560,22 @@ module.exports = function(controller) {
                   if (usersClicking.includes(user.userId))
                     user.prisoner = true;
 
-									console.log(user);
+									// console.log(user);
 
                   return user;
                 });
 
-								console.log(res.users);
+								// console.log(res.users);
 
                 res.prisoner_players = _.where(res.users, { prisoner: true });
 
-								console.log("users clicking: ", usersClicking);
+								// console.log("users clicking: ", usersClicking);
 
 								controller.storage.teams.save(res, function(err, saved) {
 
 									usersClicking.splice(usersClicking.indexOf(event.user), 1);
 
-									console.log("reduced users clicking, ", usersClicking);
+									// console.log("reduced users clicking, ", usersClicking);
 
 									controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
