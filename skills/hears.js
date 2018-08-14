@@ -243,7 +243,6 @@ module.exports = function(controller) {
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
 
     // if (process.env.environment != 'dev') return;
-    // if (process.env.environment != 'dev') return;
     if (message.match[0] != "prison") return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
@@ -261,6 +260,14 @@ module.exports = function(controller) {
         var web = new WebClient(team.bot.app_token);
         controller.prisoners_leftout(users);
       });
+    });
+  });
+
+  controller.hears("check_dilemma", 'direct_message', function(bot, message) {
+    if (message.match[0] != "check_dilemma") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      controller.trigger("prisoners_check", [bot, team.id]);
     });
   });
 
