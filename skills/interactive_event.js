@@ -556,25 +556,25 @@ module.exports = function(controller) {
 
               if (res.prisoner_started) {
 								console.log('prisoner thing started');
-								if (!thisUser.prisoner)
+								// if (!thisUser.prisoner)
 									 opt.thread = "already_started";
-								else {
-									console.log('this user is already a prisoner tho!!')
-									controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
-
-			              bot.api.chat.update({
-			                channel: event.channel,
-			                ts: event.original_message.ts,
-			                attachments: card.attachments
-			              }, function(err, updated) {
-											console.log(updated);
-										});
-
-										return;
-
-									});
-
-									return;
+								// else {
+								// 	console.log('this user is already a prisoner tho!!')
+								// 	controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
+                //
+			          //     bot.api.chat.update({
+			          //       channel: event.channel,
+			          //       ts: event.original_message.ts,
+			          //       attachments: card.attachments
+			          //     }, function(err, updated) {
+								// 			console.log(updated);
+								// 		});
+                //
+								// 		return;
+                //
+								// 	});
+                //
+								// 	return;
 								}
 							}
               else {
