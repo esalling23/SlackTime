@@ -560,11 +560,11 @@ module.exports = function(controller) {
 									 opt.thread = "already_started";
 								else {
 									console.log('this user is already a prisoner tho!!')
-									controller.makeCard(bot, message, "prisoners_dilemma", "default", {}, function(card) {
+									controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
 
 			              bot.api.chat.update({
-			                channel: message.channel,
-			                ts: message.ts,
+			                channel: event.channel,
+			                ts: event.ts,
 			                attachments: card.attachments
 			              }, function(err, updated) {
 											console.log(updated);
