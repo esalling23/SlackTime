@@ -32,8 +32,10 @@ module.exports = function(controller) {
         console.log(newData, " are the returned messages");
 
         _.each(newData, function(data) {
-          if (data.msg.attachments[0].title == title)
-            prisoners.push(data.channel);
+          if (data.msg.attachments) {
+            if (data.msg.attachments[0].title == title)
+              prisoners.push(data.channel);
+          }
         });
 
         team.users = _.map(team.users, function(user) {

@@ -5,7 +5,7 @@ module.exports = function(controller) {
   controller.secretTriggers = function(trigger) {
     var secrets = {
       "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s",
-      "prisoner_room": "greedymother"
+      "prisoners_room": "greedymother"
     };
 
     return Object.keys(secrets).map(function(key) {
