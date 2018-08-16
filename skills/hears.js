@@ -313,9 +313,9 @@ module.exports = function(controller) {
     });
   });
 
-  controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
+  controller.hears("image_onboard_secret", 'direct_message,direct_mention', function(bot, message) {
 
-    if (process.env.environment != 'dev') return;
+    if (message.match[0] != "image_onboard_secret") return;
     controller.trigger("image_counter_onboard", [bot, message]);
 
   });
