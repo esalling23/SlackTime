@@ -275,7 +275,8 @@ module.exports = function(controller) {
     if (message.match[0] != "continue_dilemma") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
-      controller.trigger("prisoners_continue", [bot, team]);
+      controller.prisoners_continue(bot, team);
+      // controller.trigger("prisoners_continue", [bot, team]);
     });
   });
 
