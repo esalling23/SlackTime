@@ -263,13 +263,21 @@ module.exports = function(controller) {
   //   });
   // });
   //
-  // controller.hears("check_dilemma", 'direct_message', function(bot, message) {
-  //   if (message.match[0] != "check_dilemma") return;
-  //
-  //   controller.storage.teams.get(message.team, function(err, team) {
-  //     controller.trigger("prisoners_check", [bot, team.id]);
-  //   });
-  // });
+  controller.hears("check_dilemma", 'direct_message', function(bot, message) {
+    if (message.match[0] != "check_dilemma") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      controller.trigger("prisoners_check", [bot, team.id]);
+    });
+  });
+
+  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
+    if (message.match[0] != "continue_dilemma") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      controller.trigger("prisoners_continue", [bot, team]);
+    });
+  });
 
   controller.hears("players_get", 'direct_message', function(bot, message) {
     if (message.match[0] != "players_get") return;
