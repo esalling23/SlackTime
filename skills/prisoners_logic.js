@@ -225,6 +225,8 @@ module.exports = function(controller) {
     // Send the global response to all players based on saved thread
     _.each(team.prisoner_players, function(user) {
 
+      console.log(user, " gonna send this user forward");
+
       var token = bot.config.token ? bot.config.token : bot.config.bot.token;
 
       // Delete most recent message
