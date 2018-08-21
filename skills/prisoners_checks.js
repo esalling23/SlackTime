@@ -68,7 +68,7 @@ module.exports = function(controller) {
         res.msg.channel = user.bot_chat;
         res.msg.user = user.userId;
 
-        controller.makeCard(bot, event, "prisoners_dilemma", "default", vars, function(card) {
+        controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
 
           bot.api.chat.update({
             channel: event.channel,
