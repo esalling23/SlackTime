@@ -22,26 +22,36 @@ module.exports = function(controller) {
     {
       if (message.text.split(" ")[1] == "all")
       {
-        let script = controller.secretTriggers(message.text.split(" ")[0], false)
+        var script = controller.secretTriggers(message.text.split(" ")[0], false);
+
         controller.storage.teams.get(message.team, function(err, team) {
           _.each(team.users, function(user) {
-            controller.findRecentMessages(web, user.bot_chat).then(res => {
-              res.msg.channel = user.bot_chat;
-              res.msg.user = user.userId;
+            if (user.userId != message.user)
+            {
+              controller.findRecentMessages(web, user.bot_chat).then(res => {
+                res.msg.channel = user.bot_chat;
+                res.msg.user = user.userId;
 
-              controller.makeCard(bot, event, script, "default", {}, function(card) {
+                controller.makeCard(bot, event, script, "default", {}, function(card) {
 
-                bot.api.chat.update({
-                  channel: event.channel,
-                  ts: event.original_message.ts,
-                  attachments: card.attachments
-                }, function(err, updated) {
-                  console.log('this user was just sent to a place: ',  updated);
+                  bot.api.chat.update({
+                    channel: event.channel,
+                    ts: event.original_message.ts,
+                    attachments: card.attachments
+                  }, function(err, updated) {
+                    console.log('this user was just sent to a place: ',  updated);
+                  });
+
                 });
 
+              }).catch(err => console.log('error in find recent messages', err));
+            }
+            else
+            {
+              controller.studio.runTrigger(bot, message.text.split(" ")[0], message.user, message.channel, message).catch(function(err) {
+                bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
               });
-
-            }).catch(err => console.log('error in find recent messages', err));
+            }
           });
         });
       }
