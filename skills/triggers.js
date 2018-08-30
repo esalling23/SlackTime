@@ -8,12 +8,14 @@ module.exports = function(controller) {
       "prisoners_room": "greedymother"
     };
 
-    return Object.keys(secrets).map(function(key) {
-      if (returnTrigger)
+    if (returnTrigger) {
+      return Object.keys(secrets).map(function(key) {
         return secrets[key];
-      else
-        return key;
-    }).includes(trigger);
+      }).includes(trigger);
+    } else {
+      return _.invert(secrets)[trigger];
+    }
+
   }
 
   controller.on('direct_message', function(bot, message) {
