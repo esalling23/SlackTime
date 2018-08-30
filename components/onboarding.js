@@ -4,9 +4,9 @@ var _ = require("underscore");
 
 const { WebClient } = require('@slack/client');
 
-var channels = ["gamelog", "theLabyrinth", "map"], 
+var channels = ["gamelog", "theLabyrinth", "map"],
     mapChannel,
-    globalChannels = [], 
+    globalChannels = [],
     globalMembers = [],
     creator,
     memberCount;
@@ -20,15 +20,15 @@ function isUser(member) {
 }
 
 module.exports = function(controller) {
-  
+
     controller.on('onboard', function(bot, team, auth) {
-            
+
       const token = auth.access_token;
 
       var web = new WebClient(token);
       controller.storage.teams.get(team.id, function (error, team) {
        web.users.list().then((res) => {
-             
+
          team.oauth_token = auth.access_token;
          team.gameStarted = false;
          team.entered = false;
@@ -39,17 +39,17 @@ module.exports = function(controller) {
          team.events = [];
          team.codesEntered = [];
          team.uploadedImages = [];
-         
+
          team.progress_channel_id = "";
          team.garden_channel_id = "";
-         
+
          team.albumImages = undefined;
          team.imagesComplete = false;
          team.image_channel_id = "";
          team.image_feedback = undefined;
          team.phasesUnlocked = ["phase_1"];
          team.movements = [0];
-         
+
          team.prisoner_players = [];
          team.prisoner_started = false;
          team.prisoner_complete = false;
@@ -57,38 +57,42 @@ module.exports = function(controller) {
          team.prisoner_decisions = [];
          team.prisoner_success = 0;
          team.prisoner_thread = "default";
-         
+
          team.noChatChannels = [];
          team.chat_channels = [];
-         
+
          team.gamelog = {};
-         
+
          for (var i = 0; i < 5; i++) {
             var phase = "phase_" + (i+1);
             team.gamelog[phase] = [];
          }
-         
+
           // console.log(res);
          creator = bot.config.createdBy;
 
          _.each(res.members, function(user) {
+
             var thisUser = _.findWhere(team.users, { userId: user.id });
-            if (isUser(user) && !thisUser) 
-              team.users.push({ 
-                userId: user.id, 
-                name: user.name, 
-                email: user.profile.email, 
+
+            if (isUser(user) && !thisUser) {
+              team.users.push({
+                userId: user.id,
+                name: user.name,
+                real_name: user.real_name,
+                email: user.profile.email,
                 startBtns: ["default", "primary", "danger"]
               });
-                                      
+            }
+
          });
-         
-         
-         // console.log(saved, " we onboarded this team");              
+
+
+         // console.log(saved, " we onboarded this team");
           web.groups.create(process.env.progress_channel).then((channel, err) => {
 
             var channelId = channel.group.id;
-            
+
             team.gamelog_channel_id = channelId;
             team.noChatChannels.push(channelId);
 
@@ -125,17 +129,17 @@ module.exports = function(controller) {
               }, 1000 * data.length);
             }).catch(err => console.log(err));
 
-          }).catch(err => console.log(err));            
-                   
+          }).catch(err => console.log(err));
+
        }).catch((err) => console.log(err) ); // End users.list call
 
-    
+
     });
-  
+
   });
 
 }
-      
+
 var channelJoin = function channelJoin(params) {
 
   // console.log(params, "are the params in this join");
@@ -174,5 +178,3 @@ var channelJoin = function channelJoin(params) {
   }, 100 * (params[3]+1));
 
 };// End channel Join
-
-      
