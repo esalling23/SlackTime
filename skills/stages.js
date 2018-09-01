@@ -36,7 +36,7 @@ module.exports = function(controller) {
     var place = {};
     var script;
 
-    return controller.studio.getScripts(bot).then(list => {
+    return controller.studio.getScripts().then(list => {
 
       _.each(list, function(s) {
         if (s.tags.includes(event.callback_id)) {
@@ -62,7 +62,7 @@ module.exports = function(controller) {
 
       return "Phase " + place.phase + ", Node " + place.node;
 
-    }).catch(err => console.log("eventStages getScripts error: ", err));
+    }).catch(err => console.log("stages.js: eventStages getScripts error: ", err));
 
   }
 
