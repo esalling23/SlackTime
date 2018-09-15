@@ -32,7 +32,7 @@ module.exports = function(controller) {
     "remote": "Stage 4, Node 6"
   }
 
-  controller.eventStages = function(bot, event) {
+  controller.eventStages = function(bot, event, type) {
     var place = {};
     var script;
 

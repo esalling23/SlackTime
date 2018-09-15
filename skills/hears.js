@@ -52,7 +52,7 @@ module.exports = function(controller) {
    }
 
    controller.trigger('gamelog_update', [log]);
- });
+  });
 
   controller.hears('flavor_flave', 'direct_message', function(bot, message) {
 
@@ -242,7 +242,7 @@ module.exports = function(controller) {
 
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
 
-    // if (process.env.environment != 'dev') return;
+    if (process.env.environment != 'dev') return;
     if (message.match[0] != "prison") return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 

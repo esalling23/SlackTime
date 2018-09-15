@@ -23,7 +23,7 @@ module.exports = function(controller) {
         data.push([web, u.bot_chat]);
       });
 
-      // console.log(data, " is the data");
+      console.log(data, " is the data");
 
       var mapPromises = data.map(controller.findRecentMessages);
       var results = Promise.all(mapPromises);
