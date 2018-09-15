@@ -146,7 +146,7 @@ module.exports = function(controller) {
 
         controller.findRelatedMsg(bot, message, team.bot.app_token).then(msg => {
 
-          // console.log(msg, " is what the promise returned related message");
+          console.log(msg, " is what the promise returned related message");
 
           if (msg) {
             dataEvent.relatedMsg = msg.id;
@@ -154,7 +154,7 @@ module.exports = function(controller) {
 
           controller.eventStages(bot, event, type).then(res => {
 
-            // console.log(res, " is what the promise returned");
+            console.log(res, " is what the promise returned");
 
             dataEvent.place = res;
 
