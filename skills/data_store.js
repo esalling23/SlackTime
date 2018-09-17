@@ -144,10 +144,6 @@ module.exports = function(controller) {
           ts: relatedMsgTs
         }
 
-        if (["pin", "chat", "thread", "upload"].includes(type)) {
-          message.relatedMsgToBeFound = true;
-        }
-
         controller.findRelatedMsg(bot, message, team.bot.app_token).then(msg => {
 
           console.log(msg, " is what the promise returned related message");

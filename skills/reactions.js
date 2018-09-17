@@ -23,8 +23,6 @@ module.exports = function(controller) {
 
     var ts = message.ts;
 
-    if (!message.relatedMsgToBeFound) return;
-
     return controller.storage.chat.all().then(list => {
       return _.findWhere(list, { ts: ts });
     });
