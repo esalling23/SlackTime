@@ -5,7 +5,9 @@ module.exports = function(controller) {
   controller.secretTriggers = function(trigger, returnTrigger) {
     var secrets = {
       "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s",
-      "prisoners_room": "greedymother"
+      "tamagotchi_room": "#tDh7J$VdJW0OgoV3RxtXmfD",
+      "aris_room": "&nSyJf@0A45mVB0#^ZAr&6uf",
+      "prisoners_room": "$vjOBvBA0Im$d4g!6kE%vrUG"
     };
 
     if (returnTrigger) {
