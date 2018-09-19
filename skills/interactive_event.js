@@ -130,7 +130,7 @@ module.exports = function(controller) {
 
           }
 
-        // console.log(choiceSelect, "is the choice select");
+        console.log(choiceSelect, "is the choice select");
 
        }
 

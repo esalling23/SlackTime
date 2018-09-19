@@ -22,6 +22,7 @@ module.exports = function(controller) {
             team.users.push({
               userId: message.user.id,
               name: message.user.name,
+              real_name: thisUser.real_name,
               startBtns: ["default", "primary", "danger"],
               email: thisUser.profile.email
             });

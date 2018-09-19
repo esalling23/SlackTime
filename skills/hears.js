@@ -52,7 +52,7 @@ module.exports = function(controller) {
    }
 
    controller.trigger('gamelog_update', [log]);
- });
+  });
 
   controller.hears('flavor_flave', 'direct_message', function(bot, message) {
 
@@ -242,7 +242,7 @@ module.exports = function(controller) {
 
   controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
 
-    // if (process.env.environment != 'dev') return;
+    if (process.env.environment != 'dev') return;
     if (message.match[0] != "prison") return;
     controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
 
@@ -252,22 +252,59 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "reset_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
-        var web = new WebClient(team.bot.app_token);
-        controller.prisoners_leftout(users);
-      });
-    });
-  });
-
+  // controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
+  //   if (message.match[0] != "reset_dilemma") return;
+  //
+  //   controller.storage.teams.get(message.team, function(err, team) {
+  //     controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
+  //       var web = new WebClient(team.bot.app_token);
+  //       controller.prisoners_leftout(users);
+  //     });
+  //   });
+  // });
+  //
   controller.hears("check_dilemma", 'direct_message', function(bot, message) {
     if (message.match[0] != "check_dilemma") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
       controller.trigger("prisoners_check", [bot, team.id]);
+    });
+  });
+
+  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
+    if (message.match[0] != "continue_dilemma") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      controller.prisoners_continue(bot, team);
+      // controller.trigger("prisoners_continue", [bot, team]);
+    });
+  });
+
+  controller.hears("players_get", 'direct_message', function(bot, message) {
+    if (message.match[0] != "players_get") return;
+
+    controller.storage.teams.get(message.team, function(err, team) {
+      var web = new WebClient(bot.config.bot.token);
+      var presentUsers = [];
+
+      web.users.list().then(res => {
+        _.each(res.members, function(user) {
+          if (controller.isUser(user, false)) {
+            presentUsers.push({
+              userId: user.id,
+              name: user.name,
+              email: user.profile.email,
+              startBtns: ["default", "primary", "danger"]
+            });
+          }
+        });
+
+        team.users = presentUsers;
+
+        controller.storage.teams.save(team, function(err, saved) {
+          console.log(saved.users);
+        });
+      });
     });
   });
 
@@ -285,9 +322,9 @@ module.exports = function(controller) {
     });
   });
 
-  controller.hears("image_onboard", 'direct_message,direct_mention', function(bot, message) {
+  controller.hears("image_onboard_secret", 'direct_message,direct_mention', function(bot, message) {
 
-    if (process.env.environment != 'dev') return;
+    if (message.match[0] != "image_onboard_secret") return;
     controller.trigger("image_counter_onboard", [bot, message]);
 
   });
