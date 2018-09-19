@@ -7,3 +7,4 @@ components/routes/_*
 json
 *.save.*
 dump
+*.sublime-*
