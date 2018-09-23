@@ -575,7 +575,7 @@ module.exports = function(controller) {
 									});
 
 									return;
-								}*/
+								}
 							}
               else {
                 res.users = _.map(res.users, function(user) {
@@ -585,12 +585,12 @@ module.exports = function(controller) {
 									// console.log(user);
 
                   return user;
-                });
+                });*/
 							}
 
 							// console.log(res.users);
 
-              // res.prisoner_players = _.where(res.users, { prisoner: true });
+              //res.prisoner_players = _.where(res.users, { prisoner: true });
 
 							// console.log("users clicking: ", usersClicking);
 
