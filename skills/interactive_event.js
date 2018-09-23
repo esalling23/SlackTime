@@ -499,7 +499,7 @@ module.exports = function(controller) {
 
       if (event.actions[0].name.match(/^prisoners/)) {
 
-        /*controller.storage.teams.get(event.team.id, function(err, team) {
+        controller.storage.teams.get(event.team.id, function(err, team) {
 
           if (event.actions[0].value == "onboard") {
             if (!team.prisoner_started)
@@ -508,14 +508,14 @@ module.exports = function(controller) {
             controller.prisoners_next(bot, event, team);
           }
 
-        });*/
+        });
 
       }
 
       // A selection within the prisoners dilemma
       if (event.actions[0].name.match(/^dilemma/)) {
 
-        //controller.trigger("prisoners_selection", [bot, event]);
+        controller.trigger("prisoners_selection", [bot, event]);
 
       }
 
@@ -585,12 +585,12 @@ module.exports = function(controller) {
 									// console.log(user);
 
                   return user;
-                });*/
-							}
+                });
+							}*/
 
 							// console.log(res.users);
 
-              //res.prisoner_players = _.where(res.users, { prisoner: true });
+              res.prisoner_players = _.where(res.users, { prisoner: true });
 
 							// console.log("users clicking: ", usersClicking);
 
