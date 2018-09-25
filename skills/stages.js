@@ -3,23 +3,45 @@ const fs = require('fs');
 
 module.exports = function(controller) {
 
-  // var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
-  //
-  // data = _.map(data, function(d) {
-  //   _.each(d.script, function(s) {
-  //     _.each(s.script, function(x) {
-  //       x.triggers = [];
-  //     });
-  //   });
-  //
-  //
-  //   return d;
-  // });
-  //
-  // var json = JSON.stringify(data);
-  // fs.writeFile('./newscripts.json', json, 'utf8', function() {
-  //   console.log('done');
-  // });
+  var data = JSON.parse(fs.readFileSync('./scripts.json', 'utf8'));
+  
+  data = _.map(data, function(d) {
+    _.each(d.script, function(s) {
+      _.each(s.script, function(x) {
+        if (x.attachments) {
+          _.each(x.attachments, function(a) {
+            if (a.actions) {
+              _.each(a.actions, function(l) {
+                
+                if (l.url) {
+                  // console.log(l.url);
+                  l.url = l.url.replace('escape-room-production', 'daedalus-game');
+                  l.url = l.url.replace('escape-room-dev', 'daedalus-game');
+                  
+                  console.log(l.url);
+                }
+              });
+            }
+            
+          });
+        }
+      });
+    });
+  
+  
+    return d;
+  });
+  
+  setTimeout(function() {
+    var json = JSON.stringify(data);
+  // console.log(json);
+    fs.writeFile('./newscripts.json', json, 'utf8', function() {
+      console.log(json);
+      console.log('done');
+    });
+  }, 500)
+  
+  
 
 
   controller.codeStages = {

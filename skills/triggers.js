@@ -1,3 +1,5 @@
+const _ = require('underscore');
+const { WebClient } = require('@slack/client');
 
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
@@ -5,7 +7,9 @@ module.exports = function(controller) {
   controller.secretTriggers = function(trigger, returnTrigger) {
     var secrets = {
       "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s",
-      "prisoners_room": "greedymother"
+      "tamagotchi_room": "#tDh7J$VdJW0OgoV3RxtXmfD",
+      "aris_room": "&nSyJf@0A45mVB0#^ZAr&6uf",
+      "prisoners_room": "$vjOBvBA0Im$d4g!6kE%vrUG"
     };
 
     if (returnTrigger) {
@@ -27,6 +31,9 @@ module.exports = function(controller) {
         var script = controller.secretTriggers(message.text.split(" ")[0], false);
 
         controller.storage.teams.get(message.team, function(err, team) {
+          var token = bot.config.token ? bot.config.token : bot.config.bot.token;
+          var web = new WebClient(token);
+          
           _.each(team.users, function(user) {
             if (user.userId != message.user)
             {

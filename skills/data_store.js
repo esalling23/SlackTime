@@ -73,7 +73,7 @@ module.exports = function(controller) {
               });
             });
           }
-        }
+        } // /type = interactive, code
         else if (["chat", "thread", "upload"].includes(type)) {
           dataEvent.message = event.text;
           dataEvent.type = event.type;
@@ -110,7 +110,7 @@ module.exports = function(controller) {
             relatedMsgTs = event.thread_ts;
           }
 
-        }
+        } // /type = chat, thread, upload
         else if (type == "download" || type == "link") {
           // Download and link type and url
           dataEvent.type = type;
@@ -130,7 +130,6 @@ module.exports = function(controller) {
 
           if (opt.codeObj.puzzle)
             dataEvent.puzzle = opt.codeObj.puzzle;
-
         }
 
         // Settings for pinned/unpinned message
@@ -142,10 +141,6 @@ module.exports = function(controller) {
         var message = {
           channel: dataEvent.channel,
           ts: relatedMsgTs
-        }
-
-        if (["pin", "chat", "thread", "upload"].includes(type)) {
-          message.relatedMsgToBeFound = true;
         }
 
         controller.findRelatedMsg(bot, message, team.bot.app_token).then(msg => {
@@ -171,13 +166,8 @@ module.exports = function(controller) {
             });
 
           }).catch(err => console.log('Event Stages Error ', err));
-
         }).catch(err => console.log('Find Related Message Error ', err));
-
       });
-
     });
-
   };
-
 }

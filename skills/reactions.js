@@ -21,14 +21,12 @@ module.exports = function(controller) {
 
   controller.findRelatedMsg = function(bot, message, token) {
 
+    // early exit if the message is null
+    if (!message.ts) return new Promise((resolve, reject) => { resolve(undefined); });
+    
     var ts = message.ts;
-
-    if (!message.relatedMsgToBeFound) return;
-
-    return controller.storage.chat.all().then(list => {
-      return _.findWhere(list, { ts: ts });
+    return controller.storage.chat.find({ ts: ts }).then(m => {
+      return m ? m[0] : undefined;
     });
-
   }
-
 }
