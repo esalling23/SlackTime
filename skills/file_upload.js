@@ -7,7 +7,7 @@ const sharp = require('sharp');
 module.exports = function(controller) {
 
   controller.fileUpload = function(bot, message, cb) {
-    var destination_path = './tmp/uploaded/';
+    var destination_path = './tmp/uploads/';
     var small_path = './tmp/reduced_uploads/';
 
     // the url to the file is in url_private
