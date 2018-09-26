@@ -66,7 +66,11 @@ module.exports = function(controller) {
       }
       else
       {
-        controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
+        controller.studio.runTrigger(bot, message.text, message.user, message.channel, message)
+          .then(function(msg) {
+            console.log(msg);
+          })
+          .catch(function(err) {
          bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
         });
       }

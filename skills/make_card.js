@@ -63,35 +63,35 @@ module.exports = function(controller) {
         template.location = vars.location;
 
       // Display begin prisoners dilemma button for dev purposes
-      if (vars.prisoners_length <= 0 && !vars.prisoners_started) {
+      // if (vars.prisoners_length <= 0 && !vars.prisoners_started) {
           // template.attachments[0].actions.push({
           //   "type": "button",
           //   "name": "prisoners",
           //   "value": "onboard",
           //   "text": "Begin Dilemma"
           // });
-      }
+      // }
 
       // Display fields of players presence in prison
-      if (vars.prisoners_users) {
-        template.attachments[0].fields = controller.prisoner_fields(vars.prisoners_users, "prison");
-      }
+//       if (vars.prisoners_users) {
+//         template.attachments[0].fields = controller.prisoner_fields(vars.prisoners_users, "prison");
+//       }
 
-      // Prisoner decision variables for response display
-      if (vars.prisoner_decisions) {
-        template.attachments[0].fields = controller.prisoner_fields(vars.prisoner_decisions, thread_name);
-      }
+//       // Prisoner decision variables for response display
+//       if (vars.prisoner_decisions) {
+//         template.attachments[0].fields = controller.prisoner_fields(vars.prisoner_decisions, thread_name);
+//       }
 
       // Prisoner's dilemma end message based on users;
-      if (vars.prisoners_winners) {
-        var message = "The game is over! Watch the video.";
-        message = ":moneybag: :moneybag: :moneybag: " + message + " :moneybag: :moneybag: :moneybag:";
+//       if (vars.prisoners_winners) {
+//         var message = "The game is over! Watch the video.";
+//         message = ":moneybag: :moneybag: :moneybag: " + message + " :moneybag: :moneybag: :moneybag:";
 
-        template.attachments[0].text = message;
+//         template.attachments[0].text = message;
 
-        template.attachments[0].actions[0].url = vars.prisoners_link + "/" + vars.team + "/" + vars.user;
+//         template.attachments[0].actions[0].url = vars.prisoners_link + "/" + vars.team + "/" + vars.user;
 
-      }
+//       }
 
       template.username = process.env.username;
       template.icon_url = process.env.icon_url;
