@@ -329,6 +329,24 @@ module.exports = function(controller) {
 
   });
 
+  controller.hears('image_refresh_secret', 'direct_message', function(bot, message) {
+
+   if (message.match[0] != "image_refresh_secret") return;
+
+   var log = {
+     bot: bot,
+     team: bot.config.id,
+   }
+
+   controller.storage.teams.get(message.team, function(err, team) {
+     const bot = controller.spawn(team.bot);
+     controller.imageRefresh(bot, message, team.image_channel_id, team)
+      .then(res => console.log(res))
+      .catch(err => console.log("image refresh error: ", err))
+   })
+
+  });
+
   controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
 
     if (process.env.environment != 'dev') return;

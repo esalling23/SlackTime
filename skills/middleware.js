@@ -103,7 +103,7 @@ module.exports = function(controller) {
         // console.log('SEND:', message);
 
 
-        if (message.type == "feedback") {
+        if (message.type == "feedback" && bot.config.id) {
           controller.storage.teams.get(bot.config.id, function(err, team) {
             var token = team.bot.app_token;
 
@@ -136,7 +136,7 @@ module.exports = function(controller) {
         }
 
       //
-      if (message.album) {
+      if (message.album && bot.config.id) {
         controller.storage.teams.get(bot.config.id, function(err, team) {
           var web = new WebClient(team.bot.app_token);
 
