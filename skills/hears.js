@@ -312,7 +312,7 @@ module.exports = function(controller) {
     if (message.match[0] != "continue_dilemma") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
-      ready = _.where(team.prisoner_players, { "prisoner_ready": true });
+      const ready = _.where(team.prisoner_players, { "prisoner_ready": true });
 
       console.log(ready.length, team.prisoner_players.length);
       console.log("lets check and continue ", ready.length == team.prisoner_players.length);
