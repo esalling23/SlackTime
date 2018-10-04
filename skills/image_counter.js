@@ -73,7 +73,7 @@ module.exports = function(controller) {
                 convo.activate();
               });
 
-            }, 100 * data.length);
+            }, 4000);
 
           });
 

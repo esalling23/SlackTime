@@ -38,11 +38,14 @@ module.exports = function(controller) {
               { resource_type: "auto", tags: [ 'user_' + message.user, 'team_' + message.team ] },
              function(err, result) {
                 console.log(err, result);
+            
+                fs.access(filePath, fs.constants.F_OK, (err) => {
+                  if (!err) fs.unlinkSync(filePath);
+                });
 
-                if (fs.existsSync(filePath)) {
-                  // Remove the file from the temporary storage
-                  fs.unlinkSync(filePath);
-                }
+                fs.access(outPath, fs.constants.F_OK, (err) => {
+                  if (!err) fs.unlinkSync(outPath);
+                });
 
                 // if we have a callback, run it
                 if (cb) cb(err, result);

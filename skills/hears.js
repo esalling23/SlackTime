@@ -216,7 +216,7 @@ module.exports = function(controller) {
   // Listen for
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
 
-    if (process.env.environment != 'dev') return;
+    // if (process.env.environment != 'dev') return;
     console.log(message, "in the hears");
     var options = {
       bot: bot,
@@ -312,7 +312,7 @@ module.exports = function(controller) {
     if (message.match[0] != "continue_dilemma") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
-      ready = _.where(team.prisoner_players, { "prisoner_ready": true });
+      let ready = _.where(team.prisoner_players, { "prisoner_ready": true });
 
       console.log(ready.length, team.prisoner_players.length);
       console.log("lets check and continue ", ready.length == team.prisoner_players.length);
@@ -333,6 +333,24 @@ module.exports = function(controller) {
 
     if (process.env.environment != 'dev') return;
     controller.trigger("prisoners_onboard", [bot, message]);
+
+  });
+  
+  controller.hears('image_refresh_secret', 'direct_message', function(bot, message) {
+
+   if (message.match[0] != "image_refresh_secret") return;
+
+   var log = {
+     bot: bot,
+     team: bot.config.id,
+   }
+
+   controller.storage.teams.get(message.team, function(err, team) {
+     const bot = controller.spawn(team.bot);
+     controller.imageRefresh(bot, message, team.image_channel_id, team)
+      .then(res => console.log(res))
+      .catch(err => console.log("image refresh error: ", err))
+   })
 
   });
 

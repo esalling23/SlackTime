@@ -76,6 +76,7 @@ module.exports = function(controller) {
 
     controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
         // replace the original button message with a new one
+      console.log(card);
         params.bot.replyInteractive(params.event, card);
 
     });

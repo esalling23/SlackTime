@@ -100,10 +100,10 @@ module.exports = function(controller) {
     controller.middleware.send.use(function(bot, message, next) {
 
         // do something...
-        // console.log('SEND:', message);
+        console.log('SEND:', bot.config);
 
 
-        if (message.type == "feedback") {
+        if (message.type == "feedback" && bot.config.id) {
           controller.storage.teams.get(bot.config.id, function(err, team) {
             var token = team.bot.app_token;
 
@@ -116,11 +116,12 @@ module.exports = function(controller) {
               web.groups.history(message.channel).then(res => {
                 console.log(res.messages);
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
-
+                
+                
                 thisMsg.channel = message.channel;
 
                 if (!team.image_channel_id)
-                  team.image_channel_id = thisMsg.channel;
+                  team.image_channel_id = message.channel;
 
                 if (!team.noChatChannels.includes(team.image_channel_id))
                   team.noChatChannels.push(team.image_channel_id);
@@ -131,12 +132,12 @@ module.exports = function(controller) {
                   console.log(saved, "saved")
                 });
               });
-            }, 1000);
+            }, 3000);
           });
         }
 
       //
-      if (message.album) {
+      if (message.album && bot.config.id) {
         controller.storage.teams.get(bot.config.id, function(err, team) {
           var web = new WebClient(team.bot.app_token);
 

@@ -170,7 +170,7 @@ module.exports = function(controller) {
 
               controller.confirmMovement(opt);
 
-            });
+            }).catch(err => console.log('studio get error: ', err));
 
           });
 
