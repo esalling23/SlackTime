@@ -117,6 +117,8 @@ module.exports = function(controller) {
                 console.log(res.messages);
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
 
+                if (!thisMsg) return;
+
                 thisMsg.channel = message.channel;
 
                 if (!team.image_channel_id)
