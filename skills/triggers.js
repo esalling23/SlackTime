@@ -1,4 +1,6 @@
 const _ = require('underscore')
+const { WebClient } = require('@slack/client');
+
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
@@ -29,6 +31,7 @@ module.exports = function(controller) {
         var script = controller.secretTriggers(message.text.split(" ")[0], false);
 
         controller.storage.teams.get(message.team, function(err, team) {
+          const web = new WebClient(team.bot.app_token)
           _.each(team.users, function(user) {
             if (user.userId != message.user)
             {
