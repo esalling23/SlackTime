@@ -1,4 +1,4 @@
-
+const _ = require('underscore')
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 

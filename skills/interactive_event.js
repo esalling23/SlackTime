@@ -524,8 +524,8 @@ module.exports = function(controller) {
       if (event.actions[0].name.match(/^say/)) {
 				console.log("users clicking: ", usersClicking, event.user);
 
-				if (usersClicking.includes(event.user)) return;
-				usersClicking.push(event.user);
+				// if (usersClicking.includes(event.user)) return;
+				// usersClicking.push(event.user);
 				// console.log("user clicked");
 
         var opt = {
