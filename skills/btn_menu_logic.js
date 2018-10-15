@@ -41,7 +41,7 @@ module.exports = function(controller) {
     }
 
     if (params.data.value == "prisoners_room") {
-      var prisoners = _.where(params.team.users, { prisoner: true }).length;
+      /*var prisoners = _.where(params.team.users, { prisoner: true }).length;
       console.log(prisoners, " are the number of prisoners in the movement logic");
 
       vars.prisoners_length = process.env.prisoners_players - prisoners;
@@ -60,7 +60,7 @@ module.exports = function(controller) {
 
       setTimeout(function() {
         controller.prisoners_update(params.bot, params.team, params.event, "prison");
-      }, 5000)
+      }, 5000)*/
 
     }
 
@@ -76,7 +76,6 @@ module.exports = function(controller) {
 
     controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
         // replace the original button message with a new one
-      console.log(card);
         params.bot.replyInteractive(params.event, card);
 
     });

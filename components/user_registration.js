@@ -28,7 +28,6 @@ module.exports = function(controller) {
             team.bot = {
                 token: payload.bot.bot_access_token,
                 user_id: payload.bot.bot_user_id,
-                team_id: payload.identity.team_id,
                 createdBy: payload.identity.user_id,
                 app_token: payload.access_token,
             };

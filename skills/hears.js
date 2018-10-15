@@ -312,7 +312,7 @@ module.exports = function(controller) {
     if (message.match[0] != "continue_dilemma") return;
 
     controller.storage.teams.get(message.team, function(err, team) {
-      let ready = _.where(team.prisoner_players, { "prisoner_ready": true });
+      const ready = _.where(team.prisoner_players, { "prisoner_ready": true });
 
       console.log(ready.length, team.prisoner_players.length);
       console.log("lets check and continue ", ready.length == team.prisoner_players.length);
@@ -329,13 +329,6 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
-
-    if (process.env.environment != 'dev') return;
-    controller.trigger("prisoners_onboard", [bot, message]);
-
-  });
-  
   controller.hears('image_refresh_secret', 'direct_message', function(bot, message) {
 
    if (message.match[0] != "image_refresh_secret") return;
@@ -351,6 +344,13 @@ module.exports = function(controller) {
       .then(res => console.log(res))
       .catch(err => console.log("image refresh error: ", err))
    })
+
+  });
+
+  controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
+
+    if (process.env.environment != 'dev') return;
+    controller.trigger("prisoners_onboard", [bot, message]);
 
   });
 

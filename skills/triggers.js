@@ -1,6 +1,4 @@
-const _ = require('underscore');
-const { WebClient } = require('@slack/client');
-
+const _ = require('underscore')
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
@@ -31,9 +29,6 @@ module.exports = function(controller) {
         var script = controller.secretTriggers(message.text.split(" ")[0], false);
 
         controller.storage.teams.get(message.team, function(err, team) {
-          var token = bot.config.token ? bot.config.token : bot.config.bot.token;
-          var web = new WebClient(token);
-          
           _.each(team.users, function(user) {
             if (user.userId != message.user)
             {
@@ -66,11 +61,7 @@ module.exports = function(controller) {
       }
       else
       {
-        controller.studio.runTrigger(bot, message.text, message.user, message.channel, message)
-          .then(function(msg) {
-            console.log(msg);
-          })
-          .catch(function(err) {
+        controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
          bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
         });
       }

@@ -30,7 +30,10 @@
     "sharp": "^0.20.5",
     "sorted-object": "^2.0.1",
     "underscore": "^1.8.3",
-    "wordfilter": "^0.2.6"
+    "wordfilter": "^0.2.6",
+    "node-cmd": "^3.0.0",
+    "systeminformation": "^3.45.7",
+    "os-utils": "^0.0.14"
   },
   "engines": {
     "node": "9.0.0"

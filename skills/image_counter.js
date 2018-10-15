@@ -57,23 +57,27 @@ module.exports = function(controller) {
           var results = Promise.all(mapPromises);
 
           results.then(members => {
+            
+            const topic = "Upload images from Critical Safari here. Only upload images one at a time."
+            const purpose = "Please upload images one at a time. Uploading multiple files at once will confuse the system."
 
             // Set the channel topic and purpose
-            web.groups.setTopic(channelId, "Upload images from Critical Safari here. Only upload images one at a time.").then(res => console.log(res)).catch(err => console.log(err));
-            web.groups.setPurpose(channelId, "Please upload images one at a time. Uploading multiple files at once will confuse the system.").then(res => console.log(res)).catch(err => console.log(err));
+            web.groups.setTopic(channelId, topic)
+              .then(res => web.groups.setPurpose(channelId, purpose))
+              .catch(err => console.log("Error in setting topic/purpose for image counter channel", err));
 
             setTimeout(function() {
+              
               // initial feedback message
-              controller.imageFeedback(bot, message, channelId, savedTeam);
-              // image-less image album
-              controller.imageAlbum(bot, message, channelId, savedTeam);
+              controller.imageFeedback(bot, message, channelId, savedTeam)
+                // image-less image album
+                .then(res => controller.imageAlbum(bot, message, savedTeam))
+                // send out the rules message
+                .then(res =>  controller.studio.get(bot, "image_tag_rules", message.user, channelId))
+                .then(convo => convo.activate())
+                .catch(err => console.log("image onboarding messages error: ", err));
 
-              // send out the rules message
-              controller.studio.get(bot, "image_tag_rules", message.user, channelId).then(convo => {
-                convo.activate();
-              });
-
-            }, 4000);
+            }, 100 * data.length);
 
           });
 
