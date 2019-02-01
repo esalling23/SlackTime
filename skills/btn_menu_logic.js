@@ -31,10 +31,10 @@ module.exports = function(controller) {
 
       }
     }
-    
+
     if (["many_dots", "pick_up_plaque", "few_dots",  "safari"].includes(params.data.value)) {
       vars.link = true
-    
+
       controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
           // replace the original button message with a new one
           params.bot.replyInteractive(params.event, card);

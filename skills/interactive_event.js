@@ -325,7 +325,6 @@ module.exports = function(controller) {
 
     }
 
-
     if (event.actions[0].name.match(/^start/)) {
 
       var options = {
@@ -395,11 +394,6 @@ module.exports = function(controller) {
 
     // User "say"s something
     if (event.actions[0].name.match(/^say/)) {
-      console.log("users clicking: ", usersClicking, event.user);
-
-      // if (usersClicking.includes(event.user)) return;
-      // usersClicking.push(event.user);
-      // console.log("user clicked");
 
       var opt = {
         bot: bot,
@@ -425,68 +419,7 @@ module.exports = function(controller) {
           var thisUser = _.findWhere(res.users, { userId: event.user });
           console.log(event.actions[0].value);
 
-          if (event.actions[0].value == "prisoners_room") {
-
-            /*if (res.prisoner_started) {
-              console.log('prisoner thing started');
-              if (!thisUser.prisoner)
-                 opt.thread = "already_started";
-              else {
-                console.log('this user is already a prisoner tho!!')
-                controller.makeCard(bot, event, "prisoners_dilemma", "default", {}, function(card) {
-
-                  bot.api.chat.update({
-                    channel: event.channel,
-                    ts: event.original_message.ts,
-                    attachments: card.attachments
-                  }, function(err, updated) {
-                    console.log(updated);
-                  });
-
-                  return;
-
-                });
-
-                return;
-              }
-            }
-            else {
-              res.users = _.map(res.users, function(user) {
-                if (usersClicking.includes(user.userId))
-                  user.prisoner = true;
-
-                // console.log(user);
-
-                return user;
-              });
-            }*/
-
-            // console.log(res.users);
-
-            //res.prisoner_players = _.where(res.users, { prisoner: true });
-
-            // console.log("users clicking: ", usersClicking);
-
-            controller.storage.teams.save(res, function(err, saved) {
-
-              usersClicking.splice(usersClicking.indexOf(event.user), 1);
-
-              controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
-
-                opt.team = saved;
-                opt.user = _.findWhere(res.users, { userId: event.user }),
-                opt.script = currentScript;
-
-                controller.confirmMovement(opt);
-
-              });
-
-              // console.log("reduced users clicking, ", usersClicking);
-
-            });
-
-          } else {
-            controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+          controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
 
               controller.storage.teams.save(res).then(saved => {
 
@@ -500,7 +433,6 @@ module.exports = function(controller) {
               });
 
             });
-          }
 
         });
 

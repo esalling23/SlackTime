@@ -27,12 +27,10 @@ module.exports = function(controller) {
     {
       if (message.text.split(" ")[1] == "all")
       {
-        const script = controller.secretTriggers(message.text.split(" ")[0], false);
+        var script = controller.secretTriggers(message.text.split(" ")[0], false);
 
         controller.storage.teams.get(message.team, function(err, team) {
-          const token = team.bot.app_token
-          const web = new WebClient(token)
-          
+          const web = new WebClient(team.bot.app_token)
           _.each(team.users, function(user) {
             if (user.userId != message.user)
             {
