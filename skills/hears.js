@@ -26,34 +26,6 @@ const token = process.env.slackToken;
 
 module.exports = function(controller) {
 
-
-  controller.hears('(.*)', 'ambient,direct_mention', function(bot,message) {
-
-    // If we hear anything in the no-chat channels, delete it
-    controller.storage.teams.get(message.team, function(err, team) {
-
-      // if (team.noChatChannels.includes(message.channel))
-      //   controller.deleteThisMsg(message, team.bot.app_token);
-      // else {
-      controller.dataStore(bot, message, "chat").catch(err => console.log('Chat datastore error: ', err));
-      // }
-
-    });
-
-  });
-
-  controller.hears('gamelog_update_kiwi', 'direct_message', function(bot, message) {
-
-   if (message.match[0] != "gamelog_update_kiwi") return;
-
-   var log = {
-     bot: bot,
-     team: bot.config.id,
-   }
-
-   controller.trigger('gamelog_update', [log]);
-  });
-
   controller.hears('flavor_flave', 'direct_message', function(bot, message) {
 
     var botChannels = {};
@@ -116,22 +88,7 @@ module.exports = function(controller) {
 
   });
 
-  controller.hears('grab', 'ambient,direct_message', function(bot,message) {
-
-    if (process.env.environment != 'dev') return;
-    controller.trigger("grab_text", [bot, message]);
-
-
-  });
-
-
-
-  controller.hears('timer_start', 'direct_message', function(bot,message) {
-    if (process.env.environment != 'dev') return;
-    controller.prisoners_time(bot, message.team, true);
-
-  });
-
+  // Grab players who have DM open with bot
   controller.hears('chat', 'direct_message', function(bot,message) {
     if (process.env.environment != 'dev') return;
     controller.storage.teams.get(message.team, function(err, team) {
@@ -155,42 +112,11 @@ module.exports = function(controller) {
 
       }).catch(err => console.log('im list error: ' + err));
 
-
     });
-
 
   });
 
-
-
-  controller.hears('end_dilemma', 'direct_message', function(bot,message) {
-    if (process.env.environment != 'dev') return;
-    controller.storage.teams.get(message.team, function(err, team) {
-      var web = new WebClient(bot.config.bot.token);
-
-      team.prisoner_players = [];
-      team.prisoner_started = false;
-      team.prisoner_complete = false;
-
-      team.prisoner_success = 0;
-      team.prisoner_decisions = [];
-      team.prisoner_time = {};
-
-      team.users = _.map(team.users, function(user) {
-        user.prisoner = false;
-        return user;
-
-      });
-
-      controller.storage.teams.save(team, function(err, saved) {
-        console.log(saved, "saved team");
-      });
-
-    });
-
-
-  });
-
+  // Clear bot message history
   controller.hears('clear', 'direct_message', function(bot,message) {
     if (process.env.environment != 'dev') return;
     controller.storage.teams.get(message.team, function(err, team) {
@@ -212,8 +138,7 @@ module.exports = function(controller) {
 
   });
 
-
-  // Listen for
+  // Generate game data
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
 
     if (process.env.environment != 'dev') return;
@@ -238,46 +163,6 @@ module.exports = function(controller) {
       });
     }
 
-  });
-
-  controller.hears("prison", 'direct_message,direct_mention', function(bot, message) {
-
-    if (process.env.environment != 'dev') return;
-    if (message.match[0] != "prison") return;
-    controller.studio.get(bot, 'keypad', message.user, message.channel).then(function(convo) {
-
-      convo.changeTopic("correct");
-      convo.activate();
-    });
-
-  });
-
-  // controller.hears("reset_dilemma", 'direct_message', function(bot, message) {
-  //   if (message.match[0] != "reset_dilemma") return;
-  //
-  //   controller.storage.teams.get(message.team, function(err, team) {
-  //     controller.prisoners_check(bot, message.team, "Prison", false, function(users) {
-  //       var web = new WebClient(team.bot.app_token);
-  //       controller.prisoners_leftout(users);
-  //     });
-  //   });
-  // });
-  //
-  controller.hears("check_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "check_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.trigger("prisoners_check", [bot, team.id]);
-    });
-  });
-
-  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "continue_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      controller.prisoners_continue(bot, team);
-      // controller.trigger("prisoners_continue", [bot, team]);
-    });
   });
 
   controller.hears("players_get", 'direct_message', function(bot, message) {
@@ -307,53 +192,6 @@ module.exports = function(controller) {
       });
     });
   });
-
-  controller.hears("continue_dilemma", 'direct_message', function(bot, message) {
-    if (message.match[0] != "continue_dilemma") return;
-
-    controller.storage.teams.get(message.team, function(err, team) {
-      const ready = _.where(team.prisoner_players, { "prisoner_ready": true });
-
-      console.log(ready.length, team.prisoner_players.length);
-      console.log("lets check and continue ", ready.length == team.prisoner_players.length);
-      if (ready.length == team.prisoner_players.length) {
-        controller.prisoners_continue(bot, team);
-      }
-    });
-  });
-
-  controller.hears("image_onboard_secret", 'direct_message,direct_mention', function(bot, message) {
-
-    if (message.match[0] != "image_onboard_secret") return;
-    controller.trigger("image_counter_onboard", [bot, message]);
-
-  });
-
-  controller.hears('image_refresh_secret', 'direct_message', function(bot, message) {
-
-   if (message.match[0] != "image_refresh_secret") return;
-
-   var log = {
-     bot: bot,
-     team: bot.config.id,
-   }
-
-   controller.storage.teams.get(message.team, function(err, team) {
-     const bot = controller.spawn(team.bot);
-     controller.imageRefresh(bot, message, team.image_channel_id, team)
-      .then(res => console.log(res))
-      .catch(err => console.log("image refresh error: ", err))
-   })
-
-  });
-
-  controller.hears("prisoners_onboard", 'direct_message,direct_mention', function(bot, message) {
-
-    if (process.env.environment != 'dev') return;
-    controller.trigger("prisoners_onboard", [bot, message]);
-
-  });
-
 
   var deleteThisMsg = function(message, token) {
     var web = new WebClient(token);

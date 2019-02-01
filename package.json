@@ -12,7 +12,7 @@
     "@slack/events-api": "^1.0.1",
     "app-root-path": "^2.0.1",
     "body-parser": "^1.18.2",
-    "botkit": "^0.6.12",
+    "botkit": "^0.7.0",
     "botkit-storage-mongo": "^1.0.7",
     "botkit-studio-metrics": "^0.0.4",
     "bson": "^2.0.5",

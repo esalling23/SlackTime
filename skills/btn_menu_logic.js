@@ -1,9 +1,9 @@
+
+
 const _ = require("underscore");
 const request = require("request");
 
 module.exports = function(controller) {
-
-  var usersPrisoned = [];
 
   controller.confirmMovement = function(params) {
 
@@ -32,53 +32,15 @@ module.exports = function(controller) {
       }
     }
 
-    if (params.data.value.includes('channel') && params.data.value != "animal_channel" && !params.user.codesEntered.includes(params.data.value)) {
-      var channel = parseInt(params.data.value.split('_')[1]);
-      vars.funnyDigits = controller.remoteCombos[channel - 1].join(" ");
-      vars.channel = "Channel " + channel;
-      params.data.value = 'remote';
-      vars.link = true;
+    if (["many_dots", "pick_up_plaque", "few_dots",  "safari"].includes(params.data.value)) {
+      vars.link = true
+
+      controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
+          // replace the original button message with a new one
+          params.bot.replyInteractive(params.event, card);
+
+      });
     }
-
-    if (params.data.value == "prisoners_room") {
-      /*var prisoners = _.where(params.team.users, { prisoner: true }).length;
-      console.log(prisoners, " are the number of prisoners in the movement logic");
-
-      vars.prisoners_length = process.env.prisoners_players - prisoners;
-      vars.prisoners_started = params.team.prisoner_started;
-      vars.prisoners_time = controller.prisoners_initial().toDateString();
-
-      vars.prisoners_users = params.team.users;
-
-      if (vars.prisoners_length < 0) vars.prisoners_length = 0;
-
-      if (vars.prisoners_length == 2 || !params.team.prisoner_time || params.team.prisoner_time.length <= 0) {
-        setTimeout(function() {
-          controller.prisoners_time(params.bot, params.team.id, false);
-        }, 10000);
-      }
-
-      setTimeout(function() {
-        controller.prisoners_update(params.bot, params.team, params.event, "prison");
-      }, 5000)*/
-
-    }
-
-    if (["drawer", "many_dots", "tv_guide", "pick_up_plaque", "few_dots", "remote", "safari", "animal_channel", "aris_projector", "desk", "prisoners_room"].includes(params.data.value))
-      vars.link = true;
-
-    if (["egg_table", "egg_table_dev"].includes(params.data.value) || vars.link) {
-      vars.user = params.user.userId;
-      vars.team = params.team.id;
-    }
-
-    vars.egg = params.data.value == "egg_table";
-
-    controller.makeCard(params.bot, params.event, params.data.value, thread, vars, function(card) {
-        // replace the original button message with a new one
-        params.bot.replyInteractive(params.event, card);
-
-    });
   }
 
   controller.determineThread = function(script, user) {

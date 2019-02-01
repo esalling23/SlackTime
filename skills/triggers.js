@@ -1,6 +1,5 @@
 const _ = require('underscore')
-const { WebClient } = require('@slack/client');
-
+const { WebClient } = require('@slack/client')
 // Catches or evaluates certain triggers for dev and other purposes
 module.exports = function(controller) {
 
