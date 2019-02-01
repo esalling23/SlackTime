@@ -25,9 +25,9 @@ module.exports = function(controller) {
 
       const token = auth.access_token;
 
-      var web = new WebClient(token);
+      const web = new WebClient(token);
       controller.storage.teams.get(team.id, function (error, team) {
-       web.users.list().then((res) => {
+      web.users.list().then((res) => {
 
          team.oauth_token = auth.access_token;
          team.gameStarted = false;
@@ -38,35 +38,6 @@ module.exports = function(controller) {
          team.currentState = 'default';
          team.events = [];
          team.codesEntered = [];
-         team.uploadedImages = [];
-
-         team.progress_channel_id = "";
-         team.garden_channel_id = "";
-
-         team.albumImages = undefined;
-         team.imagesComplete = false;
-         team.image_channel_id = "";
-         team.image_feedback = undefined;
-         team.phasesUnlocked = ["phase_1"];
-         team.movements = [0];
-
-         team.prisoner_players = [];
-         team.prisoner_started = false;
-         team.prisoner_complete = false;
-         team.prisoner_time = [];
-         team.prisoner_decisions = [];
-         team.prisoner_success = 0;
-         team.prisoner_thread = "default";
-
-         team.noChatChannels = [];
-         team.chat_channels = [];
-
-         team.gamelog = {};
-
-         for (var i = 0; i < 5; i++) {
-            var phase = "phase_" + (i+1);
-            team.gamelog[phase] = [];
-         }
 
           // console.log(res);
          creator = bot.config.createdBy;
@@ -89,7 +60,7 @@ module.exports = function(controller) {
 
 
          // console.log(saved, " we onboarded this team");
-          web.groups.create(process.env.progress_channel).then((channel, err) => {
+         web.groups.create(process.env.progress_channel).then((channel, err) => {
 
             var channelId = channel.group.id;
 
@@ -132,7 +103,6 @@ module.exports = function(controller) {
           }).catch(err => console.log(err));
 
        }).catch((err) => console.log(err) ); // End users.list call
-
 
     });
 

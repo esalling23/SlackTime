@@ -39,25 +39,7 @@ module.exports = function(controller) {
       teamData.movements = [0];
       teamData.codesEntered = [];
       teamData.users = [];
-      teamData.uploadedImages = [];
-      teamData.albumImages = undefined;
-      teamData.imagesComplete = false;
-
-      teamData.image_channel_id = "";
-      teamData.image_feedback = "";
       teamData.phasesUnlocked = ["phase_1"];
-
-      teamData.prisoner_players = [];
-      teamData.prisoner_started = false;
-      teamData.prisoner_time = {};
-      teamData.prisoner_decisions = [];
-      teamData.prisoner_success = 0;
-      teamData.prisoner_complete = false;
-      teamData.prisoner_thread = "default";
-      teamData.prisoner_eliminate = false;
-      teamData.prisoner_stolen = false;
-
-      teamData.noChatChannels = [teamData.gamelog_channel_id];
 
       teamData.gamelog = {};
 
