@@ -1,7 +1,7 @@
 const _ = require("underscore");
 
 module.exports = function(controller) {
-  
+
   controller.imageFeedback = function(bot, message, channel, team) {
     return new Promise((resolve, reject) => {
       controller.studio.get(bot, "image_tag", message.user, channel)
@@ -27,15 +27,15 @@ module.exports = function(controller) {
                 a.color = "ff2600";
               else if (l > 0 && l < 6)
                 a.color = "ffb900";
-              else 
+              else
                 a.color = "00f900";
             }
           });
 
           if (team.imagesComplete) {
             template.attachments.push({
-              title: "Nice work, you've uploaded 6 images for every location!", 
-              text: "Here's a code for a safe: *" + process.env.safe_code.replace(/-/g, "").toString() + "*", 
+              title: "Nice work, you've uploaded 6 images for every location!",
+              text: "Here's a code for a safe: *" + process.env.safe_code.replace(/-/g, "").toString() + "*",
               image_url: "http://res.cloudinary.com/extraludic/image/upload/v1529679536/escape-room/safe.jpg"
             });
           }
@@ -47,12 +47,12 @@ module.exports = function(controller) {
         .catch(err => reject(err));
     })
   }
-  
+
   controller.imageTag = function(bot, message, url) {
 
     // upon image upload, show menu asking for player to tag the image location
     controller.studio.get(bot, "image_tag", message.user, message.channel).then(convo => {
-      
+
       var template = convo.threads.default[0];
 
       template.attachments[0].image_url = url;
@@ -62,12 +62,12 @@ module.exports = function(controller) {
       convo.activate();
 
     });
-    
+
   }
-  
+
   controller.imageAlbum = function(bot, message, team) {
     const placeholder = "http://res.cloudinary.com/extraludic/image/upload/v1525385203/escape-room/No-Image-Placeholder.jpg"
-    
+
     return new Promise((resolve, reject) => {
       controller.studio.get(bot, "image_tag_album", message.user, message.channel)
         .then(convo => {

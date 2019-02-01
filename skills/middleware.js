@@ -58,10 +58,8 @@ module.exports = function(controller) {
               // upload it to our cloudinary account
               controller.fileUpload(bot, message, function(err, result) {
 
-                if (err) 
-                  console.log("File Upload Error: \n", err);
-                else {
-                  // Set the message url to the cloudinary url of the uploaded file
+                if (err) console.log("File Upload Error: \n", err);
+                // Set the message url to the cloudinary url of the uploaded file
                 message.url = result.url;
 
                 // If this is the image counter channel, trigger event
@@ -74,7 +72,6 @@ module.exports = function(controller) {
 
                 // Store the message as a chat item
                 controller.dataStore(bot, message, "upload").catch(err => console.log('File upload data storage error: ', err));
-                }
 
               });
             });
@@ -119,7 +116,7 @@ module.exports = function(controller) {
               web.groups.history(message.channel).then(res => {
                 console.log(res.messages);
                 var thisMsg = _.findWhere(res.messages, { text: message.text });
-                
+
                 if (!thisMsg) return;
 
                 thisMsg.channel = message.channel;
@@ -177,8 +174,6 @@ module.exports = function(controller) {
 
               // Find the message through filtering matching text
               var thisMsg = _.filter(res.messages, function(msg) {
-                console.log(message.text, " is the text of the message we want to pin")
-                console.log(msg.attachments, msg.text, " is the message we are checking")
                 if (msg.attachments) {
                   return msg.attachments[0].title == "Remember:";
                 } else

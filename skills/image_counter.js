@@ -57,7 +57,7 @@ module.exports = function(controller) {
           var results = Promise.all(mapPromises);
 
           results.then(members => {
-            
+
             const topic = "Upload images from Critical Safari here. Only upload images one at a time."
             const purpose = "Please upload images one at a time. Uploading multiple files at once will confuse the system."
 
@@ -67,7 +67,7 @@ module.exports = function(controller) {
               .catch(err => console.log("Error in setting topic/purpose for image counter channel", err));
 
             setTimeout(function() {
-              
+
               // initial feedback message
               controller.imageFeedback(bot, message, channelId, savedTeam)
                 // image-less image album

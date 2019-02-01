@@ -3,11 +3,11 @@ const cmd = require('node-cmd');
 const os = require('os-utils');
 
 module.exports = function(controller) {
-  
+
   setInterval(function() {
-    
+
     console.log("Free memory %: ", os.freemem())
-    
+
     os.cpuFree(function(v){
       console.log( 'CPU Free: ' + v );
       // if (v <= 0.4) {
@@ -42,7 +42,6 @@ module.exports = function(controller) {
 
           }
       );
-    
-  }, msPerMin)
-}
 
+  }, msPerMin * 5)
+}

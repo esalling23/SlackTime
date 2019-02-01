@@ -216,7 +216,7 @@ module.exports = function(controller) {
   // Listen for
   controller.hears("^generate (.*)", 'direct_message,direct_mention', function(bot, message) {
 
-    // if (process.env.environment != 'dev') return;
+    if (process.env.environment != 'dev') return;
     console.log(message, "in the hears");
     var options = {
       bot: bot,

@@ -522,10 +522,10 @@ module.exports = function(controller) {
 
       // User "say"s something
       if (event.actions[0].name.match(/^say/)) {
-// 				console.log("users clicking: ", usersClicking, event.user);
+				console.log("users clicking: ", usersClicking, event.user);
 
-// 				if (usersClicking.includes(event.user)) return;
-// 				usersClicking.push(event.user);
+				// if (usersClicking.includes(event.user)) return;
+				// usersClicking.push(event.user);
 				// console.log("user clicked");
 
         var opt = {
@@ -547,8 +547,8 @@ module.exports = function(controller) {
               opt.data.value = "input_nodes_1";
             }
 
-            var script = _.findWhere(list, { name: name });
-            var scriptName = script.name;
+            var script = _.findWhere(list, { command: name });
+            var scriptName = script.command;
 						var thisUser = _.findWhere(res.users, { userId: event.user });
 						console.log(event.actions[0].value);
 

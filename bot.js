@@ -64,6 +64,7 @@ var debug = require('debug')('botkit:main');
 var bot_options = {
     clientId: process.env.clientId,
     clientSecret: process.env.clientSecret,
+    clientSigningSecret: process.env.clientSigningSecret,
     debug: false,
     scopes: ['bot'],
     // send_via_rtm: true,
