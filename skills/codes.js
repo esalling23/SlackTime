@@ -1,5 +1,4 @@
 
-
 module.exports = function(controller) {
 
   controller.puzzleCodes = {
@@ -14,5 +13,5 @@ module.exports = function(controller) {
     0: process.env.safe_code.split("-")[0],
     1: process.env.safe_code.split("-")[1],
     2: process.env.safe_code.split("-")[2]
-  };
+  }
 }

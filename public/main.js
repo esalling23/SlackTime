@@ -1,7 +1,7 @@
 /* global io */
 
 $(function() {
-  var socket = io();
+  const socket = io();
   
   
 });

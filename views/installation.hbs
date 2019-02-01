@@ -195,18 +195,18 @@
 
 <script>
   function clipboard(element) {
-    var copyText = document.getElementById(element);
-    copyText.select();
-    document.execCommand("Copy");
+    const copyText = document.getElementById(element)
+    copyText.select()
+    document.execCommand("Copy")
   }
 
   function generateEnv() {
-    var clientId = document.getElementById('clientId').value || '<Your client ID value here>';
-    var clientSecret = document.getElementById('clientSecret').value || '<Your client secret value here>';
+    const clientId = document.getElementById('clientId').value || '<Your client ID value here>'
+    const clientSecret = document.getElementById('clientSecret').value || '<Your client secret value here>'
 
-    var env = '# slack app credentials\nclientId=' + clientId + '\nclientSecret=' + clientSecret;
-    document.getElementById('env_file').value = env;
+    const env = '# slack app credentials\nclientId=' + clientId + '\nclientSecret=' + clientSecret
+    document.getElementById('env_file').value = env
   }
 
-  generateEnv();
+  generateEnv()
 </script>

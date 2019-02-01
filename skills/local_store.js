@@ -29,7 +29,7 @@ module.exports = function(controller) {
     }
   }
 
-
+  // Store teams in database every 5 seconds
   setInterval(function() {
 
     for (let team in controller.store.teams) {

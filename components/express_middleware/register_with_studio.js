@@ -1,15 +1,15 @@
-var request = require('request');
-var debug = require('debug')('botkit:register_with_studio');
+const request = require('request');
+const debug = require('debug')('botkit:register_with_studio');
 module.exports = function(webserver, controller) {
 
-    var registered_this_session = false;
+    const registered_this_session = false;
 
     controller.registerDeployWithStudio = function(host) {
             if (!registered_this_session && controller.config.studio_token) {
 
                 // information about this instance of Botkit
                 // send to Botkit Studio in order to display in the hosting tab
-                var instance = {
+                const instance = {
                     url: host,
                     version: controller.version(),
                     ts: new Date(),
@@ -27,7 +27,7 @@ module.exports = function(webserver, controller) {
                         debug('Error registering instance with Botkit Studio', err);
                     } else {
 
-                        var json = null;
+                        const json = null;
                         try {
                             json = JSON.parse(body);
                         } catch(err) {

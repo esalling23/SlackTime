@@ -1,81 +1,81 @@
-var debug = require('debug')('botkit:rtm_manager');
-const { RTMClient } = require("@slack/client");
+const debug = require('debug')('botkit:rtm_manager')
+const { RTMClient } = require("@slack/client")
 
 module.exports = function(controller) {
 
-    var managed_bots = {};
+    const managed_bots = {}
 
     // Capture the rtm:start event and actually start the RTM...
     controller.on('rtm:start', function(config) {
-        var bot = controller.spawn(config);
-      debug('starting rtm');
+        const bot = controller.spawn(config)
+      debug('starting rtm')
 
-        manager.start(bot, config);
-    });
+        manager.start(bot, config)
+    })
 
     //
     controller.on('rtm_close', function(bot) {
-        manager.remove(bot);
-    });
+        manager.remove(bot)
+    })
 
     // The manager object exposes some useful tools for managing the RTM
-    var manager = {
+    const manager = {
         start: function(bot, config) {
 
             if (managed_bots[bot.config.token]) {
-                debug('Start RTM: already online');
-               
+                debug('Start RTM: already online')
+
             } else {
-              
+
                 bot.api.rtm.start({
                   batch_presence_aware: true
                 }, function(err, bot) {
-                  managed_bots[bot.config.token] = bot.rtm;
-                });
-              
+                  managed_bots[bot.config.token] = bot.rtm
+                })
+
                 bot.startRTM(function(err, bot) {
                     if (err) {
-                        debug('Error starting RTM:', err);
+                        debug('Error starting RTM:', err)
                     } else {
-                        managed_bots[bot.config.token] = bot.rtm;
-                        debug('Start RTM: Success');
+                        managed_bots[bot.config.token] = bot.rtm
+                        debug('Start RTM: Success')
                     }
-                });
+                })
             }
-          
-            
+
+
         },
         stop: function(bot) {
             if (managed_bots[bot.config.token]) {
                 if (managed_bots[bot.config.token].rtm) {
-                    debug('Stop RTM: Stopping bot');
+                    debug('Stop RTM: Stopping bot')
                     managed_bots[bot.config.token].closeRTM()
                 }
             }
         },
         remove: function(bot) {
-            debug('Removing bot from manager');
-            delete managed_bots[bot.config.token];
+            debug('Removing bot from manager')
+            delete managed_bots[bot.config.token]
         },
         reconnect: function() {
 
-            debug('Reconnecting all existing bots...');
+            debug('Reconnecting all existing bots...')
             controller.storage.teams.all(function(err, list) {
 
                 if (err) {
-                    throw new Error('Error: Could not load existing bots:', err);
+                    throw new Error('Error: Could not load existing bots:', err)
                 } else {
-                    for (var l = 0; l < list.length; l++) {
-                        manager.start(controller.spawn(list[l].bot));
+                    for (const l = 0 l < list.length l++) {
+                        manager.start(controller.spawn(list[l].bot))
                     }
                 }
 
-            });
+            })
 
         }
     }
 
 
-    return manager;
+    return manager
 
 }

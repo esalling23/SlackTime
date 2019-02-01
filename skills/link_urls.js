@@ -1,10 +1,10 @@
 // Holds Link Urls object
 
 // In studio urls should have this format:
-// https://daedalusgame/link/LINK_NAME/{{vars.team}}/{{vars.user}}
+// https://daedalusgame/link/LINK_NAME/{{consts.team}}/{{consts.user}}
 // where LINK_NAME matches a key in the linkUrls object
 
-https://daedalusgame/link/prisoners_steal/{{vars.team}}/{{vars.user}}
+// https://daedalusgame/link/prisoners_steal/{{consts.team}}/{{consts.user}}
 
 module.exports = function(controller) {
 

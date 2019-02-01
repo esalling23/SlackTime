@@ -4,19 +4,19 @@ const { WebClient } = require('@slack/client')
 module.exports = function(controller) {
 
   controller.secretTriggers = function(trigger, returnTrigger) {
-    var secrets = {
+    const secrets = {
       "input_nodes_1": "iELOMU5N$dPkvbP7x0E$wD$s",
       "tamagotchi_room": "#tDh7J$VdJW0OgoV3RxtXmfD",
       "aris_room": "&nSyJf@0A45mVB0#^ZAr&6uf",
       "prisoners_room": "$vjOBvBA0Im$d4g!6kE%vrUG"
-    };
+    }
 
     if (returnTrigger) {
       return Object.keys(secrets).map(function(key) {
-        return secrets[key];
-      }).includes(trigger);
+        return secrets[key]
+      }).includes(trigger)
     } else {
-      return _.invert(secrets)[trigger];
+      return _.invert(secrets)[trigger]
     }
 
   }
@@ -27,16 +27,16 @@ module.exports = function(controller) {
     {
       if (message.text.split(" ")[1] == "all")
       {
-        var script = controller.secretTriggers(message.text.split(" ")[0], false);
+        const script = controller.secretTriggers(message.text.split(" ")[0], false)
 
         controller.storage.teams.get(message.team, function(err, team) {
           const web = new WebClient(team.bot.app_token)
+
           _.each(team.users, function(user) {
-            if (user.userId != message.user)
-            {
+            if (user.userId != message.user) {
               controller.findRecentMessages(web, user.bot_chat).then(res => {
-                res.msg.channel = user.bot_chat;
-                res.msg.user = user.userId;
+                res.msg.channel = user.bot_chat
+                res.msg.user = user.userId
 
                 controller.makeCard(bot, event, script, "default", {}, function(card) {
 
@@ -45,30 +45,30 @@ module.exports = function(controller) {
                     ts: event.original_message.ts,
                     attachments: card.attachments
                   }, function(err, updated) {
-                    console.log('this user was just sent to a place: ',  updated);
-                  });
+                    console.log('this user was just sent to a place: ',  updated)
+                  })
 
-                });
+                })
 
-              }).catch(err => console.log('error in find recent messages', err));
+              }).catch(err => console.log('error in find recent messages', err))
             }
             else
             {
               controller.studio.runTrigger(bot, message.text.split(" ")[0], message.user, message.channel, message).catch(function(err) {
-                bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-              });
+                bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err)
+              })
             }
-          });
-        });
+          })
+        })
       }
       else
       {
         controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).catch(function(err) {
-         bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-        });
+         bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err)
+        })
       }
 
     }
 
-  });
+  })
 }

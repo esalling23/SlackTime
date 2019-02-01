@@ -1,31 +1,31 @@
-var debug = require('debug')('botkit:incoming_webhooks');
+const debug = require('debug')('botkit:incoming_webhooks')
 
 module.exports = function(webserver, controller) {
 
-    debug('Configured /slack/receive url');
+    debug('Configured /slack/receive url')
     webserver.post('/slack/receive', function(req, res) {
 
         // NOTE: we should enforce the token check here
 
         // respond to Slack that the webhook has been received.
-        res.status(200);
+        res.status(200)
 
         // Now, pass the webhook into be processed
-        controller.handleWebhookPayload(req, res);
+        controller.handleWebhookPayload(req, res)
 
-    });
-  
-  
+    })
+
+
     webserver.post('/slack/menu', function(req, res) {
-        var data = JSON.parse(req.body.payload);
-        console.log("retrieving menu options", data);
-      
-        var id = data.callback_id;
-      
-        console.log(id);
-        var options = {
+        const data = JSON.parse(req.body.payload)
+        console.log("retrieving menu options", data)
+
+        const id = data.callback_id
+
+        console.log(id)
+        const options = {
           options: []
-        };
+        }
 
         if (id == "door_a") {
           options.options = [
@@ -41,12 +41,12 @@ module.exports = function(webserver, controller) {
                 "text": "Bot broke my toaster",
                 "value": "IOT-75"
             }
-          ];
+          ]
         }
-      
-          res.send(options);
+
+          res.send(options)
 
 
-    });
+    })
 
 }
