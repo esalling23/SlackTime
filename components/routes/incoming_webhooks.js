@@ -1,52 +1,42 @@
 const debug = require('debug')('botkit:incoming_webhooks')
 
-module.exports = function(webserver, controller) {
+module.exports = function (webserver, controller) {
+  debug('Configured /slack/receive url')
+  webserver.post('/slack/receive', function (req, res) {
+    // NOTE: we should enforce the token check here
+    // respond to Slack that the webhook has been received.
+    res.status(200)
 
-    debug('Configured /slack/receive url')
-    webserver.post('/slack/receive', function(req, res) {
+    // Now, pass the webhook into be processed
+    controller.handleWebhookPayload(req, res)
+  })
 
-        // NOTE: we should enforce the token check here
+  webserver.post('/slack/menu', function (req, res) {
+    const data = JSON.parse(req.body.payload)
+    console.log('retrieving menu options', data)
 
-        // respond to Slack that the webhook has been received.
-        res.status(200)
+    const id = data.callback_id
 
-        // Now, pass the webhook into be processed
-        controller.handleWebhookPayload(req, res)
+    console.log(id)
+    const options = {
+      options: []
+    }
 
-    })
+    if (id === 'door_a') {
+      options.options = [{
+        'text': 'Unexpected sentience',
+        'value': 'AI-2323'
+      },
+      {
+        'text': 'Bot biased toward other bots',
+        'value': 'SUPPORT-42'
+      },
+      {
+        'text': 'Bot broke my toaster',
+        'value': 'IOT-75'
+      }]
+    }
 
-
-    webserver.post('/slack/menu', function(req, res) {
-        const data = JSON.parse(req.body.payload)
-        console.log("retrieving menu options", data)
-
-        const id = data.callback_id
-
-        console.log(id)
-        const options = {
-          options: []
-        }
-
-        if (id == "door_a") {
-          options.options = [
-            {
-                "text": "Unexpected sentience",
-                "value": "AI-2323"
-            },
-            {
-                "text": "Bot biased toward other bots",
-                "value": "SUPPORT-42"
-            },
-            {
-                "text": "Bot broke my toaster",
-                "value": "IOT-75"
-            }
-          ]
-        }
-
-          res.send(options)
-
-
-    })
-
+    res.send(options)
+  })
 }

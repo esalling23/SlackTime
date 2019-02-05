@@ -1,23 +1,19 @@
-const _ = require("underscore")
-const { WebClient } = require("@slack/client")
-const request = require("request")
-
-const safe_codes = {
+const _ = require('underscore')
+const safeCodes = {
   0: [],
   1: [],
   2: []
 }
 
-module.exports = function(controller) {
-
-  controller.studio.before("three_buttons", function(convo, next) {
+module.exports = function (controller) {
+  controller.studio.before('three_buttons', function(convo, next) {
     const id = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id
 
     controller.store.getTeam(id)
       .then(team => {
         team.users = _.map(team.users, function(user) {
           if (!user.startBtns || user.startBtns.length <= 3)
-            user.startBtns = ["primary","danger","default"]
+            user.startBtns = ['primary','danger','default']
 
           return user
         })
@@ -25,29 +21,27 @@ module.exports = function(controller) {
         controller.store.teams[team.id] = team
         next()
       })
-      .catch(err => console.log(err))
-
+      .catch(error => console.log(error))
   })
 
-  controller.studio.before("safe", function(convo, next) {
+  controller.studio.before('safe', function(convo, next) {
     const menus = convo.threads.default[0].attachments[0].actions
-    const safe_code = process.env.safe_code.split("-")
+    const code = process.env.safe_code.split('-')
 
     _.each(menus, function(menu) {
-
-      menu.options = generateCodes(menu, menus, safe_codes, safe_code)
-
+      menu.options = generateCodes(menu, menus, safeCodes, code)
     })
 
     next()
   })
 
-  const generateString = function() {
-    const text = ""
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  const generateString = function () {
+    let text = ''
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 
-    for (let i = 0; i < 3; i++)
+    for (let i = 0; i < 3; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length))
+    }
 
     return text
   }
@@ -63,7 +57,6 @@ module.exports = function(controller) {
         codes[menus.indexOf(menu)][x] = { text: string, value: string }
 
       menu.options[x] = codes[menus.indexOf(menu)][x]
-
     }
 
     if (word) {
@@ -79,5 +72,4 @@ module.exports = function(controller) {
 
     return _.shuffle(menu.options)
   }
-
 }

@@ -1,19 +1,16 @@
 const _ = require('underscore')
 
-module.exports = function(webserver, controller) {
-
-  webserver.get('/link/:link/:team/:user?', function(req, res){
-
-    controller.storage.teams.get(req.params.team, function(err, team) {
+module.exports = function (webserver, controller) {
+  webserver.get('/link/:link/:team/:user?', function (req, res) {
+    controller.storage.teams.get(req.params.team, function (error, team) {
+      if (error) return
 
       const bot = controller.spawn(team.bot)
+      let user = _.findWhere(team.users, { 'userId': req.params.user })
 
-      const user = _.findWhere(team.users, { "userId" : req.params.user })
-
-      if (!user) user = { userId: "untrackable", bot_chat: 'gamelog' }
+      if (!user) user = { userId: 'untrackable', bot_chat: 'gamelog' }
 
       const url = controller.linkUrls[req.params.link]
-
       const opt = {
         team: team.id,
         user: user.userId,
@@ -22,15 +19,9 @@ module.exports = function(webserver, controller) {
         linkName: req.params.link
       }
 
-      controller.dataStore(bot, opt, "link").then((result) => {
-
+      controller.dataStore(bot, opt, 'link').then((result) => {
         res.redirect(url)
-
-      }).catch(err => console.log('error with link storage: ' + err))
-
+      }).catch(error => console.log('erroror with link storage: ' + error))
     })
-
   })
-
-
 }

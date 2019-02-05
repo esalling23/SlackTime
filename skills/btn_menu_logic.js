@@ -1,5 +1,5 @@
-const _ = require("underscore")
-const request = require("request")
+const _ = require('underscore')
+const request = require('request')
 
 module.exports = function(controller) {
 
@@ -17,12 +17,12 @@ module.exports = function(controller) {
     if (params.user.codesEntered) {
       if (params.user.codesEntered.includes(params.data.value)) {
         // If there's a repeat thread, use that
-        if (_.contains(params.script.threads, "repeat"))
-          thread = "repeat"
+        if (_.contains(params.script.threads, 'repeat'))
+          thread = 'repeat'
 
         // If this is a channel, send them to the channel thread
         if (params.data.value.includes('channel')) {
-          thread = "correct_" + parseInt(params.data.value.split('_')[1])
+          thread = 'correct_' + parseInt(params.data.value.split('_')[1])
           params.data.value = 'remote'
           consts.link = true
         }
@@ -30,7 +30,7 @@ module.exports = function(controller) {
       }
     }
 
-    if (["many_dots", "pick_up_plaque", "few_dots",  "safari"].includes(params.data.value)) {
+    if (['many_dots', 'pick_up_plaque', 'few_dots',  'safari'].includes(params.data.value)) {
       consts.link = true
 
       controller.makeCard(params.bot, params.event, params.data.value, thread, consts, function(card) {
@@ -43,30 +43,30 @@ module.exports = function(controller) {
 
   controller.determineThread = function(script, user) {
 
-    const thread
+    let thread
 
     _.each(script.threads, function(t, v) {
 
-      if (!thread || v.includes("combo")) {
-        if (v.split("_").length > 1) {
+      if (!thread || v.includes('combo')) {
+        if (v.split('_').length > 1) {
 
-          if (v.includes("combo")) {
+          if (v.includes('combo')) {
             if (user.events) {
 
               _.each(user.events, function(event) {
-                if (v.includes(event) && v.split("_")[2].includes(user.currentState))
+                if (v.includes(event) && v.split('_')[2].includes(user.currentState))
                   thread = v
               })
 
             }
 
-          } else if (v.includes("state")) {
+          } else if (v.includes('state')) {
             if (user.currentState != 'default') {
-              if (v.split("_")[1].includes(user.currentState))
+              if (v.split('_')[1].includes(user.currentState))
                 thread = v
             }
 
-          } else if (v.includes("event")) {
+          } else if (v.includes('event')) {
 
             if (user.events) {
 

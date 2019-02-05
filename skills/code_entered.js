@@ -1,7 +1,7 @@
-const _ = require("underscore")
+const _ = require('underscore')
 const fs = require('fs')
 const request = require('request')
-const sort = require("sorted-object")
+const sort = require('sorted-object')
 
 const correctButtonCodes = {
   random: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
@@ -13,24 +13,24 @@ const correctButtonCodes = {
 
 module.exports = function(controller) {
 
-  controller.on("code_entered", function(params) {
+  controller.on('code_entered', function(params) {
 
     const bot = params.bot
     controller.storage.teams.get(params.team).then(res => {
 
-      const correctCodes
-      const codeObj
+      let correctCodes
+      let codeObj
 
       if (['safe', 'bookshelf', 'aris_door', 'remote'].includes(params.codeType)) {
         if (params.codeType == 'safe') {
           correctCodes = controller.safeCode
-          params.phaseUnlocked = "phase_2"
+          params.phaseUnlocked = 'phase_2'
         } else if (params.codeType == 'bookshelf') {
           correctCodes = controller.bookCode
-          params.phaseUnlocked = "phase_3"
+          params.phaseUnlocked = 'phase_3'
         } else if (params.codeType == 'aris_door') {
           correctCodes = controller.arisCode
-          params.phaseUnlocked = "phase_4"
+          params.phaseUnlocked = 'phase_4'
         } else if (params.codeType == 'remote') {
           correctCodes = {}
           _.each(controller.remoteCombos[parseInt(params.channel) - 1], function(item, ind) {
@@ -44,7 +44,7 @@ module.exports = function(controller) {
 
       } else {
 
-        if (params.codeType == "buttons") {
+        if (params.codeType == 'buttons') {
           correctCodes = correctButtonCodes
         }
         else if (params.codeType == 'telegraph_key') {
@@ -59,27 +59,27 @@ module.exports = function(controller) {
 
       }
 
-      if (params.codeType == "telegraph_key")
+      if (params.codeType == 'telegraph_key')
         codeObj.puzzle = parseInt(codeObj.puzzle) + 1
       else if (params.codeType == 'remote')
         codeObj.puzzle = parseInt(params.channel)
 
       // Store data of entered code
-      controller.dataStore(bot, params.event, "code", {
+      controller.dataStore(bot, params.event, 'code', {
         codeObj: codeObj,
         codeType: params.codeType
-      }).then(data => console.log("logged: ", data))
-        .catch(err => console.log("code loggin error: ", err))
+      }).then(data => console.log('logged: ', data))
+        .catch(error => console.log('code loggin erroror: ', error))
 
       if (codeObj.correct == true) {
 
         params.key = codeObj
         params.team = res
 
-        controller.trigger("state_change", [params])
+        controller.trigger('state_change', [params])
 
         if (codeObj.puzzle == 'safari')
-          controller.trigger("image_counter_onboard", [bot, params.event])
+          controller.trigger('image_counter_onboard', [bot, params.event])
 
       } else {
 
@@ -94,7 +94,7 @@ module.exports = function(controller) {
             consts.randomText = text
 
             controller.makeCard(bot, params.event, params.codeType, 'random', consts, function(card) {
-                console.log(card, "is the card for the wrong entered code")
+                console.log(card, 'is the card for the wrong entered code')
 
                 // replace the original button message with a new one
                 bot.replyInteractive(params.event, card)
@@ -105,7 +105,7 @@ module.exports = function(controller) {
         } else {
 
          controller.makeCard(bot, params.event, params.codeType, 'wrong', consts, function(card) {
-            console.log(card, "is the card for the wrong entered code")
+            console.log(card, 'is the card for the wrong entered code')
 
             // replace the original button message with a new one
             bot.replyInteractive(params.event, card)

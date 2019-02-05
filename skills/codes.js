@@ -1,6 +1,4 @@
-
-module.exports = function(controller) {
-
+module.exports = function (controller) {
   controller.puzzleCodes = {
     random: 'red, red, green, white, white, green, green, red, white',
     safari: 'white, green, green, white, white, red, red, green, red',
@@ -10,8 +8,8 @@ module.exports = function(controller) {
   }
 
   controller.safeCode = {
-    0: process.env.safe_code.split("-")[0],
-    1: process.env.safe_code.split("-")[1],
-    2: process.env.safe_code.split("-")[2]
+    0: process.env.safe_code.split('-')[0],
+    1: process.env.safe_code.split('-')[1],
+    2: process.env.safe_code.split('-')[2]
   }
 }
