@@ -12,7 +12,7 @@ module.exports = function (controller) {
       if (callback) callback()
     }).catch(error => {
       if (error) return
-      // console.log('delete erroror: ', error)
+      // console.log('delete error: ', error)
       // console.log('couldn't delete: ', message)
       if (callback) callback()
     })
@@ -34,7 +34,7 @@ module.exports = function (controller) {
           })
         }, 500 * res.messages.indexOf(msg) + 1)
       })
-    }).catch(error => console.log('history erroror: ', error))
+    }).catch(error => console.log('history error: ', error))
   }
 
   // Delete the most recent message of a
@@ -47,7 +47,7 @@ module.exports = function (controller) {
       controller.deleteThisMsg(msg, token, function () {
         if (cb) cb()
       })
-    }).catch(error => console.log('history erroror: ', error))
+    }).catch(error => console.log('history error: ', error))
   }
 
   controller.findRecentMessages = function (opt) {
@@ -64,7 +64,7 @@ module.exports = function (controller) {
         } else {
           resolve('no message found')
         }
-      }).catch(error => console.log('history erroror in finding messages: ', error))
+      }).catch(error => console.log('history error in finding messages: ', error))
     })
   }
 }

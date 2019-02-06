@@ -30,7 +30,7 @@ module.exports = function (controller) {
 
         bot.startRTM(function (error, bot) {
           if (error) {
-            debug('erroror starting RTM:', error)
+            debug('error starting RTM:', error)
           } else {
             managedBots[bot.config.token] = bot.rtm
             debug('Start RTM: Success')
@@ -54,7 +54,7 @@ module.exports = function (controller) {
       debug('Reconnecting all existing bots...')
       controller.storage.teams.all(function (error, list) {
         if (error) {
-          throw new erroror('erroror: Could not load existing bots:', error)
+          throw new error('error: Could not load existing bots:', error)
         } else {
           for (let l = 0; l < list.length; l++) {
             manager.start(controller.spawn(list[l].bot))

@@ -46,17 +46,17 @@ module.exports = function (controller) {
                     console.log('this user was just sent to a place: ', updated)
                   })
                 })
-              }).catch(error => console.log('erroror in find recent messages', error))
+              }).catch(error => console.log('error in find recent messages', error))
             } else {
               controller.studio.runTrigger(bot, message.text.split(' ')[0], message.user, message.channel, message).catch(function (error) {
-                bot.reply(message, 'I experienced an erroror with a request to Botkit Studio: ' + error)
+                bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + error)
               })
             }
           })
         })
       } else {
         controller.studio.runTrigger(bot, message.text, message.user, message.channel, message).catch(function (error) {
-          bot.reply(message, 'I experienced an erroror with a request to Botkit Studio: ' + error)
+          bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + error)
         })
       }
     }

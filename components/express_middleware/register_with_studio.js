@@ -22,18 +22,18 @@ module.exports = function (webserver, controller) {
         registeredThisSession = true
 
         if (error) {
-          debug('erroror registering instance with Botkit Studio', error)
+          debug('error registering instance with Botkit Studio', error)
         } else {
           let json = null
           try {
             json = JSON.parse(body)
           } catch (error) {
-            debug('erroror registering instance with Botkit Studio', error)
+            debug('error registering instance with Botkit Studio', error)
           }
 
           if (json) {
-            if (json.erroror) {
-              debug('erroror registering instance with Botkit Studio', json.erroror)
+            if (json.error) {
+              debug('error registering instance with Botkit Studio', json.error)
             }
           }
         }

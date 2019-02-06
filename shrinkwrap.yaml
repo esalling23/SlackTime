@@ -806,7 +806,7 @@ packages:
       content-type: 1.0.4
       debug: 2.6.9
       depd: 1.1.2
-      http-errorors: 1.6.2
+      http-errors: 1.6.2
       iconv-lite: 0.4.19
       on-finished: 2.3.0
       qs: 6.5.1
@@ -823,7 +823,7 @@ packages:
       content-type: 1.0.4
       debug: 2.6.9
       depd: 1.1.2
-      http-errorors: 1.6.3
+      http-errors: 1.6.3
       iconv-lite: 0.4.23
       on-finished: 2.3.0
       qs: 6.5.2
@@ -1451,7 +1451,7 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-IKRVVoAYr4pIx4yIWNsz9mOsboxlNXiu7TNBnem/K/uTHdkyzXWDzHCK7UTolqBbgaBz0tQHsD3YNls0uIIjiw==
-  /erroror-ex/1.3.1:
+  /error-ex/1.3.1:
     dependencies:
       is-arrayish: 0.2.1
     dev: false
@@ -1999,7 +1999,7 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-lIbgIIQA3lz5XaB6vxakj6sDHADJiZadYEJB+FgA+C4nubM1NwcuvUr9EJPmnH1skZqpqUzWborWo8EIUi0Sdw==
-  /http-errorors/1.6.2:
+  /http-errors/1.6.2:
     dependencies:
       depd: 1.1.1
       inherits: 2.0.3
@@ -2010,7 +2010,7 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-CgAsyFcHGSp+eUbO7cERVfYOxzY=
-  /http-errorors/1.6.3:
+  /http-errors/1.6.3:
     dependencies:
       depd: 1.1.2
       inherits: 2.0.3
@@ -2252,7 +2252,7 @@ packages:
       assert-plus: 1.0.0
       extsprintf: 1.3.0
       json-schema: 0.2.3
-      verroror: 1.10.0
+      verror: 1.10.0
     dev: false
     engines:
       '0': node >=0.6.0
@@ -2796,7 +2796,7 @@ packages:
       integrity: sha1-aug6eqJanZtwCswoaYzR8e1+lTY=
   /parse-json/2.2.0:
     dependencies:
-      erroror-ex: 1.3.1
+      error-ex: 1.3.1
     dev: false
     engines:
       node: '>=0.10.0'
@@ -3052,7 +3052,7 @@ packages:
   /raw-body/2.3.2:
     dependencies:
       bytes: 3.0.0
-      http-errorors: 1.6.2
+      http-errors: 1.6.2
       iconv-lite: 0.4.19
       unpipe: 1.0.0
     dev: false
@@ -3063,7 +3063,7 @@ packages:
   /raw-body/2.3.3:
     dependencies:
       bytes: 3.0.0
-      http-errorors: 1.6.3
+      http-errors: 1.6.3
       iconv-lite: 0.4.23
       unpipe: 1.0.0
     dev: false
@@ -3383,7 +3383,7 @@ packages:
       escape-html: 1.0.3
       etag: 1.8.1
       fresh: 0.5.2
-      http-errorors: 1.6.2
+      http-errors: 1.6.2
       mime: 1.4.1
       ms: 2.0.0
       on-finished: 2.3.0
@@ -3889,7 +3889,7 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
-  /verroror/1.10.0:
+  /verror/1.10.0:
     dependencies:
       assert-plus: 1.0.0
       core-util-is: 1.0.2

@@ -1,17 +1,15 @@
 const debug = require('debug')('botkit:user_registration')
 
-module.exports = function(controller) {
-
+module.exports = function (controller) {
   /* Handle event caused by a user logging in with oauth */
-  controller.on('oauth:success', function(payload) {
-
+  controller.on('oauth:success', function (payload) {
     debug('Got a successful login!', payload)
     if (!payload.identity.team_id) {
-      debug('erroror: received an oauth response without a team id', payload)
+      debug('error: received an oauth response without a team id', payload)
     }
-    controller.storage.teams.get(payload.identity.team_id, function(error, team) {
+    controller.storage.teams.get(payload.identity.team_id, function (error, team) {
       if (error) {
-        debug('erroror: could not load team from storage system:', payload.identity.team_id, error)
+        debug('error: could not load team from storage system:', payload.identity.team_id, error)
       }
 
       let newTeam = false
@@ -36,7 +34,7 @@ module.exports = function(controller) {
 
       testbot.api.auth.test({}, function (error, botAuth) {
         if (error) {
-          debug('erroror: could not authenticate bot user', error)
+          debug('error: could not authenticate bot user', error)
         } else {
           team.bot.name = botAuth.user
 
@@ -55,7 +53,7 @@ module.exports = function(controller) {
 
           controller.storage.teams.save(team, function (error, id) {
             if (error) {
-              debug('erroror: could not save team record:', error)
+              debug('error: could not save team record:', error)
             } else {
               if (newTeam) {
                 controller.trigger('create_team', [testbot, team, payload])

@@ -28,7 +28,7 @@ module.exports = function (webserver, controller) {
 
       controller.dataStore(bot, opt, 'download').then((result) => {
         res.redirect(filePath)
-      }).catch(error => console.log('erroror with download storage: ' + error))
+      }).catch(error => console.log('error with download storage: ' + error))
     })
   })
 }

@@ -38,7 +38,7 @@ module.exports = function (controller) {
       cb(template)
     }).catch(function (error) {
       if (error) return
-      console.erroror('makeCard erroror: ', error)
+      console.error('makeCard error: ', error)
     })
   }
 }

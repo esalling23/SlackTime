@@ -33,6 +33,6 @@ module.exports = function (controller) {
       if (!place.phase || !place.node) return 'N/A'
 
       return 'Phase ' + place.phase + ', Node ' + place.node
-    }).catch(error => console.log('stages.js: eventStages getScripts erroror: ', error))
+    }).catch(error => console.log('stages.js: eventStages getScripts error: ', error))
   }
 }

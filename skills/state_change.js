@@ -48,7 +48,7 @@ module.exports = function (controller) {
       if (['random', 'safe', 'orb'].includes(code)) {
         if (!thisUser.events.includes(code)) thisUser.events.push(code)
       } else {
-        thisUser.currentState = findState(thisUser.currentState, code)
+        thisUser.currentState = changeState(thisUser.currentState, code)
       }
 
       res.users = _.map(res.users, function (user) {
@@ -61,15 +61,6 @@ module.exports = function (controller) {
 
       controller.storage.teams.save(res).then((updated) => {
         controller.studio.getScripts().then(scripts => {
-          // console.log('We saved this new team state', updated)
-          const thisScript = _.findWhere(scripts, {
-            name: options.codeType
-          })
-
-          const thisPhase = _.filter(thisScript.tags, function (tag) {
-            return tag.includes('phase')
-          })[0]
-
           controller.makeCard(options.bot, options.event, options.codeType, thread, consts, function (card) {
             // console.log(card, 'is the card from the state change')
             // replace the original button message with a new one
@@ -87,31 +78,38 @@ module.exports = function (controller) {
             updated.codesEntered.push(code)
           }
 
-          controller.storage.teams.save(updated).then((saved) => {
-            const log = {
-              bot: options.bot,
-              team: options.event.team.id ? options.event.team.id : options.event.team,
-              phase: thisPhase,
-              event: options.event,
-              codeType: options.codeType,
-              player: event.user,
-              code: options.key.code
-            }
-
-            if (['buttons', 'telegraph_key', 'remote'].includes(log.codeType)) {
-              log.puzzle = code
-            } else if (['bookshelf', 'safe', 'aris_door', 'keypad'].includes(log.codeType)) {
-              log.puzzle = log.codeType
-            }
-
-            console.log(log.codeType, log.puzzle)
-
-            controller.trigger('gamelog_update', [log])
-          })
+          controller.store.teams[updated.id] = updated
         })
       })
     }
   }) // End on event
+}
+
+const changeState = function (currentState, event) {
+  let newState
+  switch (event) {
+    case 'hole':
+      // hole state
+      newState = 'a'
+      break
+
+    case 'glyph':
+      // glyph state
+      newState = 'b'
+      break
+
+    case 'stars':
+      // stars state
+      newState = 'c'
+      break
+
+    case 'safe':
+      // safe state
+      newState = 'c'
+      break
+  }
+  currentState = currentState += newState
+  return currentState
 }
 
 const findState = function (currentState, event) {
@@ -122,7 +120,7 @@ const findState = function (currentState, event) {
     case 'default':
 
       switch (event) {
-        case 'safari':
+        case 'hole':
 
           // safari video state
           newState = 'a'

@@ -17,7 +17,7 @@ module.exports = function (controller) {
           console.log('onboarding this player', user)
 
           if (error) {
-            console.log('erroror sending onboarding message:', error)
+            console.log('error sending onboarding message:', error)
           } else {
             controller.studio.get(bot, 'onboarding', user.userId, directMessage.channel.id).then(convo => {
               const template = convo.threads.default[0]
@@ -29,7 +29,7 @@ module.exports = function (controller) {
 
               convo.activate()
             }).catch(function (error) {
-              console.log('erroror: encountered an erroror loading onboarding script from Botkit Studio:', error)
+              console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
             })
           }
         })
@@ -74,7 +74,7 @@ module.exports = function (controller) {
           if (error) return
           console.log(saved, 'saved team')
         })
-      }).catch(error => console.log('im list erroror: ' + error))
+      }).catch(error => console.log('im list error: ' + error))
     })
   })
 

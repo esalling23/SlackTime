@@ -8,29 +8,16 @@ module.exports = function (controller) {
     })
 
     const length = (users.length * 6) / 3
-
-    let redCount = 0
-    let greyCount = 0
-    let greenCount = 0
+    let buttons = []
 
     _.each(users, function (user) {
-      console.log(user.startBtns, redCount)
-
       if (!user.startBtns || user.startBtns.length < 3) return
-
-      _.each(user.startBtns, function (btn) {
-        if (btn === 'danger') {
-          redCount++
-        } else if (btn === 'primary') {
-          greenCount++
-        } else {
-          greyCount++
-        }
-        console.log('RedCount:' + redCount)
-      })
+      buttons = buttons.concat(user.startBtns)
     })
 
-    if (redCount < length && greenCount < length && greyCount < length) return
+    if (buttons.filter('danger') < length &&
+          buttons.filter('primary') < length &&
+            buttons.filter('') < length) return
 
     team.entered = true
     // If any of the button counts are >= to the given length
@@ -53,13 +40,13 @@ module.exports = function (controller) {
             btnMessage.channel = channel
             btnMessage.user = user.userId
 
-            controller.makeCard(bot, btnMessage, 'input_nodes_1', 'default', {}, function (card) {
+            controller.makeCard(bot, btnMessage, 'the_room', 'default', {}, function (card) {
               bot.api.chat.update({
                 channel: btnMessage.channel,
                 ts: btnMessage.ts,
                 attachments: card.attachments
               }, function (error, updated) {
-                if (error) return
+                if (error) console.log(error)
               })
             })
           }).catch(error => console.log('conversation history error: ', error))

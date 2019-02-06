@@ -44,7 +44,7 @@ module.exports = function (controller) {
 
             controller.storage.teams.save(saved, function (error, updated) {
               if (error) {
-                console.log('erroror sending onboarding message:', error)
+                console.log('error sending onboarding message:', error)
               } else {
                 // console.log(user.id)
                 controller.studio.get(bot, 'onboarding', message.user.id, directMessage.channel.id).then(convo => {
@@ -61,7 +61,7 @@ module.exports = function (controller) {
             })
           })
         })
-      }).catch(error => console.log('Team Join User Profile Get erroror: ', error))
+      }).catch(error => console.log('Team Join User Profile Get error: ', error))
     })
   })
 }

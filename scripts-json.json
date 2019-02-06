@@ -1839,20 +1839,7 @@
         "pattern": "safari_plaque"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -1910,20 +1897,7 @@
         "pattern": "many_dots_painting"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2127,20 +2101,7 @@
         "pattern": "few_dots"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2320,20 +2281,7 @@
         "id": 432
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2390,20 +2338,7 @@
         "pattern": "many_dots_painting_plaque"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2496,20 +2431,7 @@
         "pattern": "few_dots_plaque"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2573,20 +2495,7 @@
         "pattern": "safari_elephant"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2650,20 +2559,7 @@
         "pattern": "safari_iguana"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2881,20 +2777,7 @@
         "pattern": "safari_snake"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -2957,20 +2840,7 @@
         "pattern": "safari_parrot"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -3026,20 +2896,7 @@
         "pattern": "abstract_symbols_plaque"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "escape",
       "phase_1",
@@ -3395,20 +3252,7 @@
         "pattern": "exit"
       }
     ],
-    "variables": [
-      {
-        "name": "question_1",
-        "type": "string"
-      },
-      {
-        "name": "question_2",
-        "type": "string"
-      },
-      {
-        "name": "question_3",
-        "type": "string"
-      }
-    ],
+    "variables": [],
     "tags": [
       "phase_5"
     ],

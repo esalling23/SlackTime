@@ -21,7 +21,7 @@ module.exports = function (webserver, controller) {
 
       controller.dataStore(bot, opt, 'link').then((result) => {
         res.redirect(url)
-      }).catch(error => console.log('erroror with link storage: ' + error))
+      }).catch(error => console.log('error with link storage: ' + error))
     })
   })
 }

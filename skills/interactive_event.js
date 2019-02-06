@@ -156,10 +156,8 @@ module.exports = function (controller) {
         options.codeType = callback_id
 
       } else if (type.includes('buttons')) {
-
-        _.each(reply.attachments, function(attachment) {
-          _.each(attachment.actions, function(action) {
-
+        _.each(reply.attachments, function (attachment) {
+          _.each(attachment.actions, function (action) {
             if (action.name === 'color') {
               let color
               switch (action.style) {
@@ -176,28 +174,22 @@ module.exports = function (controller) {
               }
               code.push(color)
             }
-
           })
         })
 
         options.codeType = 'buttons'
         options.code = code
-
       } else if (type.includes('keypad')) {
-
-        _.each(reply.attachments, function(attachment) {
-          _.each(attachment.actions, function(action) {
-
+        _.each(reply.attachments, function (attachment) {
+          _.each(attachment.actions, function (action) {
             if (action.name === 'letter') {
               code.push(action.text)
             }
-
           })
         })
 
         options.code = code
         options.codeType = 'keypad'
-
       }
       console.log(options.code, options.codeType)
 
@@ -207,9 +199,7 @@ module.exports = function (controller) {
       options.bot = bot
 
       // console.log('code has been entered')
-
       controller.trigger('code_entered', [options])
-
     }
 
     // button color change
@@ -219,8 +209,8 @@ module.exports = function (controller) {
       const callback_id = event.callback_id
       const reply = event.original_message
       // we need to change this button's color homie
-      _.each(reply.attachments, function(attachment) {
-        _.map(attachment.actions, function(action) {
+      _.each(reply.attachments, function (attachment) {
+        _.map(attachment.actions, function (action) {
           // console.log(action)
           if (action.value === event.actions[0].value) {
             switch (action.style) {
@@ -284,7 +274,6 @@ module.exports = function (controller) {
     }
 
     if (event.actions[0].name.match(/^start/)) {
-
       const options = {
         bot: bot,
         message: event,
@@ -296,9 +285,8 @@ module.exports = function (controller) {
       controller.trigger('generation_event', [options])
 
       controller.studio.runTrigger(bot, 'start', event.user, event.channel, event).catch(function(error) {
-        console.log('erroror: encountered an erroror loading onboarding script from Botkit Studio:', error)
+        console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
       })
-
     }
 
     // Move through pictures in a given photo album
@@ -309,9 +297,10 @@ module.exports = function (controller) {
       const url = reply.attachments[0].image_url
       // console.log(reply.attachments[0].image_url)
 
-      controller.storage.teams.get(event.team.id, function(error, team) {
-        const album = _.filter(team.uploadedImages, function(img) {
-          return img.location != undefined
+      controller.storage.teams.get(event.team.id, function (error, team) {
+        if (error) return
+        let album = _.filter(team.uploadedImages, function (img) {
+          return img.location !== undefined
         })
         let nxt = 1
         if (event.actions[0].name.includes('album')) {
@@ -322,7 +311,7 @@ module.exports = function (controller) {
         const image = _.findWhere(album, {
           url: url
         })
-        const pos = album.indexOf(image)
+        let pos = album.indexOf(image)
 
         if (type === 'next') {
           pos++
@@ -355,7 +344,6 @@ module.exports = function (controller) {
 
     // User says something
     if (event.actions[0].name.match(/^say/)) {
-
       const opt = {
         bot: bot,
         event: event,
@@ -363,36 +351,25 @@ module.exports = function (controller) {
       }
 
       controller.storage.teams.get(event.team.id).then((res) => {
-
         controller.studio.getScripts().then((list) => {
-
-          const name = event.actions[0].value
-
-          if (event.actions[0].value.includes('channel')) {
-            name = 'remote'
-          } else if (res.entered && event.actions[0].value === 'three_color_buttons') {
-            name = 'input_nodes_1'
-            opt.data.value = 'input_nodes_1'
+          let name = event.actions[0].value
+          if (res.entered && event.actions[0].value === 'three_color_buttons') {
+            name = 'the_room'
+            opt.data.value = 'the_room'
           }
 
           const script = _.findWhere(list, {
             command: name
           })
           const scriptName = script.command
-          const thisUser = _.findWhere(res.users, {
-            userId: event.user
-          })
-          console.log(event.actions[0].value)
 
           controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
-
             controller.storage.teams.save(res).then(saved => {
-
               opt.team = saved
               opt.user = _.findWhere(res.users, {
-                  userId: event.user
-                }),
-                opt.script = currentScript
+                userId: event.user
+              })
+              opt.script = currentScript
 
               controller.confirmMovement(opt)
               usersClicking.splice(usersClicking.indexOf(event.user), 1)

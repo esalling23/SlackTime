@@ -19,16 +19,16 @@ module.exports = function (webserver, controller) {
 
       slackapi.api.oauth.access(opts, function (error, auth) {
         if (error) {
-          debug('erroror confirming oauth', error)
-          return res.redirect('/login_erroror.html')
+          debug('error confirming oauth', error)
+          return res.redirect('/login_error.html')
         }
         // use the token we got from the oauth
         // to call auth.test to make sure the token is valid
         // but also so that we reliably have the team_id field!
         slackapi.api.auth.test({token: auth.access_token}, function (error, identity) {
           if (error) {
-            debug('erroror fetching user identity', error)
-            return res.redirect('/login_erroror.html')
+            debug('error fetching user identity', error)
+            return res.redirect('/login_error.html')
           }
 
           // Now we've got all we need to connect to this user's team

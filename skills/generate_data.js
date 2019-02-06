@@ -61,7 +61,7 @@ module.exports = function (controller) {
 
         // Set the team puzzles to the generated puzzles array
         if (error) {
-          console.log('There was an erroror: ', error)
+          console.log('There was an error: ', error)
         }
 
         setTimeout(function () {
@@ -84,7 +84,7 @@ module.exports = function (controller) {
               console.log(error, directMessage)
               console.log(directMessage, 'opened the onboarding message')
               if (error) {
-                console.log('erroror sending onboarding message:', error)
+                console.log('error sending onboarding message:', error)
               } else {
                 botChannels[user.userId] = directMessage.channel.id
                 // console.log(user.id)
