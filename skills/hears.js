@@ -7,7 +7,7 @@ module.exports = function (controller) {
 
     if (message.match[0] !== 'flavor_flave') return
 
-    controller.storage.getTeam(message.team)
+    controller.store.getTeam(message.team)
       .then(team => {
         _.each(team.users, function (user) {
           bot.api.im.open({ user: user.userId }, function (error, directMessage) {
@@ -19,18 +19,20 @@ module.exports = function (controller) {
             if (error) {
               console.log('error sending onboarding message:', error)
             } else {
-              controller.studio.get(bot, 'onboarding', user.userId, directMessage.channel.id).then(convo => {
-                const template = convo.threads.default[0]
-                template.username = process.env.username
-                template.icon_url = process.env.icon_url
+              controller.studio.get(bot, 'onboarding', user.userId, directMessage.channel.id)
+                .then(convo => {
+                  const template = convo.threads.default[0]
+                  template.username = process.env.username
+                  template.icon_url = process.env.icon_url
 
-                convo.setconst('team', team.id)
-                convo.setconst('user', user.userId)
+                  convo.setVar('team', team.id)
+                  convo.setVar('user', user.userId)
 
-                convo.activate()
-              }).catch(function (error) {
-                console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
-              })
+                  convo.activate()
+                }).catch(function (error) {
+                  console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
+                  // controller.studio.run(bot, 'fallback', user.userId, directMessage.channel.id)
+                })
             }
           })
         })
@@ -54,7 +56,7 @@ module.exports = function (controller) {
   // Grab players who have DM open with bot
   controller.hears('chat', 'direct_message', function (bot, message) {
     if (process.env.environment !== 'dev') return
-    controller.storage.getTeam(message.team)
+    controller.store.getTeam(message.team)
       .then(team => {
         const web = new WebClient(team.bot.token)
 
@@ -81,7 +83,7 @@ module.exports = function (controller) {
   // Clear bot message history
   controller.hears('clear', 'direct_message', function (bot, message) {
     if (process.env.environment !== 'dev') return
-    controller.storage.getTeam(message.team)
+    controller.store.getTeam(message.team)
       .then(team => {
         const web = new WebClient(bot.config.bot.token)
 
@@ -99,57 +101,57 @@ module.exports = function (controller) {
   })
 
   // Generate game data
-  // controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
-    if (process.env.environment !== 'dev') return
-    console.log(message, 'in the hears')
-    const options = {
-      bot: bot,
-      message: message,
-      forced: true
-    }
+//   controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
+//     if (process.env.environment !== 'dev') return
+//     console.log(message, 'in the hears')
+//     const options = {
+//       bot: bot,
+//       message: message,
+//       forced: true
+//     }
 
-    // if the message is 'generate player' then generate player data
-    if (message.match[0] === 'generate player') {
-      options.player = true
-      controller.trigger('generation_event', [options])
-    } else if (message.match[0] === 'generate dev') {
-      options.player = false
-      // Otherwise, generate development data for each puzzle
-      controller.trigger('generation_event', [options])
-    } else {
-      bot.reply(message, {
-        'text': 'Hmm.. please specify if you want to generate dev or player data!'
-      })
-    }
-  })
+//     // if the message is 'generate player' then generate player data
+//     if (message.match[0] === 'generate player') {
+//       options.player = true
+//       controller.trigger('generation_event', [options])
+//     } else if (message.match[0] === 'generate dev') {
+//       options.player = false
+//       // Otherwise, generate development data for each puzzle
+//       controller.trigger('generation_event', [options])
+//     } else {
+//       bot.reply(message, {
+//         'text': 'Hmm.. please specify if you want to generate dev or player data!'
+//       })
+//     }
+//   })
 
-  // controller.hears('players_get', 'direct_message', function (bot, message) {
-    if (message.match[0] !== 'players_get') return
+//   controller.hears('players_get', 'direct_message', function (bot, message) {
+//     if (message.match[0] !== 'players_get') return
 
-    controller.storage.getTeam(message.team, function (error, team) {
-      if (error) return
-      const web = new WebClient(bot.config.bot.token)
-      const presentUsers = []
+//     controller.storage.getTeam(message.team, function (error, team) {
+//       if (error) return
+//       const web = new WebClient(bot.config.bot.token)
+//       const presentUsers = []
 
-      web.users.list().then(res => {
-        _.each(res.members, function (user) {
-          if (controller.isUser(user, false)) {
-            presentUsers.push({
-              userId: user.id,
-              name: user.name,
-              email: user.profile.email,
-              startBtns: ['default', 'primary', 'danger']
-            })
-          }
-        })
+//       web.users.list().then(res => {
+//         _.each(res.members, function (user) {
+//           if (controller.isUser(user, false)) {
+//             presentUsers.push({
+//               userId: user.id,
+//               name: user.name,
+//               email: user.profile.email,
+//               startBtns: ['default', 'primary', 'danger']
+//             })
+//           }
+//         })
 
-        team.users = presentUsers
+//         team.users = presentUsers
 
-        controller.storage.teams.save(team, function (error, saved) {
-          if (error) return
-          console.log(saved.users)
-        })
-      })
-    })
-  })
+//         controller.storage.teams.save(team, function (error, saved) {
+//           if (error) return
+//           console.log(saved.users)
+//         })
+//       })
+//     })
+//   })
 }
