@@ -59,27 +59,28 @@ module.exports = function (controller) {
         }
       })
 
-      controller.storage.teams.save(res).then((updated) => {
-        controller.studio.getScripts().then(scripts => {
-          controller.makeCard(options.bot, options.event, options.codeType, thread, consts, function (card) {
-            // console.log(card, 'is the card from the state change')
-            // replace the original button message with a new one
-            options.bot.replyInteractive(options.event, card)
-          })
-
-          thisUser = _.findWhere(updated.users, {
-            userId: options.user
-          })
-
-          if (thisUser.codesEntered.includes(code)) return
-
-          if (options.codeType !== 'bookshelf') {
-            thisUser.codesEntered.push(code)
-            updated.codesEntered.push(code)
-          }
-
-          controller.store.teams[updated.id] = updated
+      controller.studio.getScripts().then(scripts => {
+        controller.makeCard(options.bot, options.event, options.codeType, thread, consts, function (card) {
+          // console.log(card, 'is the card from the state change')
+          // replace the original button message with a new one
+          options.bot.replyInteractive(options.event, card)
         })
+
+        thisUser = _.findWhere(res.users, {
+          userId: options.user
+        })
+
+        if (thisUser.codesEntered.includes(code)) return
+
+        thisUser.codesEntered.push(code)
+        res.codesEntered.push(code)
+
+        res.users = _.map(res.users, (user) => {
+          if (user.userId === options.user) return thisUser
+          else return user
+        })
+
+        controller.store.teams[res.id] = res
       })
     }
   }) // End on event

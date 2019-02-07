@@ -7,64 +7,57 @@ module.exports = function (controller) {
     if (!payload.identity.team_id) {
       debug('error: received an oauth response without a team id', payload)
     }
-    controller.storage.teams.get(payload.identity.team_id, function (error, team) {
-      if (error) {
-        debug('error: could not load team from storage system:', payload.identity.team_id, error)
-      }
+    controller.storage.getTeam(payload.identity.team_id)
+      .then(team => {
+        let newTeam = false
+        if (!team) {
+          team = {
+            id: payload.identity.team_id,
+            createdBy: payload.identity.user_id,
+            url: payload.identity.url,
+            name: payload.identity.team
+          }
+          newTeam = true
+        }
 
-      let newTeam = false
-      if (!team) {
-        team = {
-          id: payload.identity.team_id,
+        team.bot = {
+          token: payload.bot.bot_access_token,
+          user_id: payload.bot.bot_user_id,
           createdBy: payload.identity.user_id,
-          url: payload.identity.url,
-          name: payload.identity.team
+          app_token: payload.access_token
         }
-        newTeam = true
-      }
 
-      team.bot = {
-        token: payload.bot.bot_access_token,
-        user_id: payload.bot.bot_user_id,
-        createdBy: payload.identity.user_id,
-        app_token: payload.access_token
-      }
+        const testbot = controller.spawn(team.bot)
 
-      const testbot = controller.spawn(team.bot)
+        testbot.api.auth.test({}, function (error, botAuth) {
+          if (error) {
+            debug('error: could not authenticate bot user', error)
+          } else {
+            team.bot.name = botAuth.user
 
-      testbot.api.auth.test({}, function (error, botAuth) {
-        if (error) {
-          debug('error: could not authenticate bot user', error)
-        } else {
-          team.bot.name = botAuth.user
+            // add in info that is expected by Botkit
+            testbot.identity = botAuth
 
-          // add in info that is expected by Botkit
-          testbot.identity = botAuth
+            testbot.identity.id = botAuth.user_id
+            testbot.identity.name = botAuth.user
 
-          testbot.identity.id = botAuth.user_id
-          testbot.identity.name = botAuth.user
+            testbot.team_info = team
 
-          testbot.team_info = team
+            // team.bot_instance = testbot
+            // console.log(team.bot_instance, " THIS IS THE BOT INSTANCE")
 
-          // team.bot_instance = testbot
-          // console.log(team.bot_instance, " THIS IS THE BOT INSTANCE")
+            // Replace this with your own database!
 
-          // Replace this with your own database!
+            controller.store.teams[team.id] = team
 
-          controller.storage.teams.save(team, function (error, id) {
-            if (error) {
-              debug('error: could not save team record:', error)
+            if (newTeam) {
+              controller.trigger('create_team', [testbot, team, payload])
             } else {
-              if (newTeam) {
-                controller.trigger('create_team', [testbot, team, payload])
-              } else {
-                controller.trigger('update_team', [testbot, team, payload])
-              }
+              controller.trigger('update_team', [testbot, team, payload])
             }
-          })
-        }
-      })
-    })
+          }
+        })
+      }).catch(console.error)
   })
 
   controller.on('create_team', function (bot, team, payload) {

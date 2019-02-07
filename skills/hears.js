@@ -7,99 +7,99 @@ module.exports = function (controller) {
 
     if (message.match[0] !== 'flavor_flave') return
 
-    controller.storage.teams.get(message.team, function (error, team) {
-      if (error) return
-      _.each(team.users, function (user) {
-        bot.api.im.open({ user: user.userId }, function (error, directMessage) {
-          if (error) return
-          botChannels[user.userId] = directMessage.channel.id
+    controller.storage.getTeam(message.team)
+      .then(team => {
+        _.each(team.users, function (user) {
+          bot.api.im.open({ user: user.userId }, function (error, directMessage) {
+            if (error) return
+            botChannels[user.userId] = directMessage.channel.id
 
-          console.log('onboarding this player', user)
+            console.log('onboarding this player', user)
 
-          if (error) {
-            console.log('error sending onboarding message:', error)
-          } else {
-            controller.studio.get(bot, 'onboarding', user.userId, directMessage.channel.id).then(convo => {
-              const template = convo.threads.default[0]
-              template.username = process.env.username
-              template.icon_url = process.env.icon_url
+            if (error) {
+              console.log('error sending onboarding message:', error)
+            } else {
+              controller.studio.get(bot, 'onboarding', user.userId, directMessage.channel.id).then(convo => {
+                const template = convo.threads.default[0]
+                template.username = process.env.username
+                template.icon_url = process.env.icon_url
 
-              convo.setconst('team', team.id)
-              convo.setconst('user', user.userId)
+                convo.setconst('team', team.id)
+                convo.setconst('user', user.userId)
 
-              convo.activate()
-            }).catch(function (error) {
-              console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
-            })
-          }
+                convo.activate()
+              }).catch(function (error) {
+                console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
+              })
+            }
+          })
         })
+
+        setTimeout(function () {
+          team.gameStarted = true
+
+          team.users = _.map(team.users, function (u) {
+            u.bot_chat = botChannels[u.userId]
+            u.startBtns = ['danger', 'primary', 'default']
+            return u
+          })
+          controller.storage.teams.save(team, function (error, saved) {
+            if (error) return
+            console.log(saved)
+          })
+        }, 1000 * team.users.length)
       })
-
-      setTimeout(function () {
-        team.gameStarted = true
-
-        team.users = _.map(team.users, function (u) {
-          u.bot_chat = botChannels[u.userId]
-          u.startBtns = ['danger', 'primary', 'default']
-          return u
-        })
-        controller.storage.teams.save(team, function (error, saved) {
-          if (error) return
-          console.log(saved)
-        })
-      }, 1000 * team.users.length)
-    })
   })
 
   // Grab players who have DM open with bot
   controller.hears('chat', 'direct_message', function (bot, message) {
     if (process.env.environment !== 'dev') return
-    controller.storage.teams.get(message.team, function (error, team) {
-      if (error) return
-      const web = new WebClient(team.bot.token)
+    controller.storage.getTeam(message.team)
+      .then(team => {
+        const web = new WebClient(team.bot.token)
 
-      web.conversations.list({types: 'im'}).then(res => {
-        team.users = _.map(res.channels, function (im) {
-          console.log(im)
-          const user = _.findWhere(team.users, { userId: im.user })
-          if (im.is_im && user) {
-            user.bot_chat = im.id
-            return user
-          }
-        })
+        web.conversations.list({types: 'im'}).then(res => {
+          team.users = _.map(res.channels, function (im) {
+            console.log(im)
+            const user = _.findWhere(team.users, { userId: im.user })
+            if (im.is_im && user) {
+              user.bot_chat = im.id
+              return user
+            }
+          })
 
-        team.users = _.filter(team.users, function (user) { return user != null })
+          team.users = _.filter(team.users, function (user) { return user != null })
 
-        controller.storage.teams.save(team, function (error, saved) {
-          if (error) return
-          console.log(saved, 'saved team')
-        })
-      }).catch(error => console.log('im list error: ' + error))
-    })
+          controller.storage.teams.save(team, function (error, saved) {
+            if (error) return
+            console.log(saved, 'saved team')
+          })
+        }).catch(error => console.log('im list error: ' + error))
+      })
   })
 
   // Clear bot message history
   controller.hears('clear', 'direct_message', function (bot, message) {
     if (process.env.environment !== 'dev') return
-    controller.storage.teams.get(message.team, function (error, team) {
-      if (error) return
-      const web = new WebClient(bot.config.bot.token)
+    controller.storage.getTeam(message.team)
+      .then(team => {
+        const web = new WebClient(bot.config.bot.token)
 
-      web.conversations.history(message.channel).then(res => {
-        _.each(res.messages, function (ms) {
-          const web = new WebClient(team.bot.app_token)
-          setTimeout(function () {
-            web.chat.delete(ms.ts, message.channel).then(res => {
-              console.log(res)
-            }).catch(error => console.log(error))
-          }, 500 * res.messages.indexOf(ms))
-        })
-      }).catch(error => console.log(error))
-    })
+        web.conversations.history(message.channel).then(res => {
+          _.each(res.messages, function (ms) {
+            const web = new WebClient(team.bot.app_token)
+            setTimeout(function () {
+              web.chat.delete(ms.ts, message.channel).then(res => {
+                console.log(res)
+              }).catch(error => console.log(error))
+            }, 500 * res.messages.indexOf(ms))
+          })
+        }).catch(error => console.log(error))
+      })
   })
 
   // Generate game data
-  controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
+  // controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
     if (process.env.environment !== 'dev') return
     console.log(message, 'in the hears')
     const options = {
@@ -123,10 +123,10 @@ module.exports = function (controller) {
     }
   })
 
-  controller.hears('players_get', 'direct_message', function (bot, message) {
+  // controller.hears('players_get', 'direct_message', function (bot, message) {
     if (message.match[0] !== 'players_get') return
 
-    controller.storage.teams.get(message.team, function (error, team) {
+    controller.storage.getTeam(message.team, function (error, team) {
       if (error) return
       const web = new WebClient(bot.config.bot.token)
       const presentUsers = []

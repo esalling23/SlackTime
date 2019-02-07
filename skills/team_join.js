@@ -6,7 +6,7 @@ module.exports = function (controller) {
     console.log('a user joined', message)
     if (!controller.isUser(message.user)) return
 
-    controller.storage.teams.get(message.team_id, function (error, team) {
+    controller.storage.getTeam(message.team_id, function (error, team) {
       if (error) return
       if (_.findWhere(team.users, { userId: message.user.id })) return
 

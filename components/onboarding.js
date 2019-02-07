@@ -12,18 +12,23 @@ function isUser (member) {
 module.exports = function (controller) {
   controller.on('onboard', function (bot, team, auth) {
     const web = new WebClient(auth.access_token)
-    controller.store.teams.get(team.id, function (error, team) {
-      if (error) return
-      web.users.list().then((res) => {
-        team.oauth_token = auth.access_token
-        team.gameStarted = false
-        team.entered = false
+    controller.store.getTeam(team.id)
+      .then(storeTeam => {
         // reset data
-        team.currentState = 'default'
-        team.events = []
-        team.codesEntered = []
+        storeTeam.oauth_token = auth.access_token
+        storeTeam.gameStarted = false
+        storeTeam.entered = false
+        storeTeam.currentState = 'default'
+        storeTeam.events = []
+        storeTeam.codesEntered = []
+        // store
+        controller.store.teams[team.id] = storeTeam
+      })
+      .then(web.users.list())
+      .then((res) => {
+        const storeTeam = controller.store.teams[team.id]
         // console.log(res)
-        team.users = _.map(res.members, function (user) {
+        storeTeam.users = _.map(res.members, function (user) {
           if (isUser(user)) {
             const newUser = {
               userId: user.id,
@@ -36,8 +41,8 @@ module.exports = function (controller) {
           }
         })
 
-        controller.store.teams[team.id] = team
-      }).catch((error) => console.log(error)) // End users.list call
-    })
+        controller.store.teams[team.id] = storeTeam
+      })
+      .catch((error) => console.log(error)) // End users.list call
   })
 }

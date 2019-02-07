@@ -26,7 +26,7 @@ module.exports = function (controller) {
       if (message.text.split(' ')[1] === 'all') {
         const script = controller.secretTriggers(message.text.split(' ')[0], false)
 
-        controller.storage.teams.get(message.team, function (error, team) {
+        controller.storage.getTeam(message.team, function (error, team) {
           if (error) return
           const web = new WebClient(team.bot.app_token)
 

@@ -12,7 +12,7 @@ const correctButtonCodes = {
 module.exports = function (controller) {
   controller.on('code_entered', function (params) {
     const bot = params.bot
-    controller.storage.teams.get(params.team).then(res => {
+    controller.storage.getTeam(params.team).then(res => {
       let correctCodes
       let codeObj
 
@@ -48,7 +48,7 @@ module.exports = function (controller) {
           bot.replyInteractive(params.event, card)
         })
       }
-    })
+    }).catch(console.error)
   }) // End on event
 
   // Function checks if the entered code matches any of an Array of correct codes

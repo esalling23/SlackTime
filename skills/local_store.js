@@ -6,7 +6,7 @@ module.exports = function (controller) {
       // console.log('local store says: ', controller.store.teams)
       return new Promise((resolve, reject) => {
         if (!controller.store.teams[teamId]) {
-          controller.storage.teams.get(teamId, function (error, team) {
+          controller.storage.getTeam(teamId, function (error, team) {
             if (error) reject(error)
 
             controller.store.teams[teamId] = team

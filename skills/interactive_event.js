@@ -101,32 +101,27 @@ module.exports = function (controller) {
         user: event.user
       })
 
-      controller.storage.teams.get(event.team.id).then((res) => {
-        const opt = {
-          bot: bot,
-          event: event,
-          team: res,
-          data: confirmedChoice
-        }
+      const opt = {
+        bot: bot,
+        event: event,
+        data: confirmedChoice
+      }
 
-        let scriptName = confirmedChoice.value
-
-        if (confirmedChoice.value.includes('channel')) {
-          opt.thread = 'channel_code'
-          scriptName = 'remote'
-        }
-
-        // Set the puzzle, answer, and if the answer is correct
-        // This data will be sent to the puzzle_attempt event for saving to storage
-
-        controller.studio.get(bot, scriptName, event.user, event.channel).then((script) => {
-          opt.user = _.findWhere(res.users, {
+      controller.store.getTeam(event.team.id)
+        .then((res) => {
+          opt.team = res
+          const scriptName = confirmedChoice.value
+          // Set the puzzle, answer, and if the answer is correct
+          // This data will be sent to the puzzle_attempt event for saving to storage
+          return controller.studio.get(bot, scriptName, event.user, event.channel)
+        })
+        .then((script) => {
+          opt.user = _.findWhere(opt.team.users, {
             userId: event.user
           })
           opt.script = script
           controller.confirmMovement(opt)
         })
-      })
     }
 
     // user submitted a code
@@ -138,23 +133,15 @@ module.exports = function (controller) {
 
       const type = event.actions[0].name
 
-      if (type.includes('safe') || type.includes('aris') || type.includes('bookshelf') || type.includes('telegraph_key') || type.includes('remote')) {
+      if (type.includes('safe')) {
         // console.log('confirming safe/door enter code')
         const confirmedChoice = _.findWhere(choiceSelect, {
           user: event.user
         })
-        const callback_id = event.callback_id.replace('_code', '').replace('_confirm', '')
-        // If this is a remote code, use the callback id as a special channel parameter
-        // Also set the codeType to 'remote' via callback_id
-        if (type.includes('remote')) {
-          options.channel = callback_id.split('_')[2]
-          callback_id = 'remote'
-        }
+        const callbackId = event.callback_id.replace('_code', '').replace('_confirm', '')
 
         options.code = confirmedChoice.choice
-
-        options.codeType = callback_id
-
+        options.codeType = callbackId
       } else if (type.includes('buttons')) {
         _.each(reply.attachments, function (attachment) {
           _.each(attachment.actions, function (action) {
@@ -206,7 +193,7 @@ module.exports = function (controller) {
     if (event.actions[0].name.match(/^color/)) {
 
       // console.log(event)
-      const callback_id = event.callback_id
+      const callbackId = event.callback_id
       const reply = event.original_message
       // we need to change this button's color homie
       _.each(reply.attachments, function (attachment) {
@@ -236,41 +223,35 @@ module.exports = function (controller) {
         channel: event.channel,
         ts: reply.ts,
         attachments: reply.attachments
-      }, function(error, updated) {
+      }, function (error, updated) {
         if (error) return
         if (callback_id === 'three_color_buttons') {
           // console.log(event.team.id)
 
-          controller.storage.teams.get(event.team.id, function(error, team) {
-            if (error) return
-            const thisUser = _.findWhere(team.users, {
-              userId: event.user
-            })
-            const startBtns = []
-            _.each(updated.message.attachments[0].actions, function(btn) {
-              startBtns.push(btn.style === '' ? 'default' : btn.style)
-            })
-
-            thisUser.startBtns = startBtns
-
-            team.users = _.map(team.users, function(user) {
-              if (user.userId === thisUser.userId)
-                return thisUser
-              else
-                return user
-            })
-
-            controller.storage.teams.save(team, function(error, saved) {
+          controller.storage.getTeam(event.team.id)
+            .then(team => {
               if (error) return
-              // console.log(saved.users, ' we saved these users')
-              controller.trigger('count_colors', [bot, event, saved])
-            })
+              const thisUser = _.findWhere(team.users, {
+                userId: event.user
+              })
+              const startBtns = []
+              _.each(updated.message.attachments[0].actions, function (btn) {
+                startBtns.push(btn.style === '' ? 'default' : btn.style)
+              })
 
-          })
+              thisUser.startBtns = startBtns
+
+              team.users = _.map(team.users, function (user) {
+                if (user.userId === thisUser.userId) return thisUser
+                else return user
+              })
+
+              controller.store.teams[team.id] = team
+              controller.trigger('count_colors', [bot, event, team])
+            })
+            .catch(console.error)
         }
       })
-
-
     }
 
     if (event.actions[0].name.match(/^start/)) {
@@ -297,7 +278,7 @@ module.exports = function (controller) {
       const url = reply.attachments[0].image_url
       // console.log(reply.attachments[0].image_url)
 
-      controller.storage.teams.get(event.team.id, function (error, team) {
+      controller.storage.getTeam(event.team.id, function (error, team) {
         if (error) return
         let album = _.filter(team.uploadedImages, function (img) {
           return img.location !== undefined
@@ -350,33 +331,35 @@ module.exports = function (controller) {
         data: event.actions[0]
       }
 
-      controller.storage.teams.get(event.team.id).then((res) => {
-        controller.studio.getScripts().then((list) => {
-          let name = event.actions[0].value
-          if (res.entered && event.actions[0].value === 'three_color_buttons') {
-            name = 'the_room'
-            opt.data.value = 'the_room'
-          }
+      controller.store.getTeam(event.team.id)
+        .then((res) => {
+          controller.studio.getScripts().then((list) => {
+            let name = event.actions[0].value
+            if (res.entered && event.actions[0].value === 'three_color_buttons') {
+              name = 'the_room'
+              opt.data.value = 'the_room'
+            }
 
-          const script = _.findWhere(list, {
-            command: name
-          })
-          const scriptName = script.command
+            const script = _.findWhere(list, {
+              command: name
+            })
+            const scriptName = script.command
 
-          controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
-            controller.storage.teams.save(res).then(saved => {
-              opt.team = saved
-              opt.user = _.findWhere(res.users, {
-                userId: event.user
+            controller.studio.get(bot, scriptName, event.user, event.channel).then((currentScript) => {
+              controller.storage.teams.save(res).then(saved => {
+                opt.team = saved
+                opt.user = _.findWhere(res.users, {
+                  userId: event.user
+                })
+                opt.script = currentScript
+
+                controller.confirmMovement(opt)
+                usersClicking.splice(usersClicking.indexOf(event.user), 1)
               })
-              opt.script = currentScript
-
-              controller.confirmMovement(opt)
-              usersClicking.splice(usersClicking.indexOf(event.user), 1)
             })
           })
         })
-      })
+        .catch(console.error)
     }
   })
 }

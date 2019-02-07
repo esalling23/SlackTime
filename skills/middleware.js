@@ -15,9 +15,7 @@ module.exports = function (controller) {
     // Update gamelog
     // Trigger phase-specific logic
     if (message.movement) {
-      controller.storage.teams.get(bot.config.id, function (error, team) {
-        if (error) next()
-
+      controller.storage.getTeam(bot.config.id).then(team => {
         if (!team.movements) team.movements = []
         const movement = parseInt(message.movement)
 
@@ -29,7 +27,7 @@ module.exports = function (controller) {
           if (error) next()
           // console.log(saved, '-- Team Movement Updated --', 'middleware send line 56')
         })
-      })
+      }).catch(console.error)
     }
     next()
   })
