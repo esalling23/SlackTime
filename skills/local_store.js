@@ -6,7 +6,7 @@ module.exports = function (controller) {
       // console.log('local store says: ', controller.store.teams)
       return new Promise((resolve, reject) => {
         if (!controller.store.teams[teamId]) {
-          controller.storage.getTeam(teamId, function (error, team) {
+          controller.storage.teams.get(teamId, function (error, team) {
             if (error) reject(error)
 
             controller.store.teams[teamId] = team
@@ -24,8 +24,8 @@ module.exports = function (controller) {
     for (const team in controller.store.teams) {
       // console.log(controller.store.teams[team], ' we should probably save this team')
       controller.storage.teams.save(controller.store.teams[team], function (error, saved) {
-        if (error) return
-        console.log('we stored team id ', saved.id)
+        if (error) console.error(error)
+        // console.log('we stored team id ', saved.id)
       })
     }
   }, 5000)
