@@ -94,8 +94,8 @@ module.exports = function (controller) {
                     template.username = process.env.username
                     template.icon_url = process.env.icon_url
 
-                    convo.setconst('team', teamData.id)
-                    convo.setconst('user', user.userId)
+                    convo.setVar('team', teamData.id)
+                    convo.setVar('user', user.userId)
 
                     convo.activate()
                   })
