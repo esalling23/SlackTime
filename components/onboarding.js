@@ -24,10 +24,11 @@ module.exports = function (controller) {
         // store
         controller.store.teams[team.id] = storeTeam
       })
-      .then(web.users.list())
+      .then(web.users.list)
       .then((res) => {
         const storeTeam = controller.store.teams[team.id]
         // console.log(res)
+        
         storeTeam.users = _.map(res.members, function (user) {
           if (isUser(user)) {
             const newUser = {

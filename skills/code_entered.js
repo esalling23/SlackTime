@@ -2,17 +2,16 @@ const _ = require('underscore')
 const sort = require('sorted-object')
 
 const correctButtonCodes = {
-  random: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
-  safari: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
-  hole: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'],
-  glyph: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'red'],
-  orb: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
+  hole: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
+  glyph: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
+  stars: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'],
+  many: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'red']
 }
 
 module.exports = function (controller) {
   controller.on('code_entered', function (params) {
     const bot = params.bot
-    controller.storage.getTeam(params.team).then(res => {
+    controller.store.getTeam(params.team).then(res => {
       let correctCodes
       let codeObj
 

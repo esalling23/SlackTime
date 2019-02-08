@@ -23,11 +23,11 @@ module.exports = function (controller) {
     let thread = 'correct'
     const consts = {}
 
-    if (['telegraph_key', 'buttons', 'remote'].includes(options.codeType)) thread += '_' + code
+    if (['buttons'].includes(options.codeType)) thread += '_' + code
 
     // Has the player already entered this code?
-    if (thisUser.codesEntered.includes(code) && !['bookshelf', 'telegraph_key', 'keypad'].includes(options.codeType)) {
-      if (options.codeType === 'buttons' || options.codeType === 'remote') consts.recap = thread
+    if (thisUser.codesEntered.includes(code)) {
+      if (options.codeType === 'buttons') consts.recap = thread
       controller.makeCard(options.bot, options.event, options.codeType, 'repeat', consts, function (card) {
         // replace the original button message with a new one
         options.bot.replyInteractive(options.event, card)
@@ -94,7 +94,7 @@ const changeState = function (currentState, event) {
       newState = 'a'
       break
 
-    case 'glyph':
+    case 'many':
       // glyph state
       newState = 'b'
       break
@@ -104,12 +104,16 @@ const changeState = function (currentState, event) {
       newState = 'c'
       break
 
-    case 'safe':
+    case 'glyph':
       // safe state
       newState = 'c'
       break
   }
+  if (currentState === 'default') currentState = ''
+  
   currentState = currentState += newState
+  currentState.split('').sort().join('')
+  console.log('this users state is now:', currentState)
   return currentState
 }
 

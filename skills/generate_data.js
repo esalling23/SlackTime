@@ -22,7 +22,7 @@ module.exports = function (controller) {
     if (!team) team = options.message.team
 
     console.log(team)
-    controller.storage.getTeam(team)
+    controller.store.getTeam(team)
       .then(teamData => {
         console.log(teamData, 'is the gotten team')
 
@@ -59,11 +59,6 @@ module.exports = function (controller) {
               })
             }
           })
-
-          // Set the team puzzles to the generated puzzles array
-          if (error) {
-            console.log('There was an error: ', error)
-          }
 
           setTimeout(function () {
             // Check the team to make sure it was updated
@@ -111,11 +106,6 @@ module.exports = function (controller) {
               })
 
               controller.storage.teams.save(teamData, function (error, saved) {
-                controller.trigger('gamelog_update', [{
-                  bot: options.bot,
-                  team: saved
-                }])
-
                 console.log(error, saved)
               })
             }, 2000 * teamData.users.length + 1)

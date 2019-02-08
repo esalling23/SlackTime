@@ -1,10 +1,9 @@
 module.exports = function (controller) {
   controller.puzzleCodes = {
-    random: 'red, red, green, white, white, green, green, red, white',
-    safari: 'white, green, green, white, white, red, red, green, red',
-    hole: 'white, white, red, red, red, green, white, red, white',
-    glyph: 'white, green, white, white, white, white, white, white, red',
-    orb: 'red, green, white, white, white, green, white, red, white'
+    hole: 'red, red, green, white, white, green, green, red, white',
+    glyph: 'white, green, green, white, white, red, red, green, red',
+    stars: 'white, white, red, red, red, green, white, red, white',
+    many: 'white, green, white, white, white, white, white, white, red'
   }
 
   controller.safeCode = {

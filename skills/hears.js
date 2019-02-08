@@ -7,7 +7,7 @@ module.exports = function (controller) {
     controller.store.getTeam(message.team)
       .then(team => {
         _.each(team.users, function (user) {
-          controller.studio.get(bot, 'the_room', user.userId, user.bot_chat)
+          controller.studio.get(bot, 'the_room', user.userId, user.botChat)
             .then(convo => {
               const template = convo.threads.default[0]
               template.username = process.env.username
@@ -62,7 +62,7 @@ module.exports = function (controller) {
           team.gameStarted = true
 
           team.users = _.map(team.users, function (u) {
-            u.bot_chat = botChannels[u.userId]
+            u.botChat = botChannels[u.userId]
             u.startBtns = ['danger', 'primary', 'default']
             return u
           })
@@ -122,29 +122,35 @@ module.exports = function (controller) {
   })
 
   // Generate game data
-//   controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
-//     if (process.env.environment !== 'dev') return
-//     console.log(message, 'in the hears')
-//     const options = {
-//       bot: bot,
-//       message: message,
-//       forced: true
-//     }
+  controller.hears('^generate (.*)', 'direct_message, direct_mention', function (bot, message) {
+    // if (process.env.environment !== 'dev') return
+    console.log(message, 'in the hears')
+    
+    controller.store.getTeam(message.team)
+      .then(team => {
 
-//     // if the message is 'generate player' then generate player data
-//     if (message.match[0] === 'generate player') {
-//       options.player = true
-//       controller.trigger('generation_event', [options])
-//     } else if (message.match[0] === 'generate dev') {
-//       options.player = false
-//       // Otherwise, generate development data for each puzzle
-//       controller.trigger('generation_event', [options])
-//     } else {
-//       bot.reply(message, {
-//         'text': 'Hmm.. please specify if you want to generate dev or player data!'
-//       })
-//     }
-//   })
+        const options = {
+          bot: bot,
+          message: message,
+          team: team,
+          forced: true
+        }
+
+        // if the message is 'generate player' then generate player data
+        if (message.match[0] === 'generate player') {
+          options.player = true
+          controller.trigger('generation_event', [options])
+        } else if (message.match[0] === 'generate dev') {
+          options.player = false
+          // Otherwise, generate development data for each puzzle
+          controller.trigger('generation_event', [options])
+        } else {
+          bot.reply(message, {
+            'text': 'Hmm.. please specify if you want to generate dev or player data!'
+          })
+        }
+      })
+  })
 
 //   controller.hears('players_get', 'direct_message', function (bot, message) {
 //     if (message.match[0] !== 'players_get') return
