@@ -225,7 +225,7 @@ module.exports = function (controller) {
         attachments: reply.attachments
       }, function (error, updated) {
         if (error) return
-        if (callback_id === 'three_color_buttons') {
+        if (callbackId === 'three_color_buttons') {
           // console.log(event.team.id)
 
           controller.storage.getTeam(event.team.id)

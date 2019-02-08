@@ -15,7 +15,7 @@ module.exports = function (controller) {
     // Update gamelog
     // Trigger phase-specific logic
     if (message.movement) {
-      controller.storage.getTeam(bot.config.id).then(team => {
+      controller.store.getTeam(bot.config.id).then(team => {
         if (!team.movements) team.movements = []
         const movement = parseInt(message.movement)
 
