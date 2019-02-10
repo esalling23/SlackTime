@@ -188,6 +188,13 @@ module.exports = function (controller) {
       // console.log('code has been entered')
       controller.trigger('code_entered', [options])
     }
+    
+    // download button
+//     if (event.actions[0].name.match(/^download(.*)/)) {
+//       let filePath = 'http://res.cloudinary.com/extraludic/image/upload/v1/fl_attachment/escape-room/' + req.params.file
+
+//       res.redirect(filePath)
+//     }
 
     // button color change
     if (event.actions[0].name.match(/^color/)) {
@@ -272,54 +279,39 @@ module.exports = function (controller) {
 
     // Move through pictures in a given photo album
     if (event.actions[0].name.match(/^picture(.*)/)) {
-      // console.log(event)
       const reply = event.original_message
       const type = event.actions[0].value
       const url = reply.attachments[0].image_url
-      // console.log(reply.attachments[0].image_url)
 
-      controller.storage.getTeam(event.team.id, function (error, team) {
-        if (error) return
-        let album = _.filter(team.uploadedImages, function (img) {
-          return img.location !== undefined
+      controller.store.getTeam(event.team.id)
+        .then(team => {
+        
+          if (!team.shownSymbol) team.shownSymbol = 0
+
+          if (type === 'next') {
+            team.shownSymbol++
+            if (team.shownSymbol > controller.symbolUrls.length - 1) team.shownSymbol = 0
+          } else if (type === 'prev') {
+            team.shownSymbol--
+            if (team.shownSymbol < 0) team.shownSymbol = controller.symbolUrls.length - 1
+          }
+
+          reply.attachments[0].image_url = controller.symbolUrls[team.shownSymbol]
+          reply.attachments[0].actions[0].text = '< Prev Image'
+          reply.attachments[0].actions[1].text = 'Next Image >'
+          reply.attachments[0].footer = `\n*Symbol ${team.shownSymbol + 1} *`
+
+          bot.api.chat.update({
+            channel: event.channel,
+            ts: reply.ts,
+            attachments: reply.attachments
+          }, function (error, updated) {
+            console.log(error, updated)
+            controller.store.teams[team.id] = team
+          })
+
         })
-        let nxt = 1
-        if (event.actions[0].name.includes('album')) {
-          album = _.flatten(_.values(team.albumImages))
-          nxt = 2
-        }
-
-        const image = _.findWhere(album, {
-          url: url
-        })
-        let pos = album.indexOf(image)
-
-        if (type === 'next') {
-          pos++
-          if (!album[pos]) pos = 0
-        } else if (type === 'back') {
-          pos--
-          if (!album[pos]) pos = album.length - 1
-        }
-
-        // console.log(pos, album.length)
-
-        reply.attachments[0].image_url = album[pos].url
-
-        if (nxt === 1) reply.attachments[0].text = 'Location: ' + album[pos].location
-
-        reply.attachments[0].actions[0].text = '< Back'
-        reply.attachments[0].actions[nxt].text = 'Next >'
-
-        bot.api.chat.update({
-          channel: event.channel,
-          ts: reply.ts,
-          attachments: reply.attachments
-        }, function (error, updated) {
-          console.log(error, updated)
-        })
-
-      })
+        .catch(console.error)
 
     }
 

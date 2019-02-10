@@ -37,6 +37,7 @@ module.exports = function (controller) {
         teamData.codesEntered = []
         teamData.users = []
         teamData.phasesUnlocked = ['phase_1']
+        teamData.shownSymbol = 0
 
         teamData.gamelog = {}
 
@@ -61,14 +62,6 @@ module.exports = function (controller) {
           })
 
           setTimeout(function () {
-            // Check the team to make sure it was updated
-            // Team should have a puzzles object now attached
-            if (options.forced) {
-              options.bot.reply(options.message, {
-                'text': 'Nice, you have updated your team\'s puzzles with completely fresh data!'
-              })
-            }
-
             const botChannels = {}
 
             _.each(teamData.users, function (user) {
@@ -93,7 +86,7 @@ module.exports = function (controller) {
                     convo.setVar('user', user.userId)
 
                     convo.activate()
-                  })
+                  }).catch(console.error)
                 }
               })
             })
@@ -107,6 +100,13 @@ module.exports = function (controller) {
 
               controller.storage.teams.save(teamData, function (error, saved) {
                 console.log(error, saved)
+                // Check the team to make sure it was updated
+                // Team should have a puzzles object now attached
+                if (options.forced) {
+                  options.bot.reply(options.message, {
+                    'text': 'Nice, you have updated your team\'s puzzles with completely fresh data!'
+                  })
+                }
               })
             }, 2000 * teamData.users.length + 1)
           }, 1000)

@@ -99,20 +99,20 @@ const changeState = function (currentState, event) {
       newState = 'b'
       break
 
-    case 'stars':
+    case 'glyph':
       // stars state
       newState = 'c'
       break
 
-    case 'glyph':
+    case 'stars':
       // safe state
-      newState = 'c'
+      newState = 'd'
       break
   }
   if (currentState === 'default') currentState = ''
   
   currentState = currentState += newState
-  currentState.split('').sort().join('')
+  currentState = currentState.split('').sort().join('')
   console.log('this users state is now:', currentState)
   return currentState
 }

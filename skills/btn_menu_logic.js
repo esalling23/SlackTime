@@ -38,25 +38,9 @@ module.exports = function (controller) {
     _.each(script.threads, function (t, v) {
       if (!thread || v.includes('combo')) {
         if (v.split('_').length > 1) {
-          if (v.includes('combo')) {
-            if (user.events) {
-              _.each(user.events, function (event) {
-                if (v.includes(event) && v.split('_')[2].includes(user.currentState)) {
-                  thread = v
-                }
-              })
-            }
-          } else if (v.includes('state')) {
-            if (user.currentState !== 'default') {
-              if (v.split('_')[1].includes(user.currentState)) {
-                thread = v
-              }
-            }
-          } else if (v.includes('event')) {
-            if (user.events) {
-              _.each(user.events, function (event) {
-                if (v.includes(event)) thread = v
-              })
+          if (user.currentState !== 'default') {
+            if (v.split('_')[1] === user.currentState) {
+              thread = v
             }
           }
         }
