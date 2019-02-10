@@ -21,7 +21,7 @@ module.exports = function (controller) {
         controller.store.teams[team.id] = team
         next()
       })
-      .catch(error => console.log(error))
+      .catch(console.error)
   })
 
   controller.studio.before('safe', function(convo, next) {
@@ -33,6 +33,17 @@ module.exports = function (controller) {
     })
 
     next()
+  })
+  
+  controller.studio.before('strange_symbols', function(convo, next) {
+    const id = convo.context.bot.config.id ? convo.context.bot.config.id : convo.context.bot.config.user_id
+    controller.store.getTeam(id)
+      .then(team => {
+        team.shownSymbol = 0
+        next()
+      })
+      .catch(console.error)
+
   })
 
   const generateString = function () {

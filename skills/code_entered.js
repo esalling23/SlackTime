@@ -2,10 +2,10 @@ const _ = require('underscore')
 const sort = require('sorted-object')
 
 const correctButtonCodes = {
-  hole: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
-  glyph: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
-  stars: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'],
-  many: ['grey', 'green', 'grey', 'grey', 'grey', 'grey', 'grey', 'grey', 'red']
+  stars: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
+  hole: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
+  glyph: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'],
+  many: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
 }
 
 module.exports = function (controller) {
