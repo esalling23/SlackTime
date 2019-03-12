@@ -7,7 +7,7 @@ module.exports = function (controller) {
     controller.store.getTeam(message.team)
       .then(team => {
         _.each(team.users, function (user) {
-          controller.studio.get(bot, 'the_room', user.userId, user.botChat)
+          controller.studio.get(bot, 'three_color_buttons', user.userId, user.botChat)
             .then(convo => {
               const template = convo.threads.default[0]
               template.username = process.env.username
@@ -21,6 +21,25 @@ module.exports = function (controller) {
         })
       }).catch(console.error)
   })
+  
+//   controller.hears('gladis', 'direct_message', function (bot, message) {
+//     controller.store.getTeam(message.team)
+//       .then(team => {
+//         _.each(team.users, function (user) {
+//           controller.studio.get(bot, 'the_room', user.userId, user.botChat)
+//             .then(convo => {
+//               const template = convo.threads.default[0]
+//               template.username = process.env.username
+//               template.icon_url = process.env.icon_url
+
+//               convo.activate()
+//             }).catch(function (error) {
+//               console.log('error: encountered an error loading onboarding script from Botkit Studio:', error)
+//               // controller.studio.run(bot, 'fallback', user.userId, directMessage.channel.id)
+//             })
+//         })
+//       }).catch(console.error)
+//   })
 
   // onboarding trigger
   controller.hears('flavor_flave', 'direct_message', function (bot, message) {

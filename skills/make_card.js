@@ -28,6 +28,18 @@ module.exports = function (controller) {
       if (consts.recap) {
         template.attachments[1] = convo.threads[consts.recap][0].attachments[0]
       }
+      
+      // Strange symbols slideshow logic
+      if (consts.symbols_state) {
+        template.attachments[0].actions.push({
+          'text': 'Download Cypher Wheel',
+          'name': 'link_button',
+          'url': controller.cypherUrls.download,
+          type: 'button'
+        })
+        // there's a new image?
+        // template.text = ''
+      }
 
       template.username = process.env.username
       template.icon_url = process.env.icon_url
