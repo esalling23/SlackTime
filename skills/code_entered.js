@@ -3,7 +3,7 @@ const sort = require('sorted-object')
 
 const correctButtonCodes = {
   stars: ['red', 'red', 'green', 'grey', 'grey', 'green', 'green', 'red', 'grey'],
-  hole: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
+  symbols: ['grey', 'green', 'green', 'grey', 'grey', 'red', 'red', 'green', 'red'],
   glyph: ['grey', 'grey', 'red', 'red', 'red', 'green', 'grey', 'red', 'grey'],
   many: ['red', 'green', 'grey', 'grey', 'grey', 'green', 'grey', 'red', 'grey']
 }

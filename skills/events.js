@@ -2,6 +2,9 @@ const _ = require('underscore')
 const { WebClient } = require('@slack/client')
 
 module.exports = function (controller) {
+  
+  
+  
   controller.on('count_colors', function (bot, event, team) {
     const users = _.filter(team.users, function (user) {
       return !controller.ignoreEmails.includes(user.email)
@@ -15,9 +18,9 @@ module.exports = function (controller) {
       buttons = buttons.concat(user.startBtns)
     })
 
-    if (buttons.filter('danger') < length &&
-          buttons.filter('primary') < length &&
-            buttons.filter('') < length) return
+    if (buttons.filter(btn => btn === 'danger') < length &&
+          buttons.filter(btn => btn === 'primary') < length &&
+            buttons.filter(btn => btn === '') < length) return
 
     team.entered = true
     // If any of the button counts are >= to the given length
@@ -31,7 +34,7 @@ module.exports = function (controller) {
           const thisIM = _.findWhere(list.channels, { user: user.userId })
           const channel = thisIM.id
 
-          web.conversations.history(channel).then(function (ims) {
+          web.conversations.history({ channel: channel }).then(function (ims) {
             const btnMessage = ims.messages[0]
 
             if (!btnMessage || !btnMessage.attachments) return

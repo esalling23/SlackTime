@@ -11,7 +11,7 @@
     "@slack/client": "^4.8.0",
     "@slack/events-api": "^1.0.1",
     "app-root-path": "^2.0.1",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "botkit": "^0.7.0",
     "botkit-storage-mongo": "^1.0.7",
     "botkit-studio-metrics": "^0.0.4",
@@ -25,7 +25,7 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
-    "express": "^4.16.2",
+    "express": "^4.16.4",
     "express-hbs": "^1.0.4",
     "fs": "^0.0.2",
     "gojs": "^1.8.14",
@@ -38,7 +38,8 @@
     "sharp": "^0.20.5",
     "sorted-object": "^2.0.1",
     "underscore": "^1.8.3",
-    "wordfilter": "^0.2.6"
+    "wordfilter": "^0.2.6",
+    "googleapis": "^27.2.0"
   },
   "engines": {
     "node": "9.0.0",

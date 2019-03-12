@@ -23,4 +23,10 @@ module.exports = function (controller) {
     7: 'https://res.cloudinary.com/extraludic/image/upload/v1523986449/escape-room/Croc.png',
     8: 'https://res.cloudinary.com/extraludic/image/upload/v1523986449/escape-room/Rhino.png'
   }
+  
+  controller.cypherUrls = {
+    img: 'https://res.cloudinary.com/extraludic/image/upload/v1550073852/escape-room/CypherWheelImg.png',
+    download: 'https://slacktime.glitch.me/download/CypherWheel.pdf'
+  }
+    
 }

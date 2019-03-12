@@ -89,7 +89,7 @@ module.exports = function (controller) {
 const changeState = function (currentState, event) {
   let newState
   switch (event) {
-    case 'hole':
+    case 'symbols':
       // hole state
       newState = 'a'
       break

@@ -235,7 +235,7 @@ module.exports = function (controller) {
         if (callbackId === 'three_color_buttons') {
           // console.log(event.team.id)
 
-          controller.storage.getTeam(event.team.id)
+          controller.store.getTeam(event.team.id)
             .then(team => {
               if (error) return
               const thisUser = _.findWhere(team.users, {
@@ -285,18 +285,26 @@ module.exports = function (controller) {
 
       controller.store.getTeam(event.team.id)
         .then(team => {
-        
+          const user = _.findWhere(team.users, { userId: event.user })
+          const urls = controller.symbolUrls
+          
+          // Add the cypher wheel image to the end
+          // if user has unlocked that state
+          if (user.currentState.split('').includes('a')) {
+            urls.push(controller.cypherUrls.img)
+          }
+
           if (!team.shownSymbol) team.shownSymbol = 0
 
           if (type === 'next') {
             team.shownSymbol++
-            if (team.shownSymbol > controller.symbolUrls.length - 1) team.shownSymbol = 0
+            if (team.shownSymbol > urls.length - 1) team.shownSymbol = 0
           } else if (type === 'prev') {
             team.shownSymbol--
-            if (team.shownSymbol < 0) team.shownSymbol = controller.symbolUrls.length - 1
+            if (team.shownSymbol < 0) team.shownSymbol = urls.length - 1
           }
 
-          reply.attachments[0].image_url = controller.symbolUrls[team.shownSymbol]
+          reply.attachments[0].image_url = urls[team.shownSymbol]
           reply.attachments[0].actions[0].text = '< Prev Image'
           reply.attachments[0].actions[1].text = 'Next Image >'
           reply.attachments[0].footer = `\n*Symbol ${team.shownSymbol + 1} *`
